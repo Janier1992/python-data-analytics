@@ -6,6 +6,8 @@ import path from 'node:path'
 
 export const PYTHON = process.env.PYTHON || 'python3'
 const TIEMPO_MAX_MS = 120_000
+// Un bucle infinito con print llena la memoria en segundos: se corta la ejecución al pasar de este tamaño
+const SALIDA_MAX_BYTES = 2_000_000
 
 // pandas 2.2 avisa en cada import de que pyarrow será obligatorio en pandas 3; no es del contenido del curso.
 const RUIDO_PYARROW = /^.*DeprecationWarning:\s*\nPyarrow will become[\s\S]*?issues\/54466\s*\n/gm
@@ -32,10 +34,23 @@ export function ejecutarPython(codigo) {
       rmSync(cwd, { recursive: true, force: true })
       resolve({ ...resultado, stdout, stderr: stderr.replace(RUIDO_PYARROW, '').replace(RUIDO_MPLSTYLE, '') })
     }
-    hijo.stdout.on('data', (d) => (stdout += d))
-    hijo.stderr.on('data', (d) => (stderr += d))
+    let excedido = false
+    const acumular = (actual, trozo) => {
+      if (actual.length + trozo.length > SALIDA_MAX_BYTES) {
+        if (!excedido) {
+          excedido = true
+          hijo.kill('SIGKILL')
+        }
+        return actual
+      }
+      return actual + trozo
+    }
+    hijo.stdout.on('data', (d) => (stdout = acumular(stdout, d)))
+    hijo.stderr.on('data', (d) => (stderr = acumular(stderr, d)))
     hijo.stdin.end() // sin entrada: input() falla en vez de colgarse
-    hijo.on('close', (codigoSalida, senal) => terminar({ codigo: senal ? `señal ${senal} (¿tiempo excedido?)` : codigoSalida }))
+    hijo.on('close', (codigoSalida, senal) =>
+      terminar({ codigo: excedido ? 'salida excesiva (¿bucle infinito con print?)' : senal ? `señal ${senal} (¿tiempo excedido?)` : codigoSalida }),
+    )
     hijo.on('error', (e) => {
       stderr += `\n${e.message}`
       terminar({ codigo: -1 })

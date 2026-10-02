@@ -194,7 +194,7 @@ while contador < 5:
     practicaGuiada: {
       id: 'm2-l3-practica',
       enunciado: 'Completa el bucle while para que imprima 10, 20 y 30 (incrementando de 10 en 10) y se detenga.',
-      codigoInicial: `n = 10\nwhile n <= 30:\n    print(n)\n    n = n + 0`,
+      codigoInicial: `n = 10\nwhile n <= 30:\n    print(n)\n    n = n + 100`,
       solucion: `n = 10\nwhile n <= 30:\n    print(n)\n    n = n + 10`,
       pistas: ['El incremento debe ser de 10 en cada vuelta, no 0 (eso causaría un bucle infinito).'],
       validar: (stdout) => {
