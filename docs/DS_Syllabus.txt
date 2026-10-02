@@ -1,0 +1,331 @@
+Data Scientist                                                            9 meses
+
+  Plan de estudios 
+
+
+    Cada sprint dura unas dos o tres semanas lo que representa unas 
+    20-40 horas de estudio aproximadamente.
+
+1 Sprint 1 Python básico 
+                                                +1 proyecto para tu portafolio
+        ¡Tu introducción al mundo del análisis de datos!
+                          2 semanas, 20 horas
+        Conceptos clave y sintaxis básica en Python. Bucles,
+        condiciones y funciones. La librería pandas para analizar datos.
+        Tu primer estudio de caso analítico, seguido de tu primer
+        proyecto.
+
+
+        Capítulo 1. Introducción a tu futura profesión
+
+        Capítulo 2. Variables, tipos de datos y operaciones aritméticas
+
+        Capítulo 3. Strings
+
+        Capítulo 4. Listas
+
+2 Sprint 2 Python básico (continuación)
+                                  +1 proyecto para tu portafolio
+                                                                                   2 semanas, 20 horas
+
+   Continuarás tu viaje por los diccionarios de Python que se emplean
+
+   comúnmente en el campo de los datos. Harás que tu código sea
+
+   flexible y reutilizable mediante la creación de funciones.
+
+
+   Capítulo 1. Bucles
+
+   Capítulo 2. Sentencias condicionales
+
+   Capítulo 3. Diccionarios
+
+   Capítulo 4. Funciones
+
+3  Sprint 3 Manipulación de datos                                         +1 proyecto para tu portafolio
+   (Data Wrangling) 
+                                                              2 semanas, 20 horas
+
+   La librería Pandas para procesar datos. Compensación por
+   datos imperfectos. Manejo de valores ausentes y duplicados.
+
+
+   Capítulo 1. La librería Pandas 
+
+   Capítulo 2. Leer y visualizar datos
+
+   Capítulo 3. Trabajar con valores duplicados y ausentes 
+
+   Capítulo 4. Filtrado de datos
+4  Sprint 4 Manipulación de datos                                  +1 proyecto para tu portafolio
+   (Data Wrangling) (continuación) 
+                                       2 semanas, 20 horas
+
+   Cambiar tipos de datos. Identificar correlaciones y crear       +1 proyecto para tu portafolio
+   gráficos.
+                                                              3 semanas, 30 horas
+
+   Capítulo 1. Tipos de datos
+                                     +1 proyecto para tu portafolio
+   Capítulo 2. Ingeniería de características
+                                1 semana, 20 horas
+   Capítulo 3. Transformación de datos
+
+   Capítulo 4. Visualización de datos                              +1 proyecto para tu portafolio
+                                                                           3 semanas, 40 horas
+5 Sprint 5 Análisis estadístico de datos 
+
+       Teoría de la probabilidad, distribuciones más comunes       +1 proyecto para tu portafolio
+       y métodos estadísticos en Python. Muestreo y significación          2 semanas, 40 horas
+       estadística. Identificación y manejo de anomalías.
+
+       Capítulo 1. Estadística descriptiva
+
+       Capítulo 2. Teoría de la probabilidad
+
+       Capítulo 3. Prueba de hipótesis
+
+6 Sprint 6 Proyecto del módulo 1
+
+       Identificar patrones que te ayudarán a determinar si un
+       videojuego concreto tendrá éxito comercial o no.
+
+7  Sprint 7 Herramientas de desarrollo 
+   de software
+
+
+   Preparar el ecosistema de las herramientas de desarrollo.
+   Aprender a utilizar la línea de comandos para acceder y
+   manipular fácilmente archivos en tu computadora. Utilizar las
+   herramientas de Git y GitHub. Profundizando en un Python más
+   avanzado.
+
+
+   Capítulo 1. Introducción a la línea de comandos
+
+
+   Capítulo 2. Entornos de desarrollo
+
+   Capítulo 3. Git y GitHub
+
+   Capítulo 4. Python intermedio
+
+   Capítulo 5. Entorno de desarrollo individual
+
+8  Sprint 8 Recopilación y almacenamiento
+   de datos (SQL)
+
+
+   Cómo se estructuran las bases de datos y cómo extraer datos
+
+   de ellas mediante consultas . SQL Encontrar datos en línea.
+
+
+   Capítulo 1. Recuperar datos de recursos en línea
+
+   Capítulo 2. SQL como herramienta para trabajar con datos
+
+   Capítulo 3. Funciones avanzadas de SQL para analistas
+
+   Capítulo 4. Relaciones entre tablas
+
+
+   Capítulo 5. Habilidades sociales (Soft skills)
+9 Sprint 9 Introducción al machine learning
+                                    +1 proyecto para tu portafolio
+       Dominar las nociones básicas del machine learning. Control de                     2 semanas, 40 horas
+       la librería scikit-learn para completar tu primer proyecto de
+       machine learning.
+
+       Capítulo 1. Entrenar tu primer modelo
+
+       Capítulo 2. Calidad del modelo
+
+       Capítulo 3. Mejora del modelo
+
+       Capítulo 4. Pasar a la regresión
+
+10 Sprint 10 Aprendizaje supervisado
+                                           +1 proyecto para tu portafolio
+        Inmersión en el área más demandada del machine learning.                         2 semanas, 40 horas
+        Cómo ajustar los modelos de machine learning, mejorar las
+        métricas y trabajar con datos desbalanceados
+
+
+        Capítulo 1. Codificación y estandarización de datos
+
+        Capítulo 2. Métricas de clasificación
+
+        Capítulo 3. Clasificación desbalanceada
+
+        Capítulo 4. Métricas de regresión
+
+        Capítulo 5. Habilidades sociales (Soft skills)
+
+11  Sprint 11 Aprendizaje automático                                            +1 proyecto para tu portafolio
+    en negocios
+                                                                         2 semanas, 40 horas
+
+    Aplicar todo lo que has aprendido en ejercicios de negocio.
+    Descubrir métricas de negocio, tests A/B, la técnica bootstrap y el
+    etiquetado de datos.
+
+
+
+    Capítulo 1. Métricas de negocio
+
+    Capítulo 2. Implementar una nueva funcionalidad
+
+    Capítulo 3. Recopilación de datos
+
+    Capítulo 4. Habilidades sociales (Soft skills)
+
+12 Sprint 12 Proyecto del módulo 2
+                                             +1 proyecto para tu portafolio
+       Realizar un prototipo de un modelo de machine learning para                         1 semana, 20 horas
+               ayudar a una compañía minera a desarrollar soluciones
+               eficientes.                                                      +1 proyecto para tu portafolio
+                                                                                         2 semanas, 40 horas
+13 Sprint 13 Álgebra lineal
+
+
+                  Examinar de cerca algunos de los algoritmos que ya has
+                  estudiado y comprender cómo aplicarlos. Obtener un enfoque
+                  práctico de los conceptos clave en álgebra lineal: vectores,
+                  matrices y regresiones lineales.
+
+
+
+                  Capítulo 1. Vectores y operaciones vectoriales
+
+                  Capítulo 2. Distancia entre vectores
+
+                  Capítulo 3. Matrices y operaciones matriciales
+
+                  Capítulo 4. Regresión lineal desde el interior
+14 Sprint 14 Métodos numéricos
+                                         +1 proyecto para tu portafolio
+       Analizar diferentes algoritmos que utilizan métodos numéricos             2 semanas, 40 horas
+       y aplicarlos a ejercicios prácticos. Aprender sobre el descenso
+       de gradiente, la potenciación del gradiente y la red neuronal.
+  +1 proyecto para tu portafolio
+       Capítulo 1. Análisis de algoritmos
+                                       2 semanas, 40 horas
+       Capítulo 2. Descenso de gradiente
+
+       Capítulo 3. Entrenamiento de descenso de gradiente
+              +1 proyecto para tu portafolio
+       Capítulo 4. Potenciación del gradiente
+                                   2 semanas, 40 horas
+       Capítulo 5. Habilidades sociales (Soft skills)
+                                                                        +1 proyecto para tu portafolio
+15 Sprint 15 Series temporales
+                                                  2 semanas, 40 horas
+       Explorar series temporales. Entender tendencias,
+       estacionalidad y creación de características.
+                   +1 proyecto para tu portafolio
+       Capítulo 1. Análisis de series temporales
+                                 1 semana, 20 horas
+       Capítulo 2. Pronóstico de series temporales
+
+16  Sprint 16 Aprendizaje automático para
+    textos
+
+
+    Aplicar el machine learning para datos de texto. Descubrir
+    cómo convertir texto en números y cómo utilizar el modelo
+    bolsa de palabras, TF-IDF, además de embeddings y BERT.
+
+
+    Capítulo 1. Vectorización de textos
+
+    Capítulo 2. Representaciones del lenguaje
+
+17 Sprint 17 Visión artificial
+
+       Cómo manejar simples ejercicios de visión artificial utilizando
+       redes neuronales preestablecidas y la librería Keras. Un rápido
+       vistazo al aprendizaje profundo (deep learning).
+
+       Capítulo 1. Redes totalmente conectadas
+
+       Capítulo 2. Redes neuronales convolucionales
+
+       Capítulo 3. Habilidades sociales o t (S f skills)
+
+18  Sprint 18 Aprendizaje no supervisado
+
+
+    Descubrir qué hacer cuando no tienes las características 
+    de la variable objetivo. Realizar ejercicios de agrupamiento
+    (clustering) y buscar anomalías.
+
+
+    Capítulo 1. Clustering
+
+    Capítulo 2. Detección de anomalías
+19 Sprint 19 Proyecto final
+                                            +1 proyecto para tu portafolio
+        Utilizar todo lo que has aprendido en un bootcamp de dos                 2 semanas, 40 horas
+        semanas que simula la experiencia de trabajo de un científico 
+        de datos junior.
+Programa de éxito profesional
+
+El Programa de éxito profesional mejora la empleabilidad de quienes se gradúan de
+TripleTen,es decir, les ayuda a pasar de aprender nuevo conocimiento a ganar dinero.
+
+1  Comunidad de antiguos alumnos
+                                      S íin l mite de tiempo
+
+   Espacio para el apoyo entre pares y la creación de redes                    4 semanas
+
+   profesionales productivas                                          6 h   meses o asta que
+
+   Comunicación constante con otros graduados                            consigas un empleo
+   y graduada
+   Eventos en línea: seminarios web de profesionales 
+   de la industria, sesiones de networkin
+   Oportunidades de trabajo y trabajo autónomo para tutores 
+   y para quienes se gradúan
+
+2  Curso de Preparación Profesional
+
+
+   Este curso adicional gratuito prepara a quienes se gradúan para 
+
+   la búsqueda de empleo. Consiste en lecciones, tareas y feedback 
+
+   de especialistas en Recursos Humanos. Estructura del curso 
+
+   de preparación para la carrera profesional:
+
+   Estrategia personal de búsqueda de emple
+   Mercado laboral en TI y la esfera digita
+   Entrevista: teoría y práctic
+   Habilidades de networking
+   Resumé/Curriculum Vitae
+   Carta de motivació
+   Portafoli
+   Presencia en línea: LinkedIn, etc.
+
+3  Aceleración profesional
+
+
+   v m , Esta es una acti idad en co unidad durante la cual quienes 
+
+   se gradúan
+
+   B j uscan activamente un empleo y me oran constantemente 
+   z a través del ciclo de feedback organi ado por nuestros
+
+   especialistas de Recursos Humano
+
+   Practican entrevistas técnicas y de Recursos Humanos
+
+   (entrevistas simuladas
+   ( Hacen networking con nuestra ayuda y por su cuenta
+   Obtienen acceso a los socios y socias de TripleTen y sus
+
+   oportunidades laborales
+

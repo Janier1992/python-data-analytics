@@ -10,6 +10,9 @@ import { module7Lessons } from './modules/module7'
 import { module8Lessons } from './modules/module8'
 import { module9Lessons } from './modules/module9'
 import { module10Lessons } from './modules/module10'
+import { module11Lessons } from './modules/module11'
+import { module12Lessons } from './modules/module12'
+import { module13Lessons } from './modules/module13'
 
 // Estructura del curso inspirada en la metodología de bootcamps profesionales
 // de analítica/ciencia de datos (progresión por sprints con proyecto de
@@ -57,11 +60,11 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-8', trackId: 'ruta-analista', numero: 8, titulo: 'Transformación y agregación de datos', descripcion: 'groupby, tablas dinámicas y métricas de negocio (ingresos, costos, margen).', disponible: true, lessonIds: module8Lessons.map((l) => l.id) },
   { id: 'modulo-9', trackId: 'ruta-analista', numero: 9, titulo: 'Visualización y storytelling de datos', descripcion: 'matplotlib para comunicar hallazgos con claridad: líneas, barras, histogramas y scatter plots.', disponible: true, lessonIds: module9Lessons.map((l) => l.id) },
   { id: 'modulo-10', trackId: 'ruta-analista', numero: 10, titulo: 'EDA y estadística aplicada', descripcion: 'Patrones, correlaciones, outliers, distribuciones y pruebas de hipótesis.', disponible: true, lessonIds: module10Lessons.map((l) => l.id) },
-  { id: 'modulo-11', trackId: 'ruta-analista', numero: 11, titulo: 'Proyecto integrador: Analista de Datos', descripcion: 'Proyecto de portafolio end-to-end: de datos crudos a un reporte de negocio.', disponible: false, lessonIds: [] },
+  { id: 'modulo-11', trackId: 'ruta-analista', numero: 11, titulo: 'Proyecto integrador: Analista de Datos', descripcion: 'Proyecto de portafolio end-to-end: de datos crudos a un reporte de negocio.', disponible: true, lessonIds: module11Lessons.map((l) => l.id) },
 
   // Ruta 3 — Ciencia de Datos y Machine Learning
-  { id: 'modulo-12', trackId: 'ruta-ciencia-datos', numero: 12, titulo: 'Fundamentos de Machine Learning', descripcion: 'scikit-learn, train/test, overfitting/underfitting, tu primer modelo.', disponible: false, lessonIds: [] },
-  { id: 'modulo-13', trackId: 'ruta-ciencia-datos', numero: 13, titulo: 'Ingeniería de características', descripcion: 'Encoding, escalado y prevención de data leakage.', disponible: false, lessonIds: [] },
+  { id: 'modulo-12', trackId: 'ruta-ciencia-datos', numero: 12, titulo: 'Fundamentos de Machine Learning', descripcion: 'scikit-learn, train/test, overfitting/underfitting, tu primer modelo.', disponible: true, lessonIds: module12Lessons.map((l) => l.id) },
+  { id: 'modulo-13', trackId: 'ruta-ciencia-datos', numero: 13, titulo: 'Ingeniería de características', descripcion: 'Encoding, escalado y prevención de data leakage.', disponible: true, lessonIds: module13Lessons.map((l) => l.id) },
   { id: 'modulo-14', trackId: 'ruta-ciencia-datos', numero: 14, titulo: 'Aprendizaje supervisado: regresión y clasificación', descripcion: 'Métricas, validación cruzada y datos desbalanceados.', disponible: false, lessonIds: [] },
   { id: 'modulo-15', trackId: 'ruta-ciencia-datos', numero: 15, titulo: 'Aprendizaje no supervisado', descripcion: 'Clustering (K-Means, DBSCAN), PCA y detección de anomalías.', disponible: false, lessonIds: [] },
   { id: 'modulo-16', trackId: 'ruta-ciencia-datos', numero: 16, titulo: 'Series temporales y texto (NLP básico)', descripcion: 'Tendencia, estacionalidad, bolsa de palabras y TF-IDF.', disponible: false, lessonIds: [] },
@@ -86,6 +89,9 @@ export const todasLasLecciones: Lesson[] = [
   ...module8Lessons,
   ...module9Lessons,
   ...module10Lessons,
+  ...module11Lessons,
+  ...module12Lessons,
+  ...module13Lessons,
 ]
 
 export function getLeccion(id: string): Lesson | undefined {
