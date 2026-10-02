@@ -51,7 +51,7 @@ plt.titulo("Ventas")`,
       id: 'm9-l1-practica',
       enunciado:
         'Completa el gráfico de barras con `plt.bar(categorias, valores)`, agrega un título con `plt.title("Ventas por categoría")`, y termina con `print("listo")`.',
-      codigoInicial: `import matplotlib.pyplot as plt\n\ncategorias = ["A", "B", "C"]\nvalores = [30, 50, 20]\n# crea el gráfico de barras y el título\nprint("listo")`,
+      codigoInicial: `import matplotlib.pyplot as plt\n\ncategorias = ["A", "B", "C"]\nvalores = [30, 50, 20]\n# crea el gráfico de barras y el título\n# al final, imprime "listo"`,
       solucion: `import matplotlib.pyplot as plt\n\ncategorias = ["A", "B", "C"]\nvalores = [30, 50, 20]\nplt.bar(categorias, valores)\nplt.title("Ventas por categoría")\nprint("listo")`,
       pistas: ['Usa `plt.bar(categorias, valores)` seguido de `plt.title("Ventas por categoría")`.'],
       validar: (stdout) => {
@@ -128,7 +128,7 @@ plt.hist(datos, bins="muchos")`,
     practicaGuiada: {
       id: 'm9-l2-practica',
       enunciado: 'Crea un histograma de `datos` con `bins=4` e imprime `len(datos)` al final.',
-      codigoInicial: `import matplotlib.pyplot as plt\n\ndatos = [5, 7, 8, 6, 9, 7, 5, 8, 10, 6]\n# crea el histograma con bins=4\nprint(len(datos))`,
+      codigoInicial: `import matplotlib.pyplot as plt\n\ndatos = [5, 7, 8, 6, 9, 7, 5, 8, 10, 6]\n# crea el histograma con bins=4\n# al final, imprime len(datos)`,
       solucion: `import matplotlib.pyplot as plt\n\ndatos = [5, 7, 8, 6, 9, 7, 5, 8, 10, 6]\nplt.hist(datos, bins=4)\nprint(len(datos))`,
       pistas: ['`plt.hist(datos, bins=4)`.'],
       validar: (stdout) => {
@@ -217,7 +217,7 @@ plt.scatter(x, y, alpha=2)`,
     practicaGuiada: {
       id: 'm9-l3-practica',
       enunciado: 'Crea un scatter plot con `plt.scatter(x, y)` e imprime "ok" al final.',
-      codigoInicial: `import matplotlib.pyplot as plt\n\nx = [1, 2, 3, 4]\ny = [10, 15, 13, 18]\n# crea el scatter plot\nprint("ok")`,
+      codigoInicial: `import matplotlib.pyplot as plt\n\nx = [1, 2, 3, 4]\ny = [10, 15, 13, 18]\n# crea el scatter plot\n# al final, imprime "ok"`,
       solucion: `import matplotlib.pyplot as plt\n\nx = [1, 2, 3, 4]\ny = [10, 15, 13, 18]\nplt.scatter(x, y)\nprint("ok")`,
       pistas: ['`plt.scatter(x, y)`.'],
       validar: (stdout) => {
@@ -304,7 +304,7 @@ plt.pie(valores, labels=categorias)`,
       id: 'm9-l4-practica',
       enunciado:
         'Tienes datos de ventas por trimestre (una tendencia en el tiempo). Elige el gráfico correcto (`plot` o `bar`) usando `plt.plot(trimestres, ventas)`, e imprime "linea" si usaste el correcto.',
-      codigoInicial: `import matplotlib.pyplot as plt\n\ntrimestres = ["Q1", "Q2", "Q3", "Q4"]\nventas = [100, 120, 90, 150]\n# elige el gráfico correcto para una tendencia en el tiempo\nprint("linea")`,
+      codigoInicial: `import matplotlib.pyplot as plt\n\ntrimestres = ["Q1", "Q2", "Q3", "Q4"]\nventas = [100, 120, 90, 150]\n# elige el gráfico correcto para una tendencia en el tiempo\n# si usaste el correcto, imprime "linea"`,
       solucion: `import matplotlib.pyplot as plt\n\ntrimestres = ["Q1", "Q2", "Q3", "Q4"]\nventas = [100, 120, 90, 150]\nplt.plot(trimestres, ventas)\nprint("linea")`,
       pistas: ['Una tendencia en el tiempo se visualiza mejor con `plt.plot()`.'],
       validar: (stdout) => {

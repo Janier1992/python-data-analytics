@@ -129,7 +129,7 @@ X_test_escalado = escalador_test.transform(X_test)`,
     practicaGuiada: {
       id: 'm13-l2-practica',
       enunciado: 'Aplica `StandardScaler().fit_transform(X)` e imprime la media resultante redondeada (debe ser prácticamente 0).',
-      codigoInicial: `from sklearn.preprocessing import StandardScaler\n\nX = [[5], [10], [15], [20]]\nprint(0)`,
+      codigoInicial: `from sklearn.preprocessing import StandardScaler\n\nX = [[5], [10], [15], [20]]\nprint(1)`,
       solucion: `from sklearn.preprocessing import StandardScaler\n\nX = [[5], [10], [15], [20]]\nescalador = StandardScaler()\nX_escalado = escalador.fit_transform(X)\nprint(round(X_escalado.mean()))`,
       pistas: ['`StandardScaler().fit_transform(X)` seguido de `.mean()`.'],
       validar: (stdout) => {

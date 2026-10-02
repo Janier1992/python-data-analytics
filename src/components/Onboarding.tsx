@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCuentaActual } from '../state/accountStore'
 import { useProgressStore } from '../state/progressStore'
+import { Boton, Logo } from './ui'
 import type { DiagnosticAnswers } from '../types'
 
 const PREGUNTAS: Array<{
@@ -68,6 +70,7 @@ export function Onboarding() {
     objetivoPrincipal: 'Aprender analítica y ciencia de datos con Python',
   })
   const completarOnboarding = useProgressStore((s) => s.completarOnboarding)
+  const cuenta = useCuentaActual()
   const navigate = useNavigate()
 
   const pregunta = PREGUNTAS[paso]
@@ -79,20 +82,35 @@ export function Onboarding() {
     if (esUltima) {
       const diagnostico = nuevas as DiagnosticAnswers
       completarOnboarding(diagnostico, nivelInicialDesde(diagnostico.experienciaPrevia))
-      navigate('/curso')
+      navigate('/curso', { replace: true })
     } else {
       setPaso((p) => p + 1)
     }
   }
 
+  function omitir() {
+    completarOnboarding(
+      {
+        experienciaPrevia: 'ninguna',
+        experienciaDatos: 'ninguna',
+        tiempoDisponible: 'moderado',
+        estiloPreferido: 'explicacion',
+        objetivoPrincipal: 'Aprender analítica y ciencia de datos con Python',
+      },
+      0,
+    )
+    navigate('/curso', { replace: true })
+  }
+
   return (
-    <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6">
-      <div className="mb-6 flex items-center gap-1.5">
+    <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6 py-10">
+      <Logo />
+      <p className="mt-8 text-lg text-slate-200">
+        ¡Bienvenido/a, <span className="font-semibold text-white">{cuenta?.nombre.split(' ')[0]}</span>! Cuéntanos un poco de ti para ajustar tu punto de partida. Son 4 preguntas.
+      </p>
+      <div className="mb-6 mt-6 flex items-center gap-1.5" role="progressbar" aria-label="Avance del diagnóstico" aria-valuemin={1} aria-valuemax={PREGUNTAS.length} aria-valuenow={paso + 1}>
         {PREGUNTAS.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1.5 flex-1 rounded-full transition-colors ${i <= paso ? 'bg-brand-500' : 'bg-surface-border'}`}
-          />
+          <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${i <= paso ? 'bg-brand-500' : 'bg-surface-border'}`} />
         ))}
       </div>
       <p className="mb-2 text-sm font-medium text-brand-400">
@@ -104,11 +122,23 @@ export function Onboarding() {
           <button
             key={op.valor}
             onClick={() => responder(op.valor)}
-            className="block w-full rounded-xl border border-surface-border bg-surface-raised px-4 py-3 text-left text-slate-200 transition hover:border-brand-500 hover:bg-surface"
+            className="block w-full rounded-xl border border-surface-border bg-surface-raised px-4 py-3 text-left text-slate-200 transition hover:border-brand-500 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
           >
             {op.label}
           </button>
         ))}
+      </div>
+      <div className="mt-6 flex items-center justify-between">
+        {paso > 0 ? (
+          <Boton variante="fantasma" onClick={() => setPaso((p) => p - 1)}>
+            ← Atrás
+          </Boton>
+        ) : (
+          <span />
+        )}
+        <button type="button" onClick={omitir} className="text-sm text-slate-400 underline-offset-2 hover:text-slate-200 hover:underline">
+          Omitir por ahora
+        </button>
       </div>
     </div>
   )

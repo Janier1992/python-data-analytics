@@ -58,8 +58,8 @@ print("La venta típica es", ventas.mean())`,
       pistas: ['`tiempos.mean()` y `tiempos.median()`.', 'La diferencia se calcula con `abs(media - mediana)`.'],
       validar: (stdout) => {
         const valor = parseFloat(stdout.trim())
-        const ok = !Number.isNaN(valor) && Math.abs(valor - 6.3) < 0.2
-        return { ok, mensaje: ok ? 'Correcto: la diferencia confirma que el outlier (40) distorsiona la media.' : 'El resultado esperado es aproximadamente 6.3.' }
+        const ok = !Number.isNaN(valor) && Math.abs(valor - 5.5) < 0.05
+        return { ok, mensaje: ok ? 'Correcto: la diferencia confirma que el outlier (40) distorsiona la media.' : 'El resultado esperado es 5.5 (media 11.5 menos mediana 6.0).' }
       },
     },
     verificacion: [
@@ -393,9 +393,9 @@ print("Son diferentes porque p-value es", p_value)`,
       id: 'm10-l5-practica',
       enunciado:
         'Ejecuta `stats.ttest_ind(grupo_a, grupo_b)` sobre los grupos dados, guarda `p_value`, e imprime si `p_value < 0.05`.',
-      codigoInicial: `from scipy import stats\n\ngrupo_a = [5, 6, 5, 7, 6]\ngrupo_b = [5, 6, 6, 5, 7]\nt_stat, p_value = 0, 1\nprint(p_value < 0.05)`,
+      codigoInicial: `from scipy import stats\n\ngrupo_a = [5, 6, 5, 7, 6]\ngrupo_b = [5, 6, 6, 5, 7]\nt_stat, p_value = 0, 0\nprint(p_value < 0.05)`,
       solucion: `from scipy import stats\n\ngrupo_a = [5, 6, 5, 7, 6]\ngrupo_b = [5, 6, 6, 5, 7]\nt_stat, p_value = stats.ttest_ind(grupo_a, grupo_b)\nprint(p_value < 0.05)`,
-      pistas: ['Reemplaza la línea de `t_stat, p_value = 0, 1` por `stats.ttest_ind(grupo_a, grupo_b)`.'],
+      pistas: ['Reemplaza la línea de `t_stat, p_value = 0, 0` por `stats.ttest_ind(grupo_a, grupo_b)`.'],
       validar: (stdout) => {
         const ok = stdout.trim() === 'False'
         return { ok, mensaje: ok ? 'Correcto: estos grupos son prácticamente idénticos, no hay diferencia significativa.' : 'El resultado esperado es False.' }

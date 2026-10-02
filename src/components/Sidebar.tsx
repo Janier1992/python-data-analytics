@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 import { curriculum, getLeccion, modulosPorTrack, todasLasLecciones, tracks } from '../content/curriculum'
-import { useProgressStore } from '../state/progressStore'
+import { programaCompleto, useProgressStore } from '../state/progressStore'
+import { Logo } from './ui'
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { leccionId } = useParams()
   const completedLessons = useProgressStore((s) => s.completedLessons)
+  const programaTerminado = programaCompleto(completedLessons)
   const leccionActual = leccionId ? getLeccion(leccionId) : undefined
   const [moduloAbierto, setModuloAbierto] = useState<string | null>(leccionActual?.moduloId ?? null)
 
@@ -18,14 +20,36 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex h-full flex-col bg-surface/95 backdrop-blur">
       <Link to="/curso" onClick={onNavigate} className="flex items-center gap-2 border-b border-surface-border px-5 py-4">
-        <span className="text-xl">🐍</span>
-        <span className="font-bold tracking-tight text-slate-100">Python Data &amp; AI Academy</span>
+        <Logo />
       </Link>
+
+      <div className="space-y-1 border-b border-surface-border px-3 py-3">
+        {[
+          { to: '/curso', etiqueta: 'Mi ruta de aprendizaje', icono: '🧭', fin: true },
+          { to: '/referencia', etiqueta: 'Guía de referencia', icono: '📚', fin: false },
+          { to: '/certificado', etiqueta: 'Mi certificado', icono: programaTerminado ? '🎓' : '🔒', fin: false },
+        ].map((enlace) => (
+          <NavLink
+            key={enlace.to}
+            to={enlace.to}
+            end={enlace.fin}
+            onClick={onNavigate}
+            className={({ isActive }) =>
+              `flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 ${
+                isActive ? 'bg-brand-600/20 text-brand-200' : 'text-slate-300 hover:bg-surface-raised hover:text-white'
+              }`
+            }
+          >
+            <span aria-hidden="true">{enlace.icono}</span>
+            {enlace.etiqueta}
+          </NavLink>
+        ))}
+      </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-4">
         {tracks.map((track) => (
           <div key={track.id} className="mb-5">
-            <p className="px-2 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <p className="px-2 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
               Ruta {track.orden} · {track.titulo}
             </p>
             <div className="space-y-1">
@@ -36,7 +60,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 
                 if (!modulo.disponible) {
                   return (
-                    <div key={modulo.id} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-600">
+                    <div key={modulo.id} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-500">
                       <span className="text-xs">🔒</span>
                       <span className="truncate">
                         {modulo.numero}. {modulo.titulo}
@@ -54,7 +78,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                       <span className="truncate">
                         {modulo.numero}. {modulo.titulo}
                       </span>
-                      <span className="ml-2 flex shrink-0 items-center gap-1.5 text-xs text-slate-500">
+                      <span className="ml-2 flex shrink-0 items-center gap-1.5 text-xs text-slate-400">
                         {completadas}/{lecciones.length}
                         <svg
                           className={`h-3 w-3 transition-transform ${abierto ? 'rotate-90' : ''}`}
@@ -82,7 +106,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                                     : 'text-slate-400 hover:bg-surface-raised hover:text-slate-200'
                                 }`}
                               >
-                                <span className={`text-xs ${hecha ? 'text-emerald-400' : 'text-slate-600'}`}>
+                                <span className={`text-xs ${hecha ? 'text-emerald-400' : 'text-slate-500'}`}>
                                   {hecha ? '✓' : '○'}
                                 </span>
                                 <span className="truncate">{l.titulo}</span>
@@ -100,7 +124,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </div>
 
-      <div className="border-t border-surface-border px-5 py-3 text-xs text-slate-500">
+      <div className="border-t border-surface-border px-5 py-3 text-xs text-slate-400">
         {curriculum.filter((m) => m.disponible).length} de {curriculum.length} módulos disponibles
       </div>
     </nav>

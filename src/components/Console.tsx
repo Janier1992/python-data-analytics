@@ -3,7 +3,7 @@ import type { RunResult } from '../pyodide/usePyodide'
 export function Console({ result }: { result: RunResult | null }) {
   if (!result) {
     return (
-      <div className="rounded-lg border border-surface-border bg-surface p-3 text-sm text-slate-500">
+      <div className="rounded-lg border border-surface-border bg-surface p-3 text-sm text-slate-400">
         Ejecuta el código para ver el resultado aquí.
       </div>
     )
@@ -18,7 +18,7 @@ export function Console({ result }: { result: RunResult | null }) {
         <pre className="whitespace-pre-wrap text-red-400">{result.error}</pre>
       )}
       {!result.stdout && !result.error && !result.figures.length && (
-        <p className="text-slate-500">El código se ejecutó sin salida (sin print()).</p>
+        <p className="text-slate-400">El código se ejecutó sin salida (sin print()).</p>
       )}
       {result.figures.map((fig, i) => (
         <img

@@ -413,7 +413,7 @@ assert calcular_iva(100) == 20, "El IVA de 100 debería ser 20"`,
       id: 'm5-l5-reto',
       enunciado:
         'Escribe una función `promedio(lista)` que devuelva el promedio de una lista de números. Agrega al menos dos `assert` que la validen (por ejemplo con `[2, 4, 6]` y con `[10]`), e imprime "Todas las pruebas pasaron" al final.',
-      codigoInicial: `def promedio(lista):\n    pass\n\n# agrega tus asserts aquí\nprint("Todas las pruebas pasaron")`,
+      codigoInicial: `def promedio(lista):\n    pass\n\n# agrega tus asserts aquí\n# y al final imprime "Todas las pruebas pasaron"`,
       solucion: `def promedio(lista):\n    return sum(lista) / len(lista)\n\nassert promedio([2, 4, 6]) == 4\nassert promedio([10]) == 10\nprint("Todas las pruebas pasaron")`,
       pistas: ['`promedio` debe devolver `sum(lista) / len(lista)`.', 'Verifica con casos simples donde conozcas el resultado exacto.'],
       validar: (stdout) => {

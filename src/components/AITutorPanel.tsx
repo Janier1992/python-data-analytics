@@ -97,7 +97,7 @@ export function AITutorPanel({ leccionContexto }: { leccionContexto: Lesson }) {
               </option>
             ))}
           </select>
-          <button onClick={() => setApiKey(null)} className="text-xs text-slate-500 underline">
+          <button onClick={() => setApiKey(null)} className="text-xs text-slate-400 underline">
             Quitar API key
           </button>
         </div>
@@ -105,7 +105,7 @@ export function AITutorPanel({ leccionContexto }: { leccionContexto: Lesson }) {
 
       <div className="mb-3 max-h-80 space-y-3 overflow-y-auto">
         {mensajes.length === 0 && (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-400">
             Pregunta algo sobre esta lección (por ejemplo: "no entiendo por qué mi código da TypeError").
           </p>
         )}

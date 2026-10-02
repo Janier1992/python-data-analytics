@@ -1,96 +1,82 @@
-import { useState } from 'react'
-import { Navigate, Route, Routes, Link } from 'react-router-dom'
+import { Suspense, lazy } from 'react'
+import type { ReactNode } from 'react'
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { useAccountStore } from './state/accountStore'
 import { useProgressStore } from './state/progressStore'
-import { Onboarding } from './components/Onboarding'
+import { AuthPage } from './components/AuthPage'
 import { Dashboard } from './components/Dashboard'
-import { LessonPage } from './components/LessonPage'
-import { Sidebar } from './components/Sidebar'
+import { Layout } from './components/Layout'
+import { NotFound } from './components/NotFound'
+import { Onboarding } from './components/Onboarding'
+import { Spinner } from './components/ui'
 
-function Layout({ children }: { children: React.ReactNode }) {
-  const resetProgreso = useProgressStore((s) => s.resetProgreso)
-  const [sidebarAbierto, setSidebarAbierto] = useState(false)
+// La página de lección arrastra CodeMirror y react-markdown: se descarga solo al abrir una lección.
+const LessonPage = lazy(() => import('./components/LessonPage').then((m) => ({ default: m.LessonPage })))
+// La guía de referencia (con sus 8 colecciones) también se descarga solo cuando se abre.
+const CertificadoPage = lazy(() => import('./components/CertificadoPage').then((m) => ({ default: m.CertificadoPage })))
+const ReferenciaPage = lazy(() => import('./components/referencia/ReferenciaPage').then((m) => ({ default: m.ReferenciaPage })))
 
+function Cargando() {
   return (
-    <div className="flex min-h-screen">
-      <aside className="hidden w-72 shrink-0 border-r border-surface-border lg:block">
-        <div className="sticky top-0 h-screen">
-          <Sidebar />
-        </div>
-      </aside>
-
-      {sidebarAbierto && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarAbierto(false)} />
-          <div className="absolute inset-y-0 left-0 w-72 border-r border-surface-border">
-            <Sidebar onNavigate={() => setSidebarAbierto(false)} />
-          </div>
-        </div>
-      )}
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-surface-border bg-surface/80 px-4 py-3 backdrop-blur lg:px-8">
-          <button
-            onClick={() => setSidebarAbierto(true)}
-            className="rounded-md p-1.5 text-slate-400 hover:bg-surface-raised hover:text-slate-200 lg:hidden"
-            aria-label="Abrir menú"
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <Link to="/curso" className="font-bold text-slate-100 lg:hidden">
-            🐍 Python Data &amp; AI Academy
-          </Link>
-          <div className="hidden lg:block" />
-          <button
-            onClick={() => {
-              if (confirm('¿Reiniciar todo tu progreso? Esta acción no se puede deshacer.')) resetProgreso()
-            }}
-            className="text-xs text-slate-500 hover:text-slate-300"
-          >
-            Reiniciar progreso
-          </button>
-        </header>
-        <main className="flex-1">{children}</main>
-      </div>
+    <div role="status" aria-live="polite" className="flex items-center gap-2 p-10 text-sm text-slate-400">
+      <Spinner /> Cargando…
     </div>
   )
 }
 
-export default function App() {
+/** Exige sesión iniciada; sin ella manda a /ingresar y recuerda a dónde quería ir. */
+function useRequiereSesion() {
+  const sesionId = useAccountStore((s) => s.sesionId)
+  const ubicacion = useLocation()
+  return sesionId ? null : <Navigate to="/ingresar" replace state={{ desde: ubicacion.pathname + ubicacion.search }} />
+}
+
+/** Diagnóstico inicial: requiere sesión, pero no el marco de la aplicación. */
+function PantallaCompleta({ children }: { children: ReactNode }) {
+  return useRequiereSesion() ?? <>{children}</>
+}
+
+/**
+ * Marco de la aplicación (barra lateral, encabezado y búsqueda). Es una ruta de diseño: se
+ * mantiene montado al navegar entre páginas, así no se pierde el estado de la barra lateral.
+ */
+function AreaProtegida() {
+  const redireccion = useRequiereSesion()
   const onboardingCompletado = useProgressStore((s) => s.onboardingCompletado)
+  if (redireccion) return redireccion
+  if (!onboardingCompletado) return <Navigate to="/onboarding" replace />
+  return (
+    <Layout>
+      <Suspense fallback={<Cargando />}>
+        <Outlet />
+      </Suspense>
+    </Layout>
+  )
+}
+
+export default function App() {
+  const sesionId = useAccountStore((s) => s.sesionId)
 
   return (
     <Routes>
+      <Route path="/" element={<Navigate to={sesionId ? '/curso' : '/ingresar'} replace />} />
+      <Route path="/ingresar" element={<AuthPage />} />
       <Route
-        path="/"
-        element={<Navigate to={onboardingCompletado ? '/curso' : '/onboarding'} replace />}
-      />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route
-        path="/curso"
+        path="/onboarding"
         element={
-          onboardingCompletado ? (
-            <Layout>
-              <Dashboard />
-            </Layout>
-          ) : (
-            <Navigate to="/onboarding" replace />
-          )
+          <PantallaCompleta>
+            <Onboarding />
+          </PantallaCompleta>
         }
       />
-      <Route
-        path="/leccion/:leccionId"
-        element={
-          onboardingCompletado ? (
-            <Layout>
-              <LessonPage />
-            </Layout>
-          ) : (
-            <Navigate to="/onboarding" replace />
-          )
-        }
-      />
+      <Route element={<AreaProtegida />}>
+        <Route path="/curso" element={<Dashboard />} />
+        <Route path="/leccion/:leccionId" element={<LessonPage />} />
+        <Route path="/referencia" element={<ReferenciaPage />} />
+        <Route path="/referencia/:coleccionId" element={<ReferenciaPage />} />
+        <Route path="/certificado" element={<CertificadoPage />} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

@@ -46,6 +46,9 @@ export interface Lesson {
   conceptos: string[] // conceptos clave que esta lección enseña (para mastery tracking)
 }
 
+/** Datos mínimos de una lección para navegación (el contenido completo se carga bajo demanda). */
+export type LessonSummary = Pick<Lesson, 'id' | 'moduloId' | 'titulo'>
+
 export interface Track {
   id: string
   orden: number
@@ -83,4 +86,14 @@ export interface StudentState {
   projectProgress: Record<string, number>
   preferredLearningStyle: LearningStyle | null
   anthropicApiKey: string | null
+  /** Cuándo empezó el estudiante el programa (primer ingreso a su cuenta). */
+  inicioEn: number | null
+  /** Cuándo completó todas las lecciones (habilita el certificado). */
+  completadoEn: number | null
+  /** Segundos de estudio activo (pestaña visible y con actividad reciente). */
+  tiempoActivoSeg: number
+  /** Días (AAAA-MM-DD, hora local) en los que estudió. */
+  diasActivos: string[]
+  /** Última lección abierta, para "continuar donde quedaste". */
+  ultimaLeccionId: string | null
 }
