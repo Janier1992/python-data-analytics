@@ -77,7 +77,7 @@ npm run build
 npm run preview
 ```
 
-El resultado de `npm run build` es un sitio 100% estático (carpeta `dist/`): se puede desplegar en Vercel, Netlify, GitHub Pages o cualquier hosting estático, sin necesidad de servidor backend. **Esto todavía no se ha hecho** — es uno de los próximos pasos.
+El resultado de `npm run build` es un sitio 100% estático (carpeta `dist/`): se puede desplegar en Vercel, Netlify, GitHub Pages o cualquier hosting estático, sin necesidad de servidor backend. **Esto todavía no se ha hecho** — es uno de los próximos pasos. Para Vercel ya existe `vercel.json` (build `npm run build`, salida `dist`, y *rewrite* de todas las rutas a `index.html` porque la app usa `BrowserRouter`; sin eso, abrir o recargar una URL como `/leccion/...` devuelve `404 NOT_FOUND`).
 
 ## Verificación / testing
 
