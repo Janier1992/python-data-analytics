@@ -15,20 +15,21 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 | **1. Fundamentos de Python** | 0–5 | ✅ Completo (6 módulos, ~23 lecciones) |
 | **2. Analista de Datos con Python** | 6–11 | ✅ Completo (6 módulos: NumPy/pandas, limpieza, agregación, visualización, EDA+estadística, proyecto integrador) |
 | **3. Ciencia de Datos y Machine Learning** | 12–18 | ✅ Completo (7 módulos: ML fundamentos, feature engineering, supervisado, no supervisado, series temporales + NLP, redes neuronales y proyecto integrador de abandono de clientes) |
-| **4. Herramientas complementarias** | 19–21 | ⬜ Pendiente: 19 (SQL), 20 (línea de comandos/Git), 21 (BI + preparación profesional) |
+| **4. Herramientas complementarias** | 19–21 | 🔶 En progreso: **19 (SQL con SQLite en el navegador) listo**. Faltan 20 (línea de comandos/Git) y 21 (BI + preparación profesional) |
 
 Cada módulo disponible tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
 
 ### Próximos pasos (en orden)
 
-1. Módulos 19–21 — Ruta 4 completa (SQL, Git/CLI, BI).
-2. Decidir y ejecutar el despliegue (Vercel/Netlify/GitHub Pages — el build es 100% estático).
-3. Pulir accesibilidad y revisar bundle size (ver nota de rendimiento abajo).
+1. Módulo 20 — Línea de comandos y Git.
+2. Módulo 21 — BI y preparación profesional (cierre del curso).
+3. Decidir y ejecutar el despliegue (Vercel/Netlify/GitHub Pages — el build es 100% estático).
+4. Pulir accesibilidad y revisar bundle size (ver nota de rendimiento abajo).
 
 ## Arquitectura
 
 - **React + Vite + TypeScript + Tailwind CSS** — interfaz. Fuente Inter (texto) y JetBrains Mono (código) vía Google Fonts.
-- **Pyodide** (Python compilado a WebAssembly, cargado desde CDN `jsdelivr`, versión `v0.26.4` fijada en `index.html` y `usePyodide.ts`) — ejecuta el código de los ejercicios directamente en el navegador del usuario. `numpy`, `pandas` y `matplotlib` se cargan siempre; `scipy`, `statsmodels` y `scikit-learn` se cargan **bajo demanda** (solo si el código del ejercicio los importa — ver `PAQUETES_BAJO_DEMANDA` en `src/pyodide/usePyodide.ts`) para no penalizar lecciones que no los usan.
+- **Pyodide** (Python compilado a WebAssembly, cargado desde CDN `jsdelivr`, versión `v0.26.4` fijada en `index.html` y `usePyodide.ts`) — ejecuta el código de los ejercicios directamente en el navegador del usuario. `numpy`, `pandas` y `matplotlib` se cargan siempre; `scipy`, `statsmodels`, `scikit-learn` y `sqlite3` (módulo de la biblioteca estándar que Pyodide no incluye por defecto; lo usa el Módulo 19) se cargan **bajo demanda** (solo si el código del ejercicio los importa — ver `PAQUETES_BAJO_DEMANDA` en `src/pyodide/usePyodide.ts`) para no penalizar lecciones que no los usan.
   - ⚠️ **`seaborn` NO está disponible** como paquete nativo de Pyodide (solo seaborn se puede instalar vía `micropip` desde PyPI, poco confiable para un curso). Las lecciones de visualización usan solo `matplotlib`.
   - No requiere servidor ni corre código del usuario en infraestructura propia: todo el cómputo ocurre en el navegador del estudiante.
 - **Zustand + localStorage** (`src/state/progressStore.ts`) — guarda el progreso del estudiante (nivel, lecciones completadas, conceptos dominados/débiles, historial de ejercicios, scores de quiz) en el navegador del propio usuario. No hay backend ni base de datos.

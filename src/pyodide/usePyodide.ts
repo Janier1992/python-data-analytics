@@ -30,6 +30,7 @@ const PAQUETES_BAJO_DEMANDA: Record<string, string> = {
   scipy: 'scipy',
   statsmodels: 'statsmodels',
   sklearn: 'scikit-learn',
+  sqlite3: 'sqlite3', // módulo de la biblioteca estándar, no incluido por defecto en Pyodide
 }
 
 async function asegurarPaquetes(py: PyodideInterface, codigo: string, onStatus: (msg: string) => void) {
