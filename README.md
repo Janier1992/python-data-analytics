@@ -94,7 +94,7 @@ Cada ejercicio (`Exercise`) tiene una función `validar(stdout) => {ok, mensaje}
 
 1. Crea `src/content/modules/moduleN.ts` exportando `export const moduleNLessons: Lesson[] = [...]`.
 2. En `src/content/curriculum.ts`, en la entrada correspondiente de `curriculum` cambia `disponible: false, lessonIds: []` por `disponible: true, lessonIds: idsDe('modulo-N')`. **No hace falta importar el módulo**: `npm run content:index` (que corren `dev` y `build`) lo detecta, lo agrega al índice y crea su carga diferida.
-3. Ejecuta `npm run content:index`, compila (`npx tsc -b`) y prueba tus ejercicios con `npm test -- N` (ver "Pruebas automáticas") antes de probar en el navegador.
+3. Ejecuta `npm run content:index`, compila (`npx tsc -b`) y prueba tus ejercicios con `npm run test:exercises -- N` (ver "Pruebas automáticas") antes de probar en el navegador.
 
 ## Pruebas automáticas
 
