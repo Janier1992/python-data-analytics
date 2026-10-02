@@ -16,6 +16,7 @@ import { module13Lessons } from './modules/module13'
 import { module14Lessons } from './modules/module14'
 import { module15Lessons } from './modules/module15'
 import { module16Lessons } from './modules/module16'
+import { module17Lessons } from './modules/module17'
 
 // Estructura del curso inspirada en la metodología de bootcamps profesionales
 // de analítica/ciencia de datos (progresión por sprints con proyecto de
@@ -71,7 +72,7 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-14', trackId: 'ruta-ciencia-datos', numero: 14, titulo: 'Aprendizaje supervisado: regresión y clasificación', descripcion: 'Métricas, validación cruzada y datos desbalanceados.', disponible: true, lessonIds: module14Lessons.map((l) => l.id) },
   { id: 'modulo-15', trackId: 'ruta-ciencia-datos', numero: 15, titulo: 'Aprendizaje no supervisado', descripcion: 'Clustering (K-Means, DBSCAN), PCA y detección de anomalías.', disponible: true, lessonIds: module15Lessons.map((l) => l.id) },
   { id: 'modulo-16', trackId: 'ruta-ciencia-datos', numero: 16, titulo: 'Series temporales y texto (NLP básico)', descripcion: 'Tendencia, estacionalidad, bolsa de palabras y TF-IDF.', disponible: true, lessonIds: module16Lessons.map((l) => l.id) },
-  { id: 'modulo-17', trackId: 'ruta-ciencia-datos', numero: 17, titulo: 'Introducción a redes neuronales', descripcion: 'Neurona, backpropagation, Keras/PyTorch y un vistazo a visión artificial.', disponible: false, lessonIds: [] },
+  { id: 'modulo-17', trackId: 'ruta-ciencia-datos', numero: 17, titulo: 'Introducción a redes neuronales', descripcion: 'Neurona, backpropagation, Keras/PyTorch y un vistazo a visión artificial.', disponible: true, lessonIds: module17Lessons.map((l) => l.id) },
   { id: 'modulo-18', trackId: 'ruta-ciencia-datos', numero: 18, titulo: 'Proyecto integrador: Ciencia de Datos', descripcion: 'Proyecto de portafolio end-to-end de machine learning.', disponible: false, lessonIds: [] },
 
   // Ruta 4 — Herramientas complementarias (después de Python)
@@ -98,6 +99,7 @@ export const todasLasLecciones: Lesson[] = [
   ...module14Lessons,
   ...module15Lessons,
   ...module16Lessons,
+  ...module17Lessons,
 ]
 
 export function getLeccion(id: string): Lesson | undefined {
