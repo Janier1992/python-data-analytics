@@ -14,7 +14,7 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 |---|---|---|
 | **1. Fundamentos de Python** | 0–5 | ✅ Completo (6 módulos, ~23 lecciones) |
 | **2. Analista de Datos con Python** | 6–11 | ✅ Completo (6 módulos: NumPy/pandas, limpieza, agregación, visualización, EDA+estadística, proyecto integrador) |
-| **3. Ciencia de Datos y Machine Learning** | 12–18 | 🔶 En progreso: **12 (ML fundamentos), 13 (feature engineering), 14 (supervisado: métricas, validación cruzada, desbalance) 15 (no supervisado: K-Means, DBSCAN, PCA) y 16 (series temporales + NLP básico) listos**. Faltan 17 (redes neuronales), 18 (proyecto integrador) |
+| **3. Ciencia de Datos y Machine Learning** | 12–18 | 🔶 En progreso: **12 (ML fundamentos), 13 (feature engineering), 14 (supervisado: métricas, validación cruzada, desbalance), 15 (no supervisado: K-Means, DBSCAN, PCA) y 16 (series temporales + NLP básico) listos**. Faltan 17 (redes neuronales), 18 (proyecto integrador) |
 | **4. Herramientas complementarias** | 19–21 | ⬜ Pendiente: 19 (SQL), 20 (línea de comandos/Git), 21 (BI + preparación profesional) |
 
 Cada módulo disponible tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
