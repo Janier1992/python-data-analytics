@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { curriculum, getLeccion, modulosPorTrack, todasLasLecciones, tracks } from '../content/curriculum'
 import { useProgressStore } from '../state/progressStore'
+import { Logo } from './ui'
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { leccionId } = useParams()
@@ -18,8 +19,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex h-full flex-col bg-surface/95 backdrop-blur">
       <Link to="/curso" onClick={onNavigate} className="flex items-center gap-2 border-b border-surface-border px-5 py-4">
-        <span className="text-xl">🐍</span>
-        <span className="font-bold tracking-tight text-slate-100">Python Data &amp; AI Academy</span>
+        <Logo />
       </Link>
 
       <div className="flex-1 overflow-y-auto px-3 py-4">

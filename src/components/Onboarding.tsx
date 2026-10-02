@@ -79,7 +79,7 @@ export function Onboarding() {
     if (esUltima) {
       const diagnostico = nuevas as DiagnosticAnswers
       completarOnboarding(diagnostico, nivelInicialDesde(diagnostico.experienciaPrevia))
-      navigate('/curso')
+      navigate('/curso', { replace: true })
     } else {
       setPaso((p) => p + 1)
     }

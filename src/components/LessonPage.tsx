@@ -78,6 +78,7 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
   const registrarQuiz = useProgressStore((s) => s.registrarQuiz)
   const actualizarDominio = useProgressStore((s) => s.actualizarDominio)
   const sincronizarModulosCompletados = useProgressStore((s) => s.sincronizarModulosCompletados)
+  const registrarLeccionVista = useProgressStore((s) => s.registrarLeccionVista)
   const [quizScore, setQuizScore] = useState<number | null>(null)
   const [showTutor, setShowTutor] = useState(false)
 
@@ -85,7 +86,8 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
     setQuizScore(null)
     setShowTutor(false)
     window.scrollTo({ top: 0 })
-  }, [leccionId])
+    registrarLeccionVista(leccionId)
+  }, [leccionId, registrarLeccionVista])
 
   const modulo = getModulo(leccion.moduloId)
   const track = modulo ? getTrack(modulo.trackId) : undefined
