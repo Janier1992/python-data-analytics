@@ -14,21 +14,20 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 |---|---|---|
 | **1. Fundamentos de Python** | 0–5 | ✅ Completo (6 módulos, ~23 lecciones) |
 | **2. Analista de Datos con Python** | 6–11 | ✅ Completo (6 módulos: NumPy/pandas, limpieza, agregación, visualización, EDA+estadística, proyecto integrador) |
-| **3. Ciencia de Datos y Machine Learning** | 12–18 | 🔶 En progreso: **12 (ML fundamentos) y 13 (feature engineering) listos**. Faltan 14 (supervisado), 15 (no supervisado), 16 (series temporales + NLP), 17 (redes neuronales), 18 (proyecto integrador) |
+| **3. Ciencia de Datos y Machine Learning** | 12–18 | 🔶 En progreso: **12 (ML fundamentos), 13 (feature engineering) y 14 (supervisado: métricas, validación cruzada, desbalance) listos**. Faltan 15 (no supervisado), 16 (series temporales + NLP), 17 (redes neuronales), 18 (proyecto integrador) |
 | **4. Herramientas complementarias** | 19–21 | ⬜ Pendiente: 19 (SQL), 20 (línea de comandos/Git), 21 (BI + preparación profesional) |
 
 Cada módulo disponible tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
 
 ### Próximos pasos (en orden)
 
-1. Módulo 14 — Aprendizaje supervisado: regresión y clasificación (métricas, validación cruzada, datos desbalanceados).
-2. Módulo 15 — Aprendizaje no supervisado (K-Means, DBSCAN, PCA).
-3. Módulo 16 — Series temporales y NLP básico.
-4. Módulo 17 — Introducción a redes neuronales.
-5. Módulo 18 — Proyecto integrador de Ciencia de Datos (cierre de la Ruta 3).
-6. Módulos 19–21 — Ruta 4 completa (SQL, Git/CLI, BI).
-7. Decidir y ejecutar el despliegue (Vercel/Netlify/GitHub Pages — el build es 100% estático).
-8. Pulir accesibilidad y revisar bundle size (ver nota de rendimiento abajo).
+1. Módulo 15 — Aprendizaje no supervisado (K-Means, DBSCAN, PCA).
+2. Módulo 16 — Series temporales y NLP básico.
+3. Módulo 17 — Introducción a redes neuronales.
+4. Módulo 18 — Proyecto integrador de Ciencia de Datos (cierre de la Ruta 3).
+5. Módulos 19–21 — Ruta 4 completa (SQL, Git/CLI, BI).
+6. Decidir y ejecutar el despliegue (Vercel/Netlify/GitHub Pages — el build es 100% estático).
+7. Pulir accesibilidad y revisar bundle size (ver nota de rendimiento abajo).
 
 ## Arquitectura
 

@@ -13,6 +13,7 @@ import { module10Lessons } from './modules/module10'
 import { module11Lessons } from './modules/module11'
 import { module12Lessons } from './modules/module12'
 import { module13Lessons } from './modules/module13'
+import { module14Lessons } from './modules/module14'
 
 // Estructura del curso inspirada en la metodología de bootcamps profesionales
 // de analítica/ciencia de datos (progresión por sprints con proyecto de
@@ -65,7 +66,7 @@ export const curriculum: ModuleMeta[] = [
   // Ruta 3 — Ciencia de Datos y Machine Learning
   { id: 'modulo-12', trackId: 'ruta-ciencia-datos', numero: 12, titulo: 'Fundamentos de Machine Learning', descripcion: 'scikit-learn, train/test, overfitting/underfitting, tu primer modelo.', disponible: true, lessonIds: module12Lessons.map((l) => l.id) },
   { id: 'modulo-13', trackId: 'ruta-ciencia-datos', numero: 13, titulo: 'Ingeniería de características', descripcion: 'Encoding, escalado y prevención de data leakage.', disponible: true, lessonIds: module13Lessons.map((l) => l.id) },
-  { id: 'modulo-14', trackId: 'ruta-ciencia-datos', numero: 14, titulo: 'Aprendizaje supervisado: regresión y clasificación', descripcion: 'Métricas, validación cruzada y datos desbalanceados.', disponible: false, lessonIds: [] },
+  { id: 'modulo-14', trackId: 'ruta-ciencia-datos', numero: 14, titulo: 'Aprendizaje supervisado: regresión y clasificación', descripcion: 'Métricas, validación cruzada y datos desbalanceados.', disponible: true, lessonIds: module14Lessons.map((l) => l.id) },
   { id: 'modulo-15', trackId: 'ruta-ciencia-datos', numero: 15, titulo: 'Aprendizaje no supervisado', descripcion: 'Clustering (K-Means, DBSCAN), PCA y detección de anomalías.', disponible: false, lessonIds: [] },
   { id: 'modulo-16', trackId: 'ruta-ciencia-datos', numero: 16, titulo: 'Series temporales y texto (NLP básico)', descripcion: 'Tendencia, estacionalidad, bolsa de palabras y TF-IDF.', disponible: false, lessonIds: [] },
   { id: 'modulo-17', trackId: 'ruta-ciencia-datos', numero: 17, titulo: 'Introducción a redes neuronales', descripcion: 'Neurona, backpropagation, Keras/PyTorch y un vistazo a visión artificial.', disponible: false, lessonIds: [] },
@@ -92,6 +93,7 @@ export const todasLasLecciones: Lesson[] = [
   ...module11Lessons,
   ...module12Lessons,
   ...module13Lessons,
+  ...module14Lessons,
 ]
 
 export function getLeccion(id: string): Lesson | undefined {
