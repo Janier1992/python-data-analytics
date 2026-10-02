@@ -39,7 +39,7 @@ export function ExerciseBlock({ exercise, lessonId, titulo }: Props) {
   }
 
   return (
-    <div className="space-y-3 rounded-xl border border-slate-700 bg-slate-900/40 p-4">
+    <div className="space-y-3 rounded-xl border border-surface-border bg-surface-raised/50 p-4">
       <h4 className="font-semibold text-slate-100">{titulo}</h4>
       <p className="text-slate-300">{exercise.enunciado}</p>
 
@@ -51,21 +51,21 @@ export function ExerciseBlock({ exercise, lessonId, titulo }: Props) {
         <button
           onClick={handleRun}
           disabled={!listo || ejecutando}
-          className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+          className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-glow hover:bg-brand-700 disabled:opacity-50 disabled:shadow-none"
         >
           {ejecutando ? 'Ejecutando…' : 'Ejecutar código'}
         </button>
         {exercise.pistas.length > 0 && pistasVisibles < exercise.pistas.length && (
           <button
             onClick={() => setPistasVisibles((n) => n + 1)}
-            className="rounded-md border border-slate-600 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+            className="rounded-md border border-surface-border px-3 py-2 text-sm text-slate-300 hover:bg-surface"
           >
             Pedir pista ({pistasVisibles}/{exercise.pistas.length})
           </button>
         )}
         <button
           onClick={() => setMostrarSolucion((v) => !v)}
-          className="rounded-md border border-slate-600 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+          className="rounded-md border border-surface-border px-3 py-2 text-sm text-slate-300 hover:bg-surface"
         >
           {mostrarSolucion ? 'Ocultar solución' : 'Ver solución'}
         </button>
@@ -89,7 +89,7 @@ export function ExerciseBlock({ exercise, lessonId, titulo }: Props) {
       )}
 
       {mostrarSolucion && (
-        <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 text-sm text-slate-300">
+        <pre className="overflow-x-auto rounded-lg border border-surface-border bg-surface p-3 font-mono text-sm text-slate-300">
           {exercise.solucion}
         </pre>
       )}

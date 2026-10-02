@@ -3,14 +3,14 @@ import type { RunResult } from '../pyodide/usePyodide'
 export function Console({ result }: { result: RunResult | null }) {
   if (!result) {
     return (
-      <div className="rounded-lg bg-slate-950 p-3 text-sm text-slate-500">
+      <div className="rounded-lg border border-surface-border bg-surface p-3 text-sm text-slate-500">
         Ejecuta el código para ver el resultado aquí.
       </div>
     )
   }
 
   return (
-    <div className="space-y-2 rounded-lg bg-slate-950 p-3 font-mono text-sm">
+    <div className="space-y-2 rounded-lg border border-surface-border bg-surface p-3 font-mono text-sm">
       {result.stdout && (
         <pre className="whitespace-pre-wrap text-slate-200">{result.stdout.trimEnd()}</pre>
       )}

@@ -6,6 +6,10 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+      },
       colors: {
         brand: {
           50: '#eef5ff',
@@ -19,6 +23,14 @@ export default {
           800: '#17339a',
           900: '#182f79',
         },
+        surface: {
+          DEFAULT: '#0d1326',
+          raised: '#131a32',
+          border: '#232b47',
+        },
+      },
+      boxShadow: {
+        glow: '0 0 0 1px rgba(90,148,255,0.15), 0 8px 24px -8px rgba(52,109,255,0.35)',
       },
     },
   },

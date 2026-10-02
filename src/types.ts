@@ -46,8 +46,16 @@ export interface Lesson {
   conceptos: string[] // conceptos clave que esta lección enseña (para mastery tracking)
 }
 
+export interface Track {
+  id: string
+  orden: number
+  titulo: string
+  descripcion: string
+}
+
 export interface ModuleMeta {
   id: string
+  trackId: string
   numero: number
   titulo: string
   descripcion: string

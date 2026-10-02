@@ -1,7 +1,7 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import { getLeccion, getModulo, moduloLeccionesMap, todasLasLecciones } from '../content/curriculum'
+import { getLeccion, getLeccionesAdyacentes, getModulo, getTrack, moduloLeccionesMap } from '../content/curriculum'
 import { ExerciseBlock } from './ExerciseBlock'
 import { QuizBlock } from './QuizBlock'
 import { useProgressStore } from '../state/progressStore'
@@ -19,6 +19,12 @@ export function LessonPage() {
   const [quizScore, setQuizScore] = useState<number | null>(null)
   const [showTutor, setShowTutor] = useState(false)
 
+  useEffect(() => {
+    setQuizScore(null)
+    setShowTutor(false)
+    window.scrollTo({ top: 0 })
+  }, [leccionId])
+
   if (!leccion) {
     return (
       <div className="p-10 text-slate-300">
@@ -28,9 +34,8 @@ export function LessonPage() {
   }
 
   const modulo = getModulo(leccion.moduloId)
-  const lessonsInModule = todasLasLecciones.filter((l) => l.moduloId === leccion.moduloId)
-  const idx = lessonsInModule.findIndex((l) => l.id === leccion.id)
-  const siguiente = lessonsInModule[idx + 1]
+  const track = modulo ? getTrack(modulo.trackId) : undefined
+  const { anterior, siguiente } = getLeccionesAdyacentes(leccion.id)
 
   function finalizarQuiz(score: number) {
     setQuizScore(score)
@@ -45,10 +50,40 @@ export function LessonPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
-      <p className="text-sm text-brand-400">
-        Módulo {modulo?.numero} · {modulo?.titulo}
-      </p>
-      <h1 className="mt-1 text-2xl font-bold text-slate-100">{leccion.titulo}</h1>
+      <nav className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+        <Link to="/curso" className="hover:text-slate-300">
+          Inicio
+        </Link>
+        <span>/</span>
+        <span>{track?.titulo}</span>
+        <span>/</span>
+        <span className="text-slate-400">
+          Módulo {modulo?.numero} · {modulo?.titulo}
+        </span>
+      </nav>
+
+      <div className="mt-3 flex items-center justify-between gap-3">
+        {anterior ? (
+          <button
+            onClick={() => navigate(`/leccion/${anterior.id}`)}
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-sm text-slate-400 hover:bg-surface-raised hover:text-slate-200"
+          >
+            ← Anterior
+          </button>
+        ) : (
+          <span />
+        )}
+        {siguiente && (
+          <button
+            onClick={() => navigate(`/leccion/${siguiente.id}`)}
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-sm text-slate-400 hover:bg-surface-raised hover:text-slate-200"
+          >
+            Siguiente →
+          </button>
+        )}
+      </div>
+
+      <h1 className="mt-3 text-2xl font-bold text-slate-100">{leccion.titulo}</h1>
 
       <Seccion titulo="Objetivo">{leccion.objetivo}</Seccion>
       <Seccion titulo="¿Por qué importa?">{leccion.porQueImporta}</Seccion>
@@ -101,21 +136,29 @@ export function LessonPage() {
       <Seccion titulo="Próximo paso">
         <p className="text-slate-300">{leccion.proximoPaso}</p>
         <div className="mt-4 flex flex-wrap gap-3">
+          {anterior && (
+            <button
+              onClick={() => navigate(`/leccion/${anterior.id}`)}
+              className="rounded-md border border-surface-border px-4 py-2 text-sm text-slate-300 hover:bg-surface-raised"
+            >
+              ← Lección anterior
+            </button>
+          )}
           {siguiente ? (
             <button
               onClick={() => navigate(`/leccion/${siguiente.id}`)}
-              className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+              className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-glow hover:bg-brand-700"
             >
               Ir a la siguiente lección →
             </button>
           ) : (
-            <Link to="/curso" className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
+            <Link to="/curso" className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-glow hover:bg-brand-700">
               Volver al mapa del curso
             </Link>
           )}
           <button
             onClick={() => setShowTutor((v) => !v)}
-            className="rounded-md border border-slate-600 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800"
+            className="rounded-md border border-surface-border px-4 py-2 text-sm text-slate-300 hover:bg-surface-raised"
           >
             {showTutor ? 'Ocultar tutor IA' : '¿Dudas? Habla con el tutor IA'}
           </button>
@@ -141,5 +184,5 @@ function Seccion({ titulo, children }: { titulo: string; children: React.ReactNo
 }
 
 function CodeBlock({ code }: { code: string }) {
-  return <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 text-sm text-slate-300">{code}</pre>
+  return <pre className="overflow-x-auto rounded-lg border border-surface-border bg-surface p-3 font-mono text-sm text-slate-300">{code}</pre>
 }

@@ -22,6 +22,29 @@ export interface RunResult {
 }
 
 let pyodideSingleton: Promise<PyodideInterface> | null = null
+const paquetesCargados = new Set(['numpy', 'pandas', 'matplotlib'])
+
+// Paquetes pesados que solo se cargan si el código del ejercicio los importa,
+// para no penalizar el tiempo de carga de lecciones que no los necesitan.
+const PAQUETES_BAJO_DEMANDA: Record<string, string> = {
+  scipy: 'scipy',
+  statsmodels: 'statsmodels',
+  sklearn: 'scikit-learn',
+}
+
+async function asegurarPaquetes(py: PyodideInterface, codigo: string, onStatus: (msg: string) => void) {
+  const faltantes = Object.entries(PAQUETES_BAJO_DEMANDA)
+    .filter(([importName]) => new RegExp(`\\b(import|from)\\s+${importName}\\b`).test(codigo))
+    .map(([, paqueteName]) => paqueteName)
+    .filter((paquete) => !paquetesCargados.has(paquete))
+
+  if (faltantes.length > 0) {
+    onStatus(`Cargando ${faltantes.join(', ')}…`)
+    await py.loadPackage(faltantes)
+    faltantes.forEach((p) => paquetesCargados.add(p))
+    onStatus('')
+  }
+}
 
 function getPyodide(onStatus: (msg: string) => void): Promise<PyodideInterface> {
   if (!pyodideSingleton) {
@@ -88,6 +111,7 @@ export function usePyodide() {
     let error: string | null = null
     let figures: string[] = []
     try {
+      await asegurarPaquetes(py, codigo, setEstado)
       await py.runPythonAsync(codigo)
       const figsRaw = await py.runPythonAsync('_capturar_figuras()')
       figures = figsRaw ? (JSON.parse(figsRaw as string) as string[]) : []

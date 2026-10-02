@@ -87,14 +87,24 @@ export function Onboarding() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6">
-      <p className="mb-2 text-sm font-medium text-brand-400">Diagnóstico inicial · {paso + 1}/{PREGUNTAS.length}</p>
+      <div className="mb-6 flex items-center gap-1.5">
+        {PREGUNTAS.map((_, i) => (
+          <div
+            key={i}
+            className={`h-1.5 flex-1 rounded-full transition-colors ${i <= paso ? 'bg-brand-500' : 'bg-surface-border'}`}
+          />
+        ))}
+      </div>
+      <p className="mb-2 text-sm font-medium text-brand-400">
+        Diagnóstico inicial · {paso + 1}/{PREGUNTAS.length}
+      </p>
       <h1 className="mb-6 text-2xl font-bold text-slate-100">{pregunta.texto}</h1>
       <div className="space-y-2">
         {pregunta.opciones.map((op) => (
           <button
             key={op.valor}
             onClick={() => responder(op.valor)}
-            className="block w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-left text-slate-200 transition hover:border-brand-500 hover:bg-slate-800"
+            className="block w-full rounded-xl border border-surface-border bg-surface-raised px-4 py-3 text-left text-slate-200 transition hover:border-brand-500 hover:bg-surface"
           >
             {op.label}
           </button>
