@@ -163,7 +163,7 @@ print("Probabilidad:", round(float(salida[0]), 2))`,
 
 x = np.array([1, 2])
 W1 = np.array([[1, -1, 2], [0.5, 0.5, 1]])   # forma (2, 3)
-h = W1 @ x      # ValueError: shapes (2,3) and (2,) not aligned`,
+h = W1 @ x      # ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0`,
       explicacion:
         'En el producto matricial las dimensiones internas deben coincidir. Con `x` de tamaño 2 y `W1` de forma `(2, 3)` se escribe `x @ W1` (da 3 valores, uno por neurona). Recuerda la regla: `(n_entradas) @ (n_entradas, n_neuronas)`.',
     },

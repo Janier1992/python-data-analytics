@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { getLeccion, getLeccionesAdyacentes, getModulo, getTrack, moduloLeccionesMap } from '../content/curriculum'
-import { cargarLeccion } from '../content/lessonLoader'
+import { cargarLeccion, leccionEnCache } from '../content/lessonLoader'
 import type { Lesson } from '../types'
 import { ExerciseBlock } from './ExerciseBlock'
 import { QuizBlock } from './QuizBlock'
@@ -16,13 +16,14 @@ type EstadoCarga = { estado: 'cargando' } | { estado: 'error' } | { estado: 'lis
 export function LessonPage() {
   const { leccionId } = useParams()
   const resumen = leccionId ? getLeccion(leccionId) : undefined
+  const enCache = resumen ? leccionEnCache(resumen.moduloId, resumen.id) : undefined
   const [carga, setCarga] = useState<EstadoCarga>({ estado: 'cargando' })
   const [intento, setIntento] = useState(0)
 
   useEffect(() => {
     if (!resumen) return
     let cancelado = false
-    setCarga({ estado: 'cargando' })
+    if (!leccionEnCache(resumen.moduloId, resumen.id)) setCarga({ estado: 'cargando' })
     cargarLeccion(resumen.moduloId, resumen.id)
       .then((leccion) => {
         if (!cancelado) setCarga(leccion ? { estado: 'lista', leccion } : { estado: 'error' })
@@ -43,6 +44,9 @@ export function LessonPage() {
     )
   }
 
+  // Si el módulo ya se descargó, se muestra al instante (sin pasar por "Cargando…")
+  if (enCache) return <LessonContent key={enCache.id} leccion={enCache} />
+
   if (carga.estado === 'cargando') {
     return (
       <div className="mx-auto max-w-3xl px-6 py-10" role="status" aria-live="polite">
@@ -55,7 +59,7 @@ export function LessonPage() {
   if (carga.estado === 'error') {
     return (
       <div className="p-10 text-slate-300">
-        No se pudo cargar la lección (revisa tu conexión).{' '}
+        No se pudo cargar la lección. Revisa tu conexión; si el problema continúa, recarga la página (puede haber una versión nueva del curso).{' '}
         <button onClick={() => setIntento((n) => n + 1)} className="text-brand-400 underline">
           Reintentar
         </button>{' '}

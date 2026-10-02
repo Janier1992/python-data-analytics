@@ -57,15 +57,15 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-12', trackId: 'ruta-ciencia-datos', numero: 12, titulo: 'Fundamentos de Machine Learning', descripcion: 'scikit-learn, train/test, overfitting/underfitting, tu primer modelo.', disponible: true, lessonIds: idsDe('modulo-12') },
   { id: 'modulo-13', trackId: 'ruta-ciencia-datos', numero: 13, titulo: 'Ingeniería de características', descripcion: 'Encoding, escalado y prevención de data leakage.', disponible: true, lessonIds: idsDe('modulo-13') },
   { id: 'modulo-14', trackId: 'ruta-ciencia-datos', numero: 14, titulo: 'Aprendizaje supervisado: regresión y clasificación', descripcion: 'Métricas, validación cruzada y datos desbalanceados.', disponible: true, lessonIds: idsDe('modulo-14') },
-  { id: 'modulo-15', trackId: 'ruta-ciencia-datos', numero: 15, titulo: 'Aprendizaje no supervisado', descripcion: 'Clustering (K-Means, DBSCAN), PCA y detección de anomalías.', disponible: true, lessonIds: idsDe('modulo-15') },
-  { id: 'modulo-16', trackId: 'ruta-ciencia-datos', numero: 16, titulo: 'Series temporales y texto (NLP básico)', descripcion: 'Tendencia, estacionalidad, bolsa de palabras y TF-IDF.', disponible: true, lessonIds: idsDe('modulo-16') },
-  { id: 'modulo-17', trackId: 'ruta-ciencia-datos', numero: 17, titulo: 'Introducción a redes neuronales', descripcion: 'Neurona, backpropagation, Keras/PyTorch y un vistazo a visión artificial.', disponible: true, lessonIds: idsDe('modulo-17') },
-  { id: 'modulo-18', trackId: 'ruta-ciencia-datos', numero: 18, titulo: 'Proyecto integrador: Ciencia de Datos', descripcion: 'Proyecto de portafolio end-to-end de machine learning.', disponible: true, lessonIds: idsDe('modulo-18') },
+  { id: 'modulo-15', trackId: 'ruta-ciencia-datos', numero: 15, titulo: 'Aprendizaje no supervisado', descripcion: 'K-Means y cómo elegir k, DBSCAN (con detección de ruido) y PCA.', disponible: true, lessonIds: idsDe('modulo-15') },
+  { id: 'modulo-16', trackId: 'ruta-ciencia-datos', numero: 16, titulo: 'Series temporales y texto (NLP básico)', descripcion: 'Series temporales (resample, rezagos, validación temporal) y texto con bolsa de palabras y TF-IDF.', disponible: true, lessonIds: idsDe('modulo-16') },
+  { id: 'modulo-17', trackId: 'ruta-ciencia-datos', numero: 17, titulo: 'Introducción a redes neuronales', descripcion: 'Neurona artificial, forward pass, descenso de gradiente y redes con MLPClassifier de scikit-learn.', disponible: true, lessonIds: idsDe('modulo-17') },
+  { id: 'modulo-18', trackId: 'ruta-ciencia-datos', numero: 18, titulo: 'Proyecto integrador: Ciencia de Datos', descripcion: 'Proyecto de abandono de clientes: de los datos al modelo, con línea base, métricas y conclusiones.', disponible: true, lessonIds: idsDe('modulo-18') },
 
   // Ruta 4 — Herramientas complementarias (después de Python)
-  { id: 'modulo-19', trackId: 'ruta-herramientas', numero: 19, titulo: 'SQL para análisis de datos', descripcion: 'Bases relacionales, SELECT/JOIN, funciones de agregación y KPIs.', disponible: true, lessonIds: idsDe('modulo-19') },
+  { id: 'modulo-19', trackId: 'ruta-herramientas', numero: 19, titulo: 'SQL para análisis de datos', descripcion: 'SQLite en el navegador: SELECT, agregaciones, JOIN, CTE y consultas desde pandas.', disponible: true, lessonIds: idsDe('modulo-19') },
   { id: 'modulo-20', trackId: 'ruta-herramientas', numero: 20, titulo: 'Herramientas de desarrollo', descripcion: 'Línea de comandos, Git y GitHub para trabajo colaborativo.', disponible: true, lessonIds: idsDe('modulo-20') },
-  { id: 'modulo-21', trackId: 'ruta-herramientas', numero: 21, titulo: 'Introducción a BI y preparación profesional', descripcion: 'Dashboards interactivos y cómo presentar tu portafolio.', disponible: true, lessonIds: idsDe('modulo-21') },
+  { id: 'modulo-21', trackId: 'ruta-herramientas', numero: 21, titulo: 'Introducción a BI y preparación profesional', descripcion: 'KPIs, diseño de dashboards, storytelling con datos, portafolio en GitHub y entrevistas.', disponible: true, lessonIds: idsDe('modulo-21') },
 ]
 
 /** Resumen (id, módulo y título) de todas las lecciones, en orden global. El contenido completo se carga con `cargarLeccion`. */
