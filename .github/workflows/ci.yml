@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  contenido-y-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Python 3.12 + las mismas versiones de bibliotecas que trae Pyodide 0.26.4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tests/requirements.txt
+
+      - run: npm ci
+      - run: pip install -r tests/requirements.txt
+
+      - name: El índice de lecciones está al día
+        run: npm run content:check
+
+      - name: Tipos y build de producción
+        run: npm run build
+
+      - name: Ejercicios del curso (ejemplos, soluciones y códigos iniciales)
+        run: npm test

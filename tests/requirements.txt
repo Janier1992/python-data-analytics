@@ -1,0 +1,8 @@
+# Versiones de las bibliotecas que trae Pyodide 0.26.4 (las que ejecuta el estudiante en el navegador).
+# Excepción: matplotlib 3.5.2 no tiene ruedas para Python 3.12; se usa una versión cercana.
+numpy==1.26.4
+pandas==2.2.0
+scipy==1.12.0
+statsmodels==0.14.2
+scikit-learn==1.4.2
+matplotlib>=3.7,<3.9

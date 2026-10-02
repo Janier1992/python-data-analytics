@@ -9,6 +9,7 @@
     "content:check": "node scripts/generate-lesson-index.mjs --check",
     "build": "npm run content:index && tsc -b && vite build",
     "preview": "vite preview",
+    "test": "node scripts/test-exercises.mjs",
     "lint": "eslint ."
   },
   "dependencies": {

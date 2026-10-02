@@ -205,13 +205,13 @@ while contador < 5:
     reto: {
       id: 'm2-l3-reto',
       enunciado:
-        'Dada una lista `numeros = [4, 7, -1, 9, 3]`, recórrela con un for y usa `break` para detenerte e imprimir el primer número negativo que encuentres.',
-      codigoInicial: `numeros = [4, 7, -1, 9, 3]\nfor n in numeros:\n    if n < 0:\n        print(n)\n        # falta detener el bucle`,
-      solucion: `numeros = [4, 7, -1, 9, 3]\nfor n in numeros:\n    if n < 0:\n        print(n)\n        break`,
+        'Dada una lista `numeros = [4, 7, -1, 9, -3]` (con dos negativos), recórrela con un for y usa `break` para detenerte tras imprimir el **primer** número negativo que encuentres.',
+      codigoInicial: `numeros = [4, 7, -1, 9, -3]\nfor n in numeros:\n    if n < 0:\n        print(n)\n        # falta detener el bucle`,
+      solucion: `numeros = [4, 7, -1, 9, -3]\nfor n in numeros:\n    if n < 0:\n        print(n)\n        break`,
       pistas: ['Agrega `break` justo después del `print` dentro del `if`.'],
       validar: (stdout) => {
         const ok = stdout.trim() === '-1'
-        return { ok, mensaje: ok ? 'Correcto: -1 es el primer número negativo.' : 'Debe imprimir únicamente -1.' }
+        return { ok, mensaje: ok ? 'Correcto: -1 es el primer número negativo y el bucle se detuvo ahí.' : 'Debe imprimir únicamente -1 (usa break para no seguir hasta el -3).' }
       },
     },
     verificacion: [

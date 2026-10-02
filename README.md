@@ -67,7 +67,28 @@ Cada ejercicio (`Exercise`) tiene una función `validar(stdout) => {ok, mensaje}
 
 1. Crea `src/content/modules/moduleN.ts` exportando `export const moduleNLessons: Lesson[] = [...]`.
 2. En `src/content/curriculum.ts`, en la entrada correspondiente de `curriculum` cambia `disponible: false, lessonIds: []` por `disponible: true, lessonIds: idsDe('modulo-N')`. **No hace falta importar el módulo**: `npm run content:index` (que corren `dev` y `build`) lo detecta, lo agrega al índice y crea su carga diferida.
-3. Ejecuta `npm run content:index` y compila (`npx tsc -b`) para detectar errores de tipos antes de probar en el navegador.
+3. Ejecuta `npm run content:index`, compila (`npx tsc -b`) y prueba tus ejercicios con `npm test -- N` (ver "Pruebas automáticas") antes de probar en el navegador.
+
+## Pruebas automáticas del contenido
+
+```bash
+pip install -r tests/requirements.txt   # Python con las versiones de Pyodide 0.26.4 (usa un venv)
+npm test                                # todos los módulos (~3 min)
+npm test -- 14 19                       # solo los módulos 14 y 19
+npm test -- --strict                    # las advertencias de Python (p. ej. ConvergenceWarning) también fallan
+PYTHON=/ruta/a/python npm test          # elegir el intérprete
+```
+
+`scripts/test-exercises.mjs` ejecuta el código de **cada lección con un Python real** y comprueba:
+
+- **Estructura**: campos obligatorios, ids únicos, preguntas del quiz bien formadas (`respuestaCorrecta` en rango, sin opciones repetidas).
+- **Ejemplos**: `ejemploMinimo` y `ejemploAplicado` se ejecutan sin errores.
+- **Soluciones**: la `solucion` de la práctica guiada y del reto se ejecuta y **pasa su `validar`**.
+- **Códigos iniciales**: el `codigoInicial` **no** pasa `validar` (un ejercicio no debe resolverse solo).
+
+El workflow `.github/workflows/ci.yml` corre `content:check`, `npm run build` y `npm test` en cada push y Pull Request. Al crearse, esta prueba detectó 8 errores en módulos anteriores (un validador con el valor equivocado y 7 códigos iniciales que ya pasaban), ya corregidos.
+
+⚠️ Las pruebas no ejecutan Pyodide: usan CPython con las mismas versiones de numpy, pandas, scikit-learn, scipy y statsmodels, pero matplotlib puede diferir ligeramente (3.5.2 en Pyodide, ≥3.7 en las pruebas) y los gráficos se validan por estructura, no por imagen.
 
 ### Cuidado con `$` dentro de template literals multilínea
 
