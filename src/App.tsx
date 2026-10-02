@@ -12,6 +12,8 @@ import { Spinner } from './components/ui'
 
 // La página de lección arrastra CodeMirror y react-markdown: se descarga solo al abrir una lección.
 const LessonPage = lazy(() => import('./components/LessonPage').then((m) => ({ default: m.LessonPage })))
+// La guía de referencia (con sus 8 colecciones) también se descarga solo cuando se abre.
+const ReferenciaPage = lazy(() => import('./components/referencia/ReferenciaPage').then((m) => ({ default: m.ReferenciaPage })))
 
 function Cargando() {
   return (
@@ -65,6 +67,22 @@ export default function App() {
         element={
           <Protegida>
             <LessonPage />
+          </Protegida>
+        }
+      />
+      <Route
+        path="/referencia"
+        element={
+          <Protegida>
+            <ReferenciaPage />
+          </Protegida>
+        }
+      />
+      <Route
+        path="/referencia/:coleccionId"
+        element={
+          <Protegida>
+            <ReferenciaPage />
           </Protegida>
         }
       />

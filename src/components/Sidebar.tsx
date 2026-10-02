@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 import { curriculum, getLeccion, modulosPorTrack, todasLasLecciones, tracks } from '../content/curriculum'
 import { useProgressStore } from '../state/progressStore'
 import { Logo } from './ui'
@@ -21,6 +21,28 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <Link to="/curso" onClick={onNavigate} className="flex items-center gap-2 border-b border-surface-border px-5 py-4">
         <Logo />
       </Link>
+
+      <div className="space-y-1 border-b border-surface-border px-3 py-3">
+        {[
+          { to: '/curso', etiqueta: 'Mi ruta de aprendizaje', icono: '🧭', fin: true },
+          { to: '/referencia', etiqueta: 'Guía de referencia', icono: '📚', fin: false },
+        ].map((enlace) => (
+          <NavLink
+            key={enlace.to}
+            to={enlace.to}
+            end={enlace.fin}
+            onClick={onNavigate}
+            className={({ isActive }) =>
+              `flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 ${
+                isActive ? 'bg-brand-600/20 text-brand-200' : 'text-slate-300 hover:bg-surface-raised hover:text-white'
+              }`
+            }
+          >
+            <span aria-hidden="true">{enlace.icono}</span>
+            {enlace.etiqueta}
+          </NavLink>
+        ))}
+      </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-4">
         {tracks.map((track) => (

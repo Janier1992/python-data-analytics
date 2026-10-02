@@ -12,55 +12,14 @@
 // Uso:  npm test                       (todos los módulos)
 //       npm test -- 14 19              (solo los módulos 14 y 19)
 //       npm test -- --strict           (las advertencias de Python, p. ej. ConvergenceWarning, también fallan)
-import { spawn } from 'node:child_process'
-import { mkdtempSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import path from 'node:path'
 import { cargarLecciones, listarModulos } from './lib/cargar-modulos.mjs'
+import { PYTHON, conConcurrencia, ejecutarPython, ultimasLineas } from './lib/python-runner.mjs'
 
-const PYTHON = process.env.PYTHON || 'python3'
-const TIEMPO_MAX_MS = 120_000
 const CONCURRENCIA = Math.max(2, Number(process.env.TEST_CONCURRENCY) || 4)
 
 const args = process.argv.slice(2)
 const estricto = args.includes('--strict')
 const filtro = args.filter((a) => /^\d+$/.test(a)).map(Number)
-
-/** Ejecuta código Python en una carpeta temporal aislada y devuelve { codigo, stdout, stderr }. */
-function ejecutarPython(codigo) {
-  return new Promise((resolve) => {
-    const cwd = mkdtempSync(path.join(tmpdir(), 'curso-test-'))
-    const hijo = spawn(PYTHON, ['-c', codigo], {
-      cwd,
-      env: { ...process.env, MPLBACKEND: 'Agg', PYTHONIOENCODING: 'utf-8', PYTHONWARNINGS: 'default' },
-      stdio: ['pipe', 'pipe', 'pipe'],
-    })
-    let stdout = ''
-    let stderr = ''
-    let terminado = false
-    const limpiar = () => rmSync(cwd, { recursive: true, force: true })
-    const temporizador = setTimeout(() => {
-      hijo.kill('SIGKILL')
-    }, TIEMPO_MAX_MS)
-    hijo.stdout.on('data', (d) => (stdout += d))
-    hijo.stderr.on('data', (d) => (stderr += d))
-    hijo.stdin.end() // sin entrada: input() falla en vez de colgarse
-    hijo.on('close', (codigoSalida, senal) => {
-      if (terminado) return
-      terminado = true
-      clearTimeout(temporizador)
-      limpiar()
-      resolve({ codigo: senal ? `señal ${senal} (¿tiempo excedido?)` : codigoSalida, stdout, stderr: stderr.replace(RUIDO_PYARROW, '').replace(RUIDO_MPLSTYLE, '') })
-    })
-    hijo.on('error', (e) => {
-      if (terminado) return
-      terminado = true
-      clearTimeout(temporizador)
-      limpiar()
-      resolve({ codigo: -1, stdout, stderr: `${stderr}\n${e.message}` })
-    })
-  })
-}
 
 function validar(ejercicio, stdout) {
   try {
@@ -69,14 +28,6 @@ function validar(ejercicio, stdout) {
     return { ok: false, mensaje: `validar lanzó un error: ${e.message}` }
   }
 }
-
-// pandas 2.2 avisa en cada import de que pyarrow será obligatorio en pandas 3; no es del contenido del curso.
-const RUIDO_PYARROW = /^.*DeprecationWarning:\s*\nPyarrow will become[\s\S]*?issues\/54466\s*\n/gm
-
-// matplotlib 3.8 + pyparsing reciente avisan de un estilo interno de matplotlib; tampoco es del curso.
-const RUIDO_MPLSTYLE = /^In .*\.mplstyle: 'parseString' deprecated.*\n/gm
-
-const ultimasLineas = (texto, n = 6) => texto.trim().split('\n').slice(-n).join('\n')
 
 /** Comprobaciones de estructura (rápidas, sin Python). */
 function comprobarEstructura(l, numeroModulo, fallos) {
@@ -140,20 +91,6 @@ function evaluar(tarea, r) {
     return { ok: false, detalle: `el código inicial ya pasa validar sin que el estudiante haga nada (salida: ${JSON.stringify(r.stdout.trim().slice(0, 100))})`, advertencias }
   }
   return { ok: true, advertencias }
-}
-
-async function conConcurrencia(items, limite, trabajo) {
-  const resultados = new Array(items.length)
-  let siguiente = 0
-  await Promise.all(
-    Array.from({ length: Math.min(limite, items.length) }, async () => {
-      while (siguiente < items.length) {
-        const i = siguiente++
-        resultados[i] = await trabajo(items[i])
-      }
-    }),
-  )
-  return resultados
 }
 
 const inicio = Date.now()
