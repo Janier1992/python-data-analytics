@@ -36,7 +36,21 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 
 ### Nota de rendimiento
 
-El bundle principal ronda 1 MB (gzip ~320 KB) por CodeMirror + react-markdown + el contenido de las lecciones. El panel de Tutor IA (`@anthropic-ai/sdk`) ya está separado en su propio chunk vía `React.lazy`. Si el bundle sigue creciendo mucho al agregar más módulos, considerar code-splitting por ruta/módulo con `React.lazy` en las rutas de React Router.
+El contenido se carga **bajo demanda** (code-splitting), así que la carga inicial es pequeña:
+
+| Qué se descarga | Cuándo | Tamaño (gzip) |
+|---|---|---|
+| App + `vendor-react` | Al abrir la app (dashboard) | ~195 KB (~63 KB) |
+| `LessonPage`, `vendor-markdown`, `vendor-editor` (CodeMirror) | Al abrir la primera lección | ~600 KB (~200 KB), se cachean aparte |
+| `moduleN` (contenido de un módulo) | Al abrir una lección de ese módulo | 8–34 KB (3–11 KB) cada uno |
+| Tutor IA (`@anthropic-ai/sdk`) | Solo si el estudiante lo abre | ~52 KB (~15 KB) |
+
+Antes del code-splitting, todo iba en un único bundle de ~1 MB (~320 KB gzip). Cómo funciona:
+
+- `src/content/generated.ts` (**generado**, no editar) contiene el índice ligero de lecciones (`id`, `moduloId`, `titulo`) para Sidebar/Dashboard y un `import()` dinámico por módulo. Lo produce `scripts/generate-lesson-index.mjs`, que se ejecuta solo en `npm run dev` y `npm run build`.
+- `src/content/lessonLoader.ts` descarga y cachea el módulo cuando se abre una lección; `LessonPage` muestra "Cargando lección…" y permite reintentar si falla la red.
+- `vite.config.ts` agrupa las dependencias pesadas en chunks propios (`vendor-react`, `vendor-markdown`, `vendor-editor`).
+- `npm run content:check` falla si `generated.ts` quedó desactualizado.
 
 ## Referencia metodológica (carpeta `docs/`)
 
@@ -51,8 +65,8 @@ Cada ejercicio (`Exercise`) tiene una función `validar(stdout) => {ok, mensaje}
 ## Cómo añadir un módulo/lección nueva
 
 1. Crea `src/content/modules/moduleN.ts` exportando `export const moduleNLessons: Lesson[] = [...]`.
-2. En `src/content/curriculum.ts`: importa el array, agrégalo al spread de `todasLasLecciones`, y en la entrada correspondiente de `curriculum` cambia `disponible: false, lessonIds: []` por `disponible: true, lessonIds: moduleNLessons.map((l) => l.id)`.
-3. Compila (`npx tsc -b`) para detectar errores de tipos antes de probar en el navegador.
+2. En `src/content/curriculum.ts`, en la entrada correspondiente de `curriculum` cambia `disponible: false, lessonIds: []` por `disponible: true, lessonIds: idsDe('modulo-N')`. **No hace falta importar el módulo**: `npm run content:index` (que corren `dev` y `build`) lo detecta, lo agrega al índice y crea su carga diferida.
+3. Ejecuta `npm run content:index` y compila (`npx tsc -b`) para detectar errores de tipos antes de probar en el navegador.
 
 ### Cuidado con `$` dentro de template literals multilínea
 

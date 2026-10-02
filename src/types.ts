@@ -46,6 +46,9 @@ export interface Lesson {
   conceptos: string[] // conceptos clave que esta lección enseña (para mastery tracking)
 }
 
+/** Datos mínimos de una lección para navegación (el contenido completo se carga bajo demanda). */
+export type LessonSummary = Pick<Lesson, 'id' | 'moduloId' | 'titulo'>
+
 export interface Track {
   id: string
   orden: number

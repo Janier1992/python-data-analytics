@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { Navigate, Route, Routes, Link } from 'react-router-dom'
 import { useProgressStore } from './state/progressStore'
 import { Onboarding } from './components/Onboarding'
 import { Dashboard } from './components/Dashboard'
-import { LessonPage } from './components/LessonPage'
 import { Sidebar } from './components/Sidebar'
+
+// La página de lección arrastra CodeMirror y react-markdown: se descarga solo al abrir una lección.
+const LessonPage = lazy(() => import('./components/LessonPage').then((m) => ({ default: m.LessonPage })))
 
 function Layout({ children }: { children: React.ReactNode }) {
   const resetProgreso = useProgressStore((s) => s.resetProgreso)
@@ -84,7 +86,9 @@ export default function App() {
         element={
           onboardingCompletado ? (
             <Layout>
-              <LessonPage />
+              <Suspense fallback={<p className="p-10 text-sm text-slate-500">Cargando…</p>}>
+                <LessonPage />
+              </Suspense>
             </Layout>
           ) : (
             <Navigate to="/onboarding" replace />

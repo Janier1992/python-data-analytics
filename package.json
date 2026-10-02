@@ -4,8 +4,10 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "npm run content:index && vite",
+    "content:index": "node scripts/generate-lesson-index.mjs",
+    "content:check": "node scripts/generate-lesson-index.mjs --check",
+    "build": "npm run content:index && tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint ."
   },

@@ -2,16 +2,74 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { getLeccion, getLeccionesAdyacentes, getModulo, getTrack, moduloLeccionesMap } from '../content/curriculum'
+import { cargarLeccion } from '../content/lessonLoader'
+import type { Lesson } from '../types'
 import { ExerciseBlock } from './ExerciseBlock'
 import { QuizBlock } from './QuizBlock'
 import { useProgressStore } from '../state/progressStore'
 
 const AITutorPanel = lazy(() => import('./AITutorPanel').then((m) => ({ default: m.AITutorPanel })))
 
+type EstadoCarga = { estado: 'cargando' } | { estado: 'error' } | { estado: 'lista'; leccion: Lesson }
+
+/** Resuelve la lección de la URL y descarga su contenido (chunk del módulo) bajo demanda. */
 export function LessonPage() {
   const { leccionId } = useParams()
+  const resumen = leccionId ? getLeccion(leccionId) : undefined
+  const [carga, setCarga] = useState<EstadoCarga>({ estado: 'cargando' })
+  const [intento, setIntento] = useState(0)
+
+  useEffect(() => {
+    if (!resumen) return
+    let cancelado = false
+    setCarga({ estado: 'cargando' })
+    cargarLeccion(resumen.moduloId, resumen.id)
+      .then((leccion) => {
+        if (!cancelado) setCarga(leccion ? { estado: 'lista', leccion } : { estado: 'error' })
+      })
+      .catch(() => {
+        if (!cancelado) setCarga({ estado: 'error' })
+      })
+    return () => {
+      cancelado = true
+    }
+  }, [resumen?.id, resumen?.moduloId, intento])
+
+  if (!resumen) {
+    return (
+      <div className="p-10 text-slate-300">
+        Lección no encontrada. <Link to="/curso" className="text-brand-400 underline">Volver al curso</Link>
+      </div>
+    )
+  }
+
+  if (carga.estado === 'cargando') {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-10" role="status" aria-live="polite">
+        <p className="text-sm text-slate-500">Cargando lección…</p>
+        <h1 className="mt-3 text-2xl font-bold text-slate-100">{resumen.titulo}</h1>
+      </div>
+    )
+  }
+
+  if (carga.estado === 'error') {
+    return (
+      <div className="p-10 text-slate-300">
+        No se pudo cargar la lección (revisa tu conexión).{' '}
+        <button onClick={() => setIntento((n) => n + 1)} className="text-brand-400 underline">
+          Reintentar
+        </button>{' '}
+        · <Link to="/curso" className="text-brand-400 underline">Volver al curso</Link>
+      </div>
+    )
+  }
+
+  return <LessonContent key={carga.leccion.id} leccion={carga.leccion} />
+}
+
+function LessonContent({ leccion }: { leccion: Lesson }) {
+  const leccionId = leccion.id
   const navigate = useNavigate()
-  const leccion = leccionId ? getLeccion(leccionId) : undefined
   const marcarLeccionCompletada = useProgressStore((s) => s.marcarLeccionCompletada)
   const registrarQuiz = useProgressStore((s) => s.registrarQuiz)
   const actualizarDominio = useProgressStore((s) => s.actualizarDominio)
@@ -24,14 +82,6 @@ export function LessonPage() {
     setShowTutor(false)
     window.scrollTo({ top: 0 })
   }, [leccionId])
-
-  if (!leccion) {
-    return (
-      <div className="p-10 text-slate-300">
-        Lección no encontrada. <Link to="/curso" className="text-brand-400 underline">Volver al curso</Link>
-      </div>
-    )
-  }
 
   const modulo = getModulo(leccion.moduloId)
   const track = modulo ? getTrack(modulo.trackId) : undefined
