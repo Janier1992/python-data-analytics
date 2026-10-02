@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function ExerciseBlock({ exercise, lessonId, titulo }: Props) {
-  const { listo, estado, ejecutando, ejecutar } = usePyodide()
+  const { listo, estado, errorCarga, reintentar, ejecutando, ejecutar } = usePyodide()
   const [codigo, setCodigo] = useState(exercise.codigoInicial)
   const [resultado, setResultado] = useState<RunResult | null>(null)
   const [feedback, setFeedback] = useState<{ ok: boolean; mensaje: string } | null>(null)
@@ -43,7 +43,18 @@ export function ExerciseBlock({ exercise, lessonId, titulo }: Props) {
       <h4 className="font-semibold text-slate-100">{titulo}</h4>
       <p className="text-slate-300">{exercise.enunciado}</p>
 
-      {!listo && <p className="text-sm text-amber-400">{estado}</p>}
+      {!listo && !errorCarga && <p className="text-sm text-amber-400">{estado}</p>}
+      {errorCarga && (
+        <div role="alert" className="flex flex-wrap items-center gap-3 rounded-md border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300">
+          <span className="min-w-0 flex-1">{errorCarga}</span>
+          <button
+            onClick={reintentar}
+            className="shrink-0 rounded-md border border-red-400/60 px-3 py-1.5 font-medium text-red-200 hover:bg-red-500/20"
+          >
+            Reintentar
+          </button>
+        </div>
+      )}
 
       <CodeEditor value={codigo} onChange={setCodigo} />
 

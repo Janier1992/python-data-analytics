@@ -41,23 +41,73 @@ async function asegurarPaquetes(py: PyodideInterface, codigo: string, onStatus: 
 
   if (faltantes.length > 0) {
     onStatus(`Cargando ${faltantes.join(', ')}…`)
-    await py.loadPackage(faltantes)
+    try {
+      await py.loadPackage(faltantes)
+    } catch {
+      throw new Error(
+        `No se pudo descargar el paquete de Python necesario (${faltantes.join(', ')}). Revisa tu conexión y vuelve a ejecutar el código.`,
+      )
+    } finally {
+      onStatus('')
+    }
     faltantes.forEach((p) => paquetesCargados.add(p))
-    onStatus('')
   }
 }
 
-function getPyodide(onStatus: (msg: string) => void): Promise<PyodideInterface> {
-  if (!pyodideSingleton) {
-    pyodideSingleton = (async () => {
-      onStatus('Cargando el intérprete de Python (Pyodide)…')
-      const pyodide = await window.loadPyodide({
-        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/',
-      })
-      onStatus('Cargando numpy, pandas y matplotlib…')
-      await pyodide.loadPackage(['numpy', 'pandas', 'matplotlib'])
-      // Configura matplotlib en modo Agg y helper para capturar figuras como PNG base64
-      await pyodide.runPythonAsync(`
+const PYODIDE_URL_BASE = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/'
+const TIEMPO_MAX_CARGA_MS = 180_000
+
+/** Error con un mensaje listo para mostrarse al estudiante. */
+class ErrorPyodide extends Error {}
+
+const MSG_SIN_CDN =
+  'No se pudo descargar el intérprete de Python (Pyodide). Revisa tu conexión a internet o si un bloqueador de contenido o un firewall impide el acceso a cdn.jsdelivr.net, y vuelve a intentarlo.'
+
+// Pyodide no se incluye en index.html (bloquearía el primer render): se descarga solo cuando
+// un ejercicio lo necesita. Si el script falla, se puede reintentar.
+function cargarScriptPyodide(): Promise<void> {
+  if (typeof window.loadPyodide === 'function') return Promise.resolve()
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.src = `${PYODIDE_URL_BASE}pyodide.js`
+    script.async = true
+    script.onload = () =>
+      typeof window.loadPyodide === 'function' ? resolve() : reject(new ErrorPyodide(MSG_SIN_CDN))
+    script.onerror = () => {
+      script.remove() // permite volver a insertar el script en el reintento
+      reject(new ErrorPyodide(MSG_SIN_CDN))
+    }
+    document.head.appendChild(script)
+  })
+}
+
+function conTiempoMaximo<T>(promesa: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const temporizador = setTimeout(
+      () => reject(new ErrorPyodide('La carga del intérprete de Python tardó demasiado. Revisa tu conexión y vuelve a intentarlo.')),
+      ms,
+    )
+    promesa.then(
+      (v) => {
+        clearTimeout(temporizador)
+        resolve(v)
+      },
+      (e) => {
+        clearTimeout(temporizador)
+        reject(e)
+      },
+    )
+  })
+}
+
+async function inicializarPyodide(onStatus: (msg: string) => void): Promise<PyodideInterface> {
+  onStatus('Cargando el intérprete de Python (Pyodide)…')
+  await cargarScriptPyodide()
+  const pyodide = await window.loadPyodide({ indexURL: PYODIDE_URL_BASE })
+  onStatus('Cargando numpy, pandas y matplotlib…')
+  await pyodide.loadPackage(['numpy', 'pandas', 'matplotlib'])
+  // Configura matplotlib en modo Agg y helper para capturar figuras como PNG base64
+  await pyodide.runPythonAsync(`
 import matplotlib
 matplotlib.use("AGG")
 import matplotlib.pyplot as plt
@@ -74,30 +124,87 @@ def _capturar_figuras():
     plt.close("all")
     return json.dumps(figs)
 `)
-      onStatus('')
-      return pyodide
-    })()
+  onStatus('')
+  return pyodide
+}
+
+// El mensaje de progreso de la carga se difunde a todos los ejercicios abiertos.
+let estadoCarga = ''
+const suscriptoresEstado = new Set<(msg: string) => void>()
+
+function publicarEstado(msg: string) {
+  estadoCarga = msg
+  suscriptoresEstado.forEach((notificar) => notificar(msg))
+}
+
+function getPyodide(): Promise<PyodideInterface> {
+  if (!pyodideSingleton) {
+    const carga = conTiempoMaximo(inicializarPyodide(publicarEstado), TIEMPO_MAX_CARGA_MS)
+    pyodideSingleton = carga
+    // Si falla, se descarta para que un reintento vuelva a empezar desde cero
+    carga.catch(() => {
+      if (pyodideSingleton === carga) pyodideSingleton = null
+    })
   }
   return pyodideSingleton
+}
+
+// Varios ejercicios comparten el mismo intérprete: un reintento desde uno actualiza a todos.
+const suscriptoresReintento = new Set<() => void>()
+
+function reiniciarCarga() {
+  pyodideSingleton = null
+  estadoCarga = ''
+  suscriptoresReintento.forEach((notificar) => notificar())
+}
+
+function mensajeDeError(e: unknown): string {
+  if (e instanceof ErrorPyodide) return e.message
+  return 'No se pudo iniciar el intérprete de Python. Vuelve a intentarlo; si el problema continúa, recarga la página.'
 }
 
 export function usePyodide() {
   const [listo, setListo] = useState(false)
   const [estado, setEstado] = useState('Iniciando…')
+  const [errorCarga, setErrorCarga] = useState<string | null>(null)
   const [ejecutando, setEjecutando] = useState(false)
+  const [intento, setIntento] = useState(0)
   const pyodideRef = useRef<PyodideInterface | null>(null)
 
   useEffect(() => {
+    const notificar = () => setIntento((n) => n + 1)
+    suscriptoresReintento.add(notificar)
+    suscriptoresEstado.add(setEstado)
+    return () => {
+      suscriptoresReintento.delete(notificar)
+      suscriptoresEstado.delete(setEstado)
+    }
+  }, [])
+
+  useEffect(() => {
     let activo = true
-    getPyodide(setEstado).then((py) => {
-      if (!activo) return
-      pyodideRef.current = py
-      setListo(true)
-    })
+    setErrorCarga(null)
+    setEstado(estadoCarga || 'Iniciando…')
+    getPyodide().then(
+      (py) => {
+        if (!activo) return
+        pyodideRef.current = py
+        setListo(true)
+      },
+      (e) => {
+        if (!activo) return
+        pyodideRef.current = null
+        setListo(false)
+        setEstado('')
+        setErrorCarga(mensajeDeError(e))
+      },
+    )
     return () => {
       activo = false
     }
-  }, [])
+  }, [intento])
+
+  const reintentar = useCallback(() => reiniciarCarga(), [])
 
   const ejecutar = useCallback(async (codigo: string): Promise<RunResult> => {
     const py = pyodideRef.current
@@ -124,5 +231,5 @@ export function usePyodide() {
     return { stdout, stderr, error, figures }
   }, [])
 
-  return { listo, estado, ejecutando, ejecutar }
+  return { listo, estado, errorCarga, reintentar, ejecutando, ejecutar }
 }
