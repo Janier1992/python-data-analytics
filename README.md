@@ -15,16 +15,15 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 | **1. Fundamentos de Python** | 0–5 | ✅ Completo (6 módulos, ~23 lecciones) |
 | **2. Analista de Datos con Python** | 6–11 | ✅ Completo (6 módulos: NumPy/pandas, limpieza, agregación, visualización, EDA+estadística, proyecto integrador) |
 | **3. Ciencia de Datos y Machine Learning** | 12–18 | ✅ Completo (7 módulos: ML fundamentos, feature engineering, supervisado, no supervisado, series temporales + NLP, redes neuronales y proyecto integrador de abandono de clientes) |
-| **4. Herramientas complementarias** | 19–21 | 🔶 En progreso: **19 (SQL con SQLite en el navegador) listo**. Faltan 20 (línea de comandos/Git) y 21 (BI + preparación profesional) |
+| **4. Herramientas complementarias** | 19–21 | 🔶 En progreso: **19 (SQL con SQLite) y 20 (línea de comandos y Git, con ejercicios que reproducen la lógica en Python) listos**. Falta 21 (BI + preparación profesional) |
 
 Cada módulo disponible tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
 
 ### Próximos pasos (en orden)
 
-1. Módulo 20 — Línea de comandos y Git.
-2. Módulo 21 — BI y preparación profesional (cierre del curso).
-3. Decidir y ejecutar el despliegue (Vercel/Netlify/GitHub Pages — el build es 100% estático).
-4. Pulir accesibilidad y revisar bundle size (ver nota de rendimiento abajo).
+1. Módulo 21 — BI y preparación profesional (cierre del curso).
+2. Decidir y ejecutar el despliegue (Vercel/Netlify/GitHub Pages — el build es 100% estático).
+3. Pulir accesibilidad y revisar bundle size (ver nota de rendimiento abajo).
 
 ## Arquitectura
 

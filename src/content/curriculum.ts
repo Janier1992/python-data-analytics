@@ -19,6 +19,7 @@ import { module16Lessons } from './modules/module16'
 import { module17Lessons } from './modules/module17'
 import { module18Lessons } from './modules/module18'
 import { module19Lessons } from './modules/module19'
+import { module20Lessons } from './modules/module20'
 
 // Estructura del curso inspirada en la metodología de bootcamps profesionales
 // de analítica/ciencia de datos (progresión por sprints con proyecto de
@@ -79,7 +80,7 @@ export const curriculum: ModuleMeta[] = [
 
   // Ruta 4 — Herramientas complementarias (después de Python)
   { id: 'modulo-19', trackId: 'ruta-herramientas', numero: 19, titulo: 'SQL para análisis de datos', descripcion: 'Bases relacionales, SELECT/JOIN, funciones de agregación y KPIs.', disponible: true, lessonIds: module19Lessons.map((l) => l.id) },
-  { id: 'modulo-20', trackId: 'ruta-herramientas', numero: 20, titulo: 'Herramientas de desarrollo', descripcion: 'Línea de comandos, Git y GitHub para trabajo colaborativo.', disponible: false, lessonIds: [] },
+  { id: 'modulo-20', trackId: 'ruta-herramientas', numero: 20, titulo: 'Herramientas de desarrollo', descripcion: 'Línea de comandos, Git y GitHub para trabajo colaborativo.', disponible: true, lessonIds: module20Lessons.map((l) => l.id) },
   { id: 'modulo-21', trackId: 'ruta-herramientas', numero: 21, titulo: 'Introducción a BI y preparación profesional', descripcion: 'Dashboards interactivos y cómo presentar tu portafolio.', disponible: false, lessonIds: [] },
 ]
 
@@ -104,6 +105,7 @@ export const todasLasLecciones: Lesson[] = [
   ...module17Lessons,
   ...module18Lessons,
   ...module19Lessons,
+  ...module20Lessons,
 ]
 
 export function getLeccion(id: string): Lesson | undefined {
