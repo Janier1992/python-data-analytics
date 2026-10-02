@@ -1,25 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { iniciales } from '../lib/auth'
 import { useAccountStore, useCuentaActual } from '../state/accountStore'
 import { useProgressStore } from '../state/progressStore'
-import { Boton, Campo, Dialogo } from './ui'
+import { EditarNombreDialogo } from './EditarNombreDialogo'
+import { Boton, Dialogo } from './ui'
 
 type Accion = 'nombre' | 'reiniciar' | 'eliminar' | null
 
 export function UserMenu() {
   const cuenta = useCuentaActual()
   const cerrarSesion = useAccountStore((s) => s.cerrarSesion)
-  const actualizarNombre = useAccountStore((s) => s.actualizarNombre)
   const eliminarCuenta = useAccountStore((s) => s.eliminarCuenta)
   const resetProgreso = useProgressStore((s) => s.resetProgreso)
   const navigate = useNavigate()
 
   const [abierto, setAbierto] = useState(false)
   const [accion, setAccion] = useState<Accion>(null)
-  const [nombre, setNombre] = useState('')
-  const [errorNombre, setErrorNombre] = useState<string | undefined>()
   const contenedorRef = useRef<HTMLDivElement>(null)
   const cerrarDialogo = useCallback(() => setAccion(null), [])
 
@@ -41,21 +38,7 @@ export function UserMenu() {
 
   function abrir(a: Accion) {
     setAbierto(false)
-    if (a === 'nombre') {
-      setNombre(cuenta!.nombre)
-      setErrorNombre(undefined)
-    }
     setAccion(a)
-  }
-
-  function guardarNombre(e: FormEvent) {
-    e.preventDefault()
-    const r = actualizarNombre(nombre)
-    if (!r.ok) {
-      setErrorNombre(r.error)
-      return
-    }
-    setAccion(null)
   }
 
   async function salir() {
@@ -113,22 +96,7 @@ export function UserMenu() {
         </div>
       )}
 
-      <Dialogo
-        abierto={accion === 'nombre'}
-        titulo="Editar mi nombre"
-        descripcion="Este es el nombre completo que aparecerá en tu certificado."
-        onCerrar={cerrarDialogo}
-      >
-        <form onSubmit={guardarNombre} className="space-y-4">
-          <Campo etiqueta="Nombre completo" autoComplete="name" value={nombre} onChange={(e) => setNombre(e.target.value)} error={errorNombre} />
-          <div className="flex justify-end gap-2">
-            <Boton variante="fantasma" onClick={cerrarDialogo}>
-              Cancelar
-            </Boton>
-            <Boton type="submit">Guardar</Boton>
-          </div>
-        </form>
-      </Dialogo>
+      <EditarNombreDialogo abierto={accion === 'nombre'} onCerrar={cerrarDialogo} />
 
       <Dialogo
         abierto={accion === 'reiniciar'}

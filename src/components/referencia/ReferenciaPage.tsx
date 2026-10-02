@@ -148,7 +148,7 @@ export function ReferenciaPage() {
           Buscar en la guía de referencia
         </label>
         <div className="relative">
-          <svg className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <svg className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
           </svg>
@@ -168,7 +168,7 @@ export function ReferenciaPage() {
               Borrar
             </button>
           ) : (
-            <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-surface-border px-1.5 py-0.5 text-xs text-slate-500 sm:block">/</kbd>
+            <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-surface-border px-1.5 py-0.5 text-xs text-slate-400 sm:block">/</kbd>
           )}
         </div>
 
@@ -232,7 +232,7 @@ export function ReferenciaPage() {
                 <Link
                   key={c.id}
                   to={`/referencia/${c.id}`}
-                  className="group rounded-2xl border border-surface-border bg-surface-raised/60 p-5 transition hover:border-brand-500/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
+                  className="group min-w-0 rounded-2xl border border-surface-border bg-surface-raised/60 p-5 transition hover:border-brand-500/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
                 >
                   <div className="flex items-center gap-3">
                     <span aria-hidden="true" className="text-2xl">{c.icono}</span>
@@ -240,7 +240,7 @@ export function ReferenciaPage() {
                     <span className="ml-auto rounded-full bg-surface px-2.5 py-0.5 text-xs text-slate-400">{c.entradas.length} entradas</span>
                   </div>
                   <p className="mt-2 text-sm text-slate-400">{c.descripcion}</p>
-                  <p className="mt-3 truncate font-mono text-xs text-slate-500">
+                  <p className="mt-3 truncate font-mono text-xs text-slate-400">
                     {c.entradas.slice(0, 4).map((e) => e.nombre.split(' / ')[0]).join(' · ')}…
                   </p>
                 </Link>
@@ -260,7 +260,7 @@ export function ReferenciaPage() {
               <nav aria-label="Secciones de la colección" className="mt-4 flex flex-wrap gap-2">
                 {[...grupos.keys()].map((g) => (
                   <a key={g} href={`#grupo-${slug(g)}`} className="rounded-full border border-surface-border px-3 py-1 text-xs text-slate-300 hover:border-slate-500">
-                    {g} <span className="text-slate-500">{grupos.get(g)!.length}</span>
+                    {g} <span className="text-slate-400">{grupos.get(g)!.length}</span>
                   </a>
                 ))}
               </nav>

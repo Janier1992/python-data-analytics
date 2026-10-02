@@ -42,7 +42,7 @@ export function EjemploEjecutable({ codigo, lenguaje }: Props) {
           Restablecer
         </Boton>
         <BotonCopiar texto={texto} etiqueta="Copiar código" />
-        <span className="hidden text-xs text-slate-500 sm:inline">Ctrl + Enter para ejecutar · puedes editar el código</span>
+        <span className="hidden text-xs text-slate-400 sm:inline">Ctrl + Enter para ejecutar · puedes editar el código</span>
       </div>
       {!listo && !errorCarga && <p className="text-xs text-amber-400" role="status">{estado || 'Preparando Python…'}</p>}
       {errorCarga && (

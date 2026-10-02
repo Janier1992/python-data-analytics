@@ -55,7 +55,7 @@ export function EntradaCard({ entrada, coleccion, abierta, onAlternar, palabras,
           aria-controls={panelId}
           className="flex w-full items-start gap-3 rounded-xl px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
         >
-          <span aria-hidden="true" className={`mt-1 text-xs text-slate-500 transition-transform ${abierta ? 'rotate-90' : ''}`}>
+          <span aria-hidden="true" className={`mt-1 text-xs text-slate-400 transition-transform ${abierta ? 'rotate-90' : ''}`}>
             ▶
           </span>
           <span className="min-w-0 flex-1">
@@ -78,7 +78,7 @@ export function EntradaCard({ entrada, coleccion, abierta, onAlternar, palabras,
         <div id={panelId} className="space-y-4 border-t border-surface-border px-4 pb-4 pt-3">
           {entrada.firma && (
             <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Sintaxis</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Sintaxis</p>
               <pre className="overflow-x-auto rounded-lg border border-surface-border bg-surface p-3 font-mono text-sm text-emerald-300">{entrada.firma}</pre>
             </div>
           )}
@@ -87,7 +87,7 @@ export function EntradaCard({ entrada, coleccion, abierta, onAlternar, palabras,
 
           {entrada.parametros && entrada.parametros.length > 0 && (
             <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Parámetros</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Parámetros</p>
               <div className="overflow-x-auto rounded-lg border border-surface-border">
                 <table className="w-full min-w-[28rem] text-left text-sm">
                   <thead className="bg-surface text-xs text-slate-400">
@@ -112,7 +112,7 @@ export function EntradaCard({ entrada, coleccion, abierta, onAlternar, palabras,
           )}
 
           <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Ejemplo</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Ejemplo</p>
             {lenguaje === 'bash' ? (
               <div className="space-y-2">
                 <pre className="overflow-x-auto rounded-lg border border-surface-border bg-surface p-3 font-mono text-sm text-slate-200">{entrada.ejemplo}</pre>
@@ -127,7 +127,7 @@ export function EntradaCard({ entrada, coleccion, abierta, onAlternar, palabras,
 
           {entrada.salida !== undefined && lenguaje !== 'bash' && (
             <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Resultado del ejemplo</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Resultado del ejemplo</p>
               <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-surface-border bg-surface p-3 font-mono text-sm text-slate-300">{entrada.salida}</pre>
             </div>
           )}
@@ -147,7 +147,7 @@ export function EntradaCard({ entrada, coleccion, abierta, onAlternar, palabras,
             <div className="flex flex-col gap-2 text-sm sm:flex-row sm:flex-wrap sm:items-start sm:gap-x-6">
               {entrada.relacionadas && entrada.relacionadas.length > 0 && (
                 <div>
-                  <span className="text-slate-500">Relacionado: </span>
+                  <span className="text-slate-400">Relacionado: </span>
                   {entrada.relacionadas.map((id) => {
                     const destino = coleccionDe(id)
                     if (!destino) return null
@@ -165,7 +165,7 @@ export function EntradaCard({ entrada, coleccion, abierta, onAlternar, palabras,
               )}
               {entrada.lecciones && entrada.lecciones.length > 0 && (
                 <div>
-                  <span className="text-slate-500">Se explica en: </span>
+                  <span className="text-slate-400">Se explica en: </span>
                   {entrada.lecciones.map((id) =>
                     TITULO_LECCION.has(id) ? (
                       <Link key={id} to={`/leccion/${id}`} className="mr-2 inline-block text-xs text-brand-400 underline-offset-2 hover:underline">

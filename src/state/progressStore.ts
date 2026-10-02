@@ -19,6 +19,7 @@ interface ProgressActions {
   setApiKey: (key: string | null) => void
   sincronizarModulosCompletados: (moduloLecciones: Record<string, string[]>) => void
   iniciarPrograma: () => void
+  verificarFinalizacion: () => void
   registrarLeccionVista: (leccionId: string) => void
   sumarTiempoActivo: (segundos: number) => void
   resetProgreso: () => void
@@ -146,6 +147,12 @@ export const useProgressStore = create<StudentState & ProgressActions>()(
 
       iniciarPrograma: () => {
         if (get().inicioEn === null) set({ inicioEn: Date.now() })
+      },
+
+      // Si todas las lecciones están hechas pero no se guardó la fecha (p. ej. progreso importado), se fija ahora
+      verificarFinalizacion: () => {
+        const { completedLessons, completadoEn } = get()
+        if (completadoEn === null && programaCompleto(completedLessons)) set({ completadoEn: Date.now() })
       },
 
       registrarLeccionVista: (leccionId) => {

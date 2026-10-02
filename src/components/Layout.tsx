@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useTiempoActivo } from '../hooks/useTiempoActivo'
+import { PaletaBusqueda } from './PaletaBusqueda'
 import { Sidebar } from './Sidebar'
 import { UserMenu } from './UserMenu'
 import { Logo } from './ui'
@@ -9,7 +10,20 @@ import { Logo } from './ui'
 /** Marco de la aplicación para usuarios con sesión: barra lateral, encabezado y contenido. */
 export function Layout({ children }: { children: ReactNode }) {
   const [sidebarAbierto, setSidebarAbierto] = useState(false)
+  const [busquedaAbierta, setBusquedaAbierta] = useState(false)
   useTiempoActivo()
+
+  // Ctrl/⌘ + K abre la búsqueda global
+  useEffect(() => {
+    const alTeclear = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setBusquedaAbierta((v) => !v)
+      }
+    }
+    document.addEventListener('keydown', alTeclear)
+    return () => document.removeEventListener('keydown', alTeclear)
+  }, [])
 
   return (
     <div className="flex min-h-screen">
@@ -53,6 +67,19 @@ export function Layout({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <div className="ml-auto flex items-center gap-2" id="acciones-encabezado">
+            <button
+              type="button"
+              onClick={() => setBusquedaAbierta(true)}
+              className="flex items-center gap-2 rounded-full border border-surface-border bg-surface-raised px-3 py-1.5 text-sm text-slate-300 transition hover:border-slate-500 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
+              aria-label="Buscar en el curso (Ctrl+K)"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+              </svg>
+              <span className="hidden sm:inline">Buscar</span>
+              <kbd className="hidden rounded border border-surface-border px-1.5 text-xs text-slate-400 md:inline">Ctrl K</kbd>
+            </button>
             <UserMenu />
           </div>
         </header>
@@ -60,6 +87,7 @@ export function Layout({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
+      <PaletaBusqueda abierta={busquedaAbierta} onCerrar={() => setBusquedaAbierta(false)} />
     </div>
   )
 }

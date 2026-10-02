@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react'
 import type { ReactNode } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { useAccountStore } from './state/accountStore'
 import { useProgressStore } from './state/progressStore'
 import { AuthPage } from './components/AuthPage'
@@ -13,6 +13,7 @@ import { Spinner } from './components/ui'
 // La página de lección arrastra CodeMirror y react-markdown: se descarga solo al abrir una lección.
 const LessonPage = lazy(() => import('./components/LessonPage').then((m) => ({ default: m.LessonPage })))
 // La guía de referencia (con sus 8 colecciones) también se descarga solo cuando se abre.
+const CertificadoPage = lazy(() => import('./components/CertificadoPage').then((m) => ({ default: m.CertificadoPage })))
 const ReferenciaPage = lazy(() => import('./components/referencia/ReferenciaPage').then((m) => ({ default: m.ReferenciaPage })))
 
 function Cargando() {
@@ -23,18 +24,32 @@ function Cargando() {
   )
 }
 
-/** Exige sesión iniciada (y diagnóstico inicial hecho) para ver el contenido. */
-function Protegida({ children, conLayout = true }: { children: ReactNode; conLayout?: boolean }) {
+/** Exige sesión iniciada; sin ella manda a /ingresar y recuerda a dónde quería ir. */
+function useRequiereSesion() {
   const sesionId = useAccountStore((s) => s.sesionId)
-  const onboardingCompletado = useProgressStore((s) => s.onboardingCompletado)
   const ubicacion = useLocation()
+  return sesionId ? null : <Navigate to="/ingresar" replace state={{ desde: ubicacion.pathname + ubicacion.search }} />
+}
 
-  if (!sesionId) return <Navigate to="/ingresar" replace state={{ desde: ubicacion.pathname + ubicacion.search }} />
-  if (!conLayout) return <>{children}</>
+/** Diagnóstico inicial: requiere sesión, pero no el marco de la aplicación. */
+function PantallaCompleta({ children }: { children: ReactNode }) {
+  return useRequiereSesion() ?? <>{children}</>
+}
+
+/**
+ * Marco de la aplicación (barra lateral, encabezado y búsqueda). Es una ruta de diseño: se
+ * mantiene montado al navegar entre páginas, así no se pierde el estado de la barra lateral.
+ */
+function AreaProtegida() {
+  const redireccion = useRequiereSesion()
+  const onboardingCompletado = useProgressStore((s) => s.onboardingCompletado)
+  if (redireccion) return redireccion
   if (!onboardingCompletado) return <Navigate to="/onboarding" replace />
   return (
     <Layout>
-      <Suspense fallback={<Cargando />}>{children}</Suspense>
+      <Suspense fallback={<Cargando />}>
+        <Outlet />
+      </Suspense>
     </Layout>
   )
 }
@@ -49,43 +64,18 @@ export default function App() {
       <Route
         path="/onboarding"
         element={
-          <Protegida conLayout={false}>
+          <PantallaCompleta>
             <Onboarding />
-          </Protegida>
+          </PantallaCompleta>
         }
       />
-      <Route
-        path="/curso"
-        element={
-          <Protegida>
-            <Dashboard />
-          </Protegida>
-        }
-      />
-      <Route
-        path="/leccion/:leccionId"
-        element={
-          <Protegida>
-            <LessonPage />
-          </Protegida>
-        }
-      />
-      <Route
-        path="/referencia"
-        element={
-          <Protegida>
-            <ReferenciaPage />
-          </Protegida>
-        }
-      />
-      <Route
-        path="/referencia/:coleccionId"
-        element={
-          <Protegida>
-            <ReferenciaPage />
-          </Protegida>
-        }
-      />
+      <Route element={<AreaProtegida />}>
+        <Route path="/curso" element={<Dashboard />} />
+        <Route path="/leccion/:leccionId" element={<LessonPage />} />
+        <Route path="/referencia" element={<ReferenciaPage />} />
+        <Route path="/referencia/:coleccionId" element={<ReferenciaPage />} />
+        <Route path="/certificado" element={<CertificadoPage />} />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   )
