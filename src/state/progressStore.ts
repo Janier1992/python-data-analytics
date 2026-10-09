@@ -7,7 +7,7 @@ import type {
   Mastery,
   StudentState,
 } from '../types'
-import { lessonIndex } from '../content/generated'
+import { leccionesCertificables } from '../content/curriculum'
 
 interface ProgressActions {
   completarOnboarding: (diagnostico: DiagnosticAnswers, nivelInicial: number) => void
@@ -52,10 +52,10 @@ export function claveDia(fecha = new Date()): string {
   return `${fecha.getFullYear()}-${mes}-${dia}`
 }
 
-/** ¿Todas las lecciones del curso están completadas? */
+/** ¿Todas las lecciones que cuentan para el certificado están completadas? */
 export function programaCompleto(completedLessons: string[]): boolean {
   const hechas = new Set(completedLessons)
-  return lessonIndex.length > 0 && lessonIndex.every((l) => hechas.has(l.id))
+  return leccionesCertificables.length > 0 && leccionesCertificables.every((id) => hechas.has(id))
 }
 
 // ───────── Almacenamiento por cuenta ─────────

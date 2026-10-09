@@ -42,7 +42,7 @@ Python deja de ser el primer curso. El orden va de lo conceptual a lo técnico:
 
 | # | Curso | Contenido principal | Estado |
 |---|---|---|---|
-| 1 | Estadística descriptiva | Tipos de datos, media/mediana/moda, dispersión, cuartiles, outliers, gráficos | Nuevo (parte en módulo 10) |
+| 1 | Estadística descriptiva | Tipos de datos, media/mediana/moda, dispersión, cuartiles, outliers, gráficos | **Publicado** (módulos 22–25, 19 lecciones) |
 | 2 | Probabilidad y distribuciones | Probabilidad, Bayes, normal, binomial, Poisson, teorema central del límite | Nuevo |
 | 3 | Estadística inferencial | Muestreo, intervalos de confianza, pruebas de hipótesis, A/B testing, regresión | Nuevo |
 | 4 | Excel para análisis de datos | Fórmulas, tablas dinámicas, limpieza, gráficos | Nuevo |
@@ -132,3 +132,8 @@ o capturas), evaluados con rúbrica.
 - Quién escribe el contenido de Power BI y quién evalúa los proyectos.
 - País de operación para el cumplimiento legal.
 - Backend administrado (Supabase) o propio.
+
+## 10. Avance
+
+- **Curso 1 · Estadística descriptiva:** publicado dentro de la aplicación actual como una ruta propia (módulos 22–25: datos y tendencia central, variabilidad y posición, forma y relaciones, proyecto integrador). Aparece primero en el temario. Aún no emite certificado propio: el certificado «AI Academy» sigue contando solo las 96 lecciones del curso de Python y datos (las rutas tienen un indicador `certifica` en `curriculum.ts`).
+- **Siguiente:** Curso 2 · Probabilidad y distribuciones.

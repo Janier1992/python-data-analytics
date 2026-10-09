@@ -7,26 +7,33 @@ import { lessonIndex } from './generated'
 // solo se adoptó la lógica de secuenciación pedagógica, no textos ni diseño.
 export const tracks: Track[] = [
   {
-    id: 'ruta-fundamentos',
+    id: 'curso-estadistica-descriptiva',
     orden: 1,
+    titulo: 'Estadística descriptiva',
+    descripcion: 'Cómo resumir, describir y entender datos: variables, frecuencias, tendencia central, dispersión, posición, forma y relaciones. Solo necesitas modificar pequeños fragmentos de código ya escritos.',
+    certifica: false,
+  },
+  {
+    id: 'ruta-fundamentos',
+    orden: 2,
     titulo: 'Fundamentos de Python',
     descripcion: 'La base del lenguaje: sintaxis, control de flujo, estructuras de datos y buenas prácticas.',
   },
   {
     id: 'ruta-analista',
-    orden: 2,
+    orden: 3,
     titulo: 'Analista de Datos con Python',
     descripcion: 'NumPy, pandas, limpieza, visualización, EDA y estadística aplicada — el paquete completo de un analista de datos.',
   },
   {
     id: 'ruta-ciencia-datos',
-    orden: 3,
+    orden: 4,
     titulo: 'Ciencia de Datos y Machine Learning',
     descripcion: 'De los primeros modelos con scikit-learn hasta series temporales, NLP básico y redes neuronales.',
   },
   {
     id: 'ruta-herramientas',
-    orden: 4,
+    orden: 5,
     titulo: 'Herramientas complementarias del analista',
     descripcion: 'SQL, línea de comandos, Git/GitHub y BI — el siguiente paquete una vez dominado Python.',
   },
@@ -37,6 +44,11 @@ function idsDe(moduloId: string): string[] {
 }
 
 export const curriculum: ModuleMeta[] = [
+  // Curso 1 — Estadística descriptiva (en construcción)
+  { id: 'modulo-22', trackId: 'curso-estadistica-descriptiva', numero: 22, titulo: 'Datos, variables y tendencia central', descripcion: 'Población y muestra, escalas de medición, tablas de frecuencia, media, mediana y moda.', disponible: true, lessonIds: idsDe('modulo-22') },
+  { id: 'modulo-23', trackId: 'curso-estadistica-descriptiva', numero: 23, titulo: 'Variabilidad y posición', descripcion: 'Rango, varianza, desviación estándar, coeficiente de variación, cuantiles, puntuaciones z y valores atípicos.', disponible: true, lessonIds: idsDe('modulo-23') },
+  { id: 'modulo-24', trackId: 'curso-estadistica-descriptiva', numero: 24, titulo: 'Forma y relaciones entre variables', descripcion: 'Asimetría, curtosis, histogramas, correlación (Pearson y Spearman) y tablas de contingencia.', disponible: true, lessonIds: idsDe('modulo-24') },
+  { id: 'modulo-25', trackId: 'curso-estadistica-descriptiva', numero: 25, titulo: 'Proyecto integrador: estudio descriptivo', descripcion: 'Un caso completo: de la pregunta y la revisión de datos a un reporte con conclusiones y limitaciones.', disponible: true, lessonIds: idsDe('modulo-25') },
   // Ruta 1 — Fundamentos de Python (construida)
   { id: 'modulo-0', trackId: 'ruta-fundamentos', numero: 0, titulo: 'Orientación', descripcion: 'Qué es Python, entornos de trabajo y tu primer código.', disponible: true, lessonIds: idsDe('modulo-0') },
   { id: 'modulo-1', trackId: 'ruta-fundamentos', numero: 1, titulo: 'Fundamentos absolutos', descripcion: 'Variables, tipos de datos, strings, operadores y errores básicos.', disponible: true, lessonIds: idsDe('modulo-1') },
@@ -68,8 +80,18 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-21', trackId: 'ruta-herramientas', numero: 21, titulo: 'Introducción a BI y preparación profesional', descripcion: 'KPIs, diseño de dashboards, storytelling con datos, portafolio en GitHub y entrevistas.', disponible: true, lessonIds: idsDe('modulo-21') },
 ]
 
-/** Resumen (id, módulo y título) de todas las lecciones, en orden global. El contenido completo se carga con `cargarLeccion`. */
-export const todasLasLecciones: LessonSummary[] = lessonIndex
+/** Resumen (id, módulo y título) de todas las lecciones, en el orden de estudio (según el orden de las rutas y de los módulos). */
+export const todasLasLecciones: LessonSummary[] = [...curriculum]
+  .sort((a, b) => (getTrack(a.trackId)?.orden ?? 0) - (getTrack(b.trackId)?.orden ?? 0) || a.numero - b.numero)
+  .flatMap((m) => lessonIndex.filter((l) => l.moduloId === m.id))
+
+/** Módulos cuyas lecciones cuentan para el certificado actual. */
+function moduloCertifica(m: ModuleMeta): boolean {
+  return getTrack(m.trackId)?.certifica !== false
+}
+
+/** Ids de las lecciones que cuentan para el certificado actual. */
+export const leccionesCertificables: string[] = curriculum.filter(moduloCertifica).flatMap((m) => m.lessonIds)
 
 export function getLeccion(id: string): LessonSummary | undefined {
   return todasLasLecciones.find((l) => l.id === id)
@@ -89,6 +111,11 @@ export function modulosPorTrack(trackId: string): ModuleMeta[] {
 
 export function moduloLeccionesMap(): Record<string, string[]> {
   return Object.fromEntries(curriculum.map((m) => [m.id, m.lessonIds]))
+}
+
+/** Igual que `moduloLeccionesMap`, pero solo con los módulos que cuentan para el certificado. */
+export function moduloLeccionesCertificablesMap(): Record<string, string[]> {
+  return Object.fromEntries(curriculum.filter(moduloCertifica).map((m) => [m.id, m.lessonIds]))
 }
 
 /** Lección anterior/siguiente en el orden global del curso (cruza módulos y rutas). */
