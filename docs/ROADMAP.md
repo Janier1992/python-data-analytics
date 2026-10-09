@@ -43,7 +43,7 @@ Python deja de ser el primer curso. El orden va de lo conceptual a lo técnico:
 | # | Curso | Contenido principal | Estado |
 |---|---|---|---|
 | 1 | Estadística descriptiva | Tipos de datos, media/mediana/moda, dispersión, cuartiles, outliers, gráficos | **Publicado** (módulos 22–25, 19 lecciones) |
-| 2 | Probabilidad y distribuciones | Probabilidad, Bayes, normal, binomial, Poisson, teorema central del límite | Nuevo |
+| 2 | Probabilidad y distribuciones | Probabilidad, Bayes, normal, binomial, Poisson, teorema central del límite | **Publicado** (módulos 26–29, 19 lecciones) |
 | 3 | Estadística inferencial | Muestreo, intervalos de confianza, pruebas de hipótesis, A/B testing, regresión | Nuevo |
 | 4 | Excel para análisis de datos | Fórmulas, tablas dinámicas, limpieza, gráficos | Nuevo |
 | 5 | SQL | Consultas, JOIN, agregaciones; luego CTEs y funciones de ventana | Parcial (módulo 19) |
@@ -136,4 +136,5 @@ o capturas), evaluados con rúbrica.
 ## 10. Avance
 
 - **Curso 1 · Estadística descriptiva:** publicado dentro de la aplicación actual como una ruta propia (módulos 22–25: datos y tendencia central, variabilidad y posición, forma y relaciones, proyecto integrador). Aparece primero en el temario. Aún no emite certificado propio: el certificado «AI Academy» sigue contando solo las 96 lecciones del curso de Python y datos (las rutas tienen un indicador `certifica` en `curriculum.ts`).
-- **Siguiente:** Curso 2 · Probabilidad y distribuciones.
+- **Curso 2 · Probabilidad y distribuciones:** publicado como ruta propia (módulos 26–29: fundamentos de probabilidad y Bayes, variables aleatorias discretas, distribuciones continuas y teorema central del límite, y un proyecto integrador de calidad, capacidad y plazos). Usa `scipy.stats`, que se carga bajo demanda en el navegador. Tampoco emite certificado propio todavía.
+- **Siguiente:** Curso 3 · Estadística inferencial.
