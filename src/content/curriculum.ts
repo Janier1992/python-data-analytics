@@ -21,26 +21,33 @@ export const tracks: Track[] = [
     certifica: false,
   },
   {
-    id: 'ruta-fundamentos',
+    id: 'curso-inferencia',
     orden: 3,
+    titulo: 'Estadística inferencial',
+    descripcion: 'De la muestra a la decisión: muestreo, intervalos de confianza, pruebas de hipótesis, A/B testing, chi-cuadrado, regresión, ANOVA y cómo evitar los errores de interpretación más comunes.',
+    certifica: false,
+  },
+  {
+    id: 'ruta-fundamentos',
+    orden: 4,
     titulo: 'Fundamentos de Python',
     descripcion: 'La base del lenguaje: sintaxis, control de flujo, estructuras de datos y buenas prácticas.',
   },
   {
     id: 'ruta-analista',
-    orden: 4,
+    orden: 5,
     titulo: 'Analista de Datos con Python',
     descripcion: 'NumPy, pandas, limpieza, visualización, EDA y estadística aplicada — el paquete completo de un analista de datos.',
   },
   {
     id: 'ruta-ciencia-datos',
-    orden: 5,
+    orden: 6,
     titulo: 'Ciencia de Datos y Machine Learning',
     descripcion: 'De los primeros modelos con scikit-learn hasta series temporales, NLP básico y redes neuronales.',
   },
   {
     id: 'ruta-herramientas',
-    orden: 6,
+    orden: 7,
     titulo: 'Herramientas complementarias del analista',
     descripcion: 'SQL, línea de comandos, Git/GitHub y BI — el siguiente paquete una vez dominado Python.',
   },
@@ -61,6 +68,12 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-27', trackId: 'curso-probabilidad', numero: 27, titulo: 'Variables aleatorias discretas', descripcion: 'Conteo, esperanza y varianza, distribuciones binomial y de Poisson, y simulación Monte Carlo.', disponible: true, lessonIds: idsDe('modulo-27') },
   { id: 'modulo-28', trackId: 'curso-probabilidad', numero: 28, titulo: 'Distribuciones continuas', descripcion: 'Densidad, uniforme, normal, puntuaciones z y percentiles, exponencial y teorema central del límite.', disponible: true, lessonIds: idsDe('modulo-28') },
   { id: 'modulo-29', trackId: 'curso-probabilidad', numero: 29, titulo: 'Proyecto integrador: calidad, capacidad y plazos', descripcion: 'Un caso de operaciones que combina binomial, Poisson, normal y simulación en un reporte final.', disponible: true, lessonIds: idsDe('modulo-29') },
+
+  // Curso 3 — Estadística inferencial (en construcción)
+  { id: 'modulo-30', trackId: 'curso-inferencia', numero: 30, titulo: 'Muestreo y estimación', descripcion: 'Muestreo y sesgo, estimadores, error estándar, tamaño de muestra e intervalos de confianza para medias y proporciones.', disponible: true, lessonIds: idsDe('modulo-30') },
+  { id: 'modulo-31', trackId: 'curso-inferencia', numero: 31, titulo: 'Pruebas de hipótesis', descripcion: 'Lógica del p-valor, prueba t (una y dos muestras, pareada), A/B testing con proporciones y chi-cuadrado.', disponible: true, lessonIds: idsDe('modulo-31') },
+  { id: 'modulo-32', trackId: 'curso-inferencia', numero: 32, titulo: 'Relaciones y modelos', descripcion: 'Regresión simple y múltiple, R² y residuos, ANOVA, tamaño del efecto y comparaciones múltiples.', disponible: true, lessonIds: idsDe('modulo-32') },
+  { id: 'modulo-33', trackId: 'curso-inferencia', numero: 33, titulo: 'Proyecto integrador: análisis de un A/B test', descripcion: 'Un experimento completo: hipótesis, intervalos, pruebas, tamaño del efecto y reporte con recomendación.', disponible: true, lessonIds: idsDe('modulo-33') },
 
   // Ruta 1 — Fundamentos de Python (construida)
   { id: 'modulo-0', trackId: 'ruta-fundamentos', numero: 0, titulo: 'Orientación', descripcion: 'Qué es Python, entornos de trabajo y tu primer código.', disponible: true, lessonIds: idsDe('modulo-0') },
