@@ -44,7 +44,7 @@ Python deja de ser el primer curso. El orden va de lo conceptual a lo técnico:
 |---|---|---|---|
 | 1 | Estadística descriptiva | Tipos de datos, media/mediana/moda, dispersión, cuartiles, outliers, gráficos | **Publicado** (módulos 22–25, 19 lecciones) |
 | 2 | Probabilidad y distribuciones | Probabilidad, Bayes, normal, binomial, Poisson, teorema central del límite | **Publicado** (módulos 26–29, 19 lecciones) |
-| 3 | Estadística inferencial | Muestreo, intervalos de confianza, pruebas de hipótesis, A/B testing, regresión | Nuevo |
+| 3 | Estadística inferencial | Muestreo, intervalos de confianza, pruebas de hipótesis, A/B testing, regresión | **Publicado** (módulos 30–33, 19 lecciones) |
 | 4 | Excel para análisis de datos | Fórmulas, tablas dinámicas, limpieza, gráficos | Nuevo |
 | 5 | SQL | Consultas, JOIN, agregaciones; luego CTEs y funciones de ventana | Parcial (módulo 19) |
 | 6 | Python para Datos | Programación, NumPy, pandas, limpieza, EDA | Existe (módulos 0–9, 11) |
@@ -137,4 +137,5 @@ o capturas), evaluados con rúbrica.
 
 - **Curso 1 · Estadística descriptiva:** publicado dentro de la aplicación actual como una ruta propia (módulos 22–25: datos y tendencia central, variabilidad y posición, forma y relaciones, proyecto integrador). Aparece primero en el temario. Aún no emite certificado propio: el certificado «AI Academy» sigue contando solo las 96 lecciones del curso de Python y datos (las rutas tienen un indicador `certifica` en `curriculum.ts`).
 - **Curso 2 · Probabilidad y distribuciones:** publicado como ruta propia (módulos 26–29: fundamentos de probabilidad y Bayes, variables aleatorias discretas, distribuciones continuas y teorema central del límite, y un proyecto integrador de calidad, capacidad y plazos). Usa `scipy.stats`, que se carga bajo demanda en el navegador. Tampoco emite certificado propio todavía.
-- **Siguiente:** Curso 3 · Estadística inferencial.
+- **Curso 3 · Estadística inferencial:** publicado como ruta propia (módulos 30–33: muestreo e intervalos de confianza, pruebas de hipótesis incluido A/B testing y chi-cuadrado, regresión, ANOVA y tamaño del efecto, y un proyecto de análisis de un A/B test). Usa `scipy.stats` y `statsmodels`, que se cargan bajo demanda. Tampoco emite certificado propio todavía.
+- **Siguiente:** Curso 4 · Excel para análisis de datos.
