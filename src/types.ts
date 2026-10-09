@@ -54,6 +54,8 @@ export interface Track {
   orden: number
   titulo: string
   descripcion: string
+  /** Si sus lecciones cuentan para el certificado «AI Academy» actual. Por defecto sí; los cursos nuevos lo desactivan hasta tener certificado propio. */
+  certifica?: boolean
 }
 
 export interface ModuleMeta {

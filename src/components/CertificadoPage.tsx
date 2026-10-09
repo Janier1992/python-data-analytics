@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LEMA_ACADEMIA, NOMBRE_ACADEMIA, NOMBRE_PROGRAMA } from '../brand'
-import { curriculum, moduloLeccionesMap, todasLasLecciones } from '../content/curriculum'
+import { curriculum, leccionesCertificables, moduloLeccionesCertificablesMap, todasLasLecciones } from '../content/curriculum'
 import { avanceCertificado, codigoDeConstancia, diasDeEstudio, formatearDuracion, formatearFecha, formatearTiempoEstudio } from '../lib/certificado'
 import { useCuentaActual } from '../state/accountStore'
 import { useProgressStore } from '../state/progressStore'
@@ -138,7 +138,7 @@ export function CertificadoPage() {
   const [codigo, setCodigo] = useState<string | null>(null)
   const [editando, setEditando] = useState(false)
 
-  const modulos = useMemo(() => moduloLeccionesMap(), [])
+  const modulos = useMemo(() => moduloLeccionesCertificablesMap(), [])
   const avance = useMemo(() => avanceCertificado(completedLessons, modulos), [completedLessons, modulos])
 
   useEffect(() => {
@@ -157,8 +157,8 @@ export function CertificadoPage() {
     }
   }, [emitible, cuenta, inicioEn, completadoEn])
 
-  const siguiente = todasLasLecciones.find((l) => !completedLessons.includes(l.id))
-  const pendientes = curriculum.filter((m) => m.disponible && m.lessonIds.some((id) => !completedLessons.includes(id)))
+  const siguiente = todasLasLecciones.find((l) => leccionesCertificables.includes(l.id) && !completedLessons.includes(l.id))
+  const pendientes = curriculum.filter((m) => m.disponible && m.lessonIds.some((id) => leccionesCertificables.includes(id) && !completedLessons.includes(id)))
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">

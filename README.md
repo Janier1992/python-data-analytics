@@ -17,7 +17,7 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 | **3. Ciencia de Datos y Machine Learning** | 12–18 | ✅ Completo (7 módulos: ML fundamentos, feature engineering, supervisado, no supervisado, series temporales + NLP, redes neuronales y proyecto integrador de abandono de clientes) |
 | **4. Herramientas complementarias** | 19–21 | ✅ Completo (SQL con SQLite, línea de comandos y Git con ejercicios que reproducen su lógica en Python, y BI + portafolio + entrevistas) |
 
-**Los 22 módulos (0–21) del plan original están disponibles.** Cada módulo tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
+**Hay 26 módulos disponibles (0–25): los 22 del curso de Python y datos (0–21) y los 4 del Curso 1 de Estadística descriptiva (22–25).** Cada módulo tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
 
 ### Próximos pasos (en orden)
 
@@ -33,7 +33,7 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 | **Lecciones** | `/leccion/:id` | Contenido, ejemplos, ejercicios con Python real (Ctrl+Enter para ejecutar), verificación, índice lateral y "consulta rápida" con las funciones de la lección. |
 | **Guía de referencia** | `/referencia` | 264 entradas en 8 colecciones (Python, NumPy, pandas, matplotlib, estadística, scikit-learn, SQL, Terminal y Git): qué hace cada función o sentencia, sintaxis, parámetros, ejemplo **editable y ejecutable**, notas y lecciones relacionadas. Búsqueda sin tildes, filtros por lenguaje y enlaces directos. |
 | **Búsqueda global** | `Ctrl/⌘ + K` | Lecciones, entradas de la guía y páginas, con navegación por teclado. |
-| **Certificado** | `/certificado` | Al completar las 96 lecciones: certificado "AI Academy" con el nombre completo, fechas, duración del programa, tiempo de estudio activo y código de constancia. Se descarga como PDF (A4 horizontal) desde el cuadro de impresión. |
+| **Certificado** | `/certificado` | Al completar las 96 lecciones del curso de Python y datos (los cursos nuevos tendrán su propio certificado): certificado "AI Academy" con el nombre completo, fechas, duración del programa, tiempo de estudio activo y código de constancia. Se descarga como PDF (A4 horizontal) desde el cuadro de impresión. |
 
 ### Cuentas, progreso y certificado: cómo funcionan (y sus límites)
 
