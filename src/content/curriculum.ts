@@ -14,26 +14,33 @@ export const tracks: Track[] = [
     certifica: false,
   },
   {
-    id: 'ruta-fundamentos',
+    id: 'curso-probabilidad',
     orden: 2,
+    titulo: 'Probabilidad y distribuciones',
+    descripcion: 'Del azar a los modelos: reglas de probabilidad, Bayes, variables aleatorias, binomial, Poisson, normal, exponencial, teorema central del límite y simulación.',
+    certifica: false,
+  },
+  {
+    id: 'ruta-fundamentos',
+    orden: 3,
     titulo: 'Fundamentos de Python',
     descripcion: 'La base del lenguaje: sintaxis, control de flujo, estructuras de datos y buenas prácticas.',
   },
   {
     id: 'ruta-analista',
-    orden: 3,
+    orden: 4,
     titulo: 'Analista de Datos con Python',
     descripcion: 'NumPy, pandas, limpieza, visualización, EDA y estadística aplicada — el paquete completo de un analista de datos.',
   },
   {
     id: 'ruta-ciencia-datos',
-    orden: 4,
+    orden: 5,
     titulo: 'Ciencia de Datos y Machine Learning',
     descripcion: 'De los primeros modelos con scikit-learn hasta series temporales, NLP básico y redes neuronales.',
   },
   {
     id: 'ruta-herramientas',
-    orden: 5,
+    orden: 6,
     titulo: 'Herramientas complementarias del analista',
     descripcion: 'SQL, línea de comandos, Git/GitHub y BI — el siguiente paquete una vez dominado Python.',
   },
@@ -49,6 +56,12 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-23', trackId: 'curso-estadistica-descriptiva', numero: 23, titulo: 'Variabilidad y posición', descripcion: 'Rango, varianza, desviación estándar, coeficiente de variación, cuantiles, puntuaciones z y valores atípicos.', disponible: true, lessonIds: idsDe('modulo-23') },
   { id: 'modulo-24', trackId: 'curso-estadistica-descriptiva', numero: 24, titulo: 'Forma y relaciones entre variables', descripcion: 'Asimetría, curtosis, histogramas, correlación (Pearson y Spearman) y tablas de contingencia.', disponible: true, lessonIds: idsDe('modulo-24') },
   { id: 'modulo-25', trackId: 'curso-estadistica-descriptiva', numero: 25, titulo: 'Proyecto integrador: estudio descriptivo', descripcion: 'Un caso completo: de la pregunta y la revisión de datos a un reporte con conclusiones y limitaciones.', disponible: true, lessonIds: idsDe('modulo-25') },
+  // Curso 2 — Probabilidad y distribuciones (en construcción)
+  { id: 'modulo-26', trackId: 'curso-probabilidad', numero: 26, titulo: 'Fundamentos de probabilidad', descripcion: 'Espacio muestral, reglas de la suma y del complemento, probabilidad condicional, independencia y teorema de Bayes.', disponible: true, lessonIds: idsDe('modulo-26') },
+  { id: 'modulo-27', trackId: 'curso-probabilidad', numero: 27, titulo: 'Variables aleatorias discretas', descripcion: 'Conteo, esperanza y varianza, distribuciones binomial y de Poisson, y simulación Monte Carlo.', disponible: true, lessonIds: idsDe('modulo-27') },
+  { id: 'modulo-28', trackId: 'curso-probabilidad', numero: 28, titulo: 'Distribuciones continuas', descripcion: 'Densidad, uniforme, normal, puntuaciones z y percentiles, exponencial y teorema central del límite.', disponible: true, lessonIds: idsDe('modulo-28') },
+  { id: 'modulo-29', trackId: 'curso-probabilidad', numero: 29, titulo: 'Proyecto integrador: calidad, capacidad y plazos', descripcion: 'Un caso de operaciones que combina binomial, Poisson, normal y simulación en un reporte final.', disponible: true, lessonIds: idsDe('modulo-29') },
+
   // Ruta 1 — Fundamentos de Python (construida)
   { id: 'modulo-0', trackId: 'ruta-fundamentos', numero: 0, titulo: 'Orientación', descripcion: 'Qué es Python, entornos de trabajo y tu primer código.', disponible: true, lessonIds: idsDe('modulo-0') },
   { id: 'modulo-1', trackId: 'ruta-fundamentos', numero: 1, titulo: 'Fundamentos absolutos', descripcion: 'Variables, tipos de datos, strings, operadores y errores básicos.', disponible: true, lessonIds: idsDe('modulo-1') },
