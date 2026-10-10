@@ -1,5 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { isValidElement } from 'react'
+import { CodigoDax } from './PantallaPBI'
 
 /** Markdown con tablas (GFM). Los enlaces a /datos/ se descargan en lugar de abrirse en la página. */
 export function TextoMd({ children, className = '', enLinea = false }: { children: string; className?: string; enLinea?: boolean }) {
@@ -23,6 +25,15 @@ export function TextoMd({ children, className = '', enLinea = false }: { childre
               {hijos}
             </a>
           ),
+          // bloques ```dax con la misma coloración de la barra de fórmulas de Power BI
+          pre: ({ children: hijos, ...resto }) => {
+            const hijo = Array.isArray(hijos) ? hijos[0] : hijos
+            if (isValidElement(hijo)) {
+              const props = hijo.props as { className?: string; children?: unknown }
+              if (/language-dax/.test(props.className ?? '')) return <CodigoDax dax={String(props.children ?? '').replace(/\n$/, '')} />
+            }
+            return <pre {...resto}>{hijos}</pre>
+          },
           // tablas con desplazamiento horizontal en pantallas pequeñas
           table: ({ children: hijos }) => (
             <div className="overflow-x-auto">

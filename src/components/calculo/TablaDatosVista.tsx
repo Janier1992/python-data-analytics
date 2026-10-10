@@ -20,7 +20,7 @@ export function TablaDatosVista({ tabla }: { tabla: TablaDatos }) {
             {tabla.filas.map((fila, i) => (
               <tr key={i} className={i % 2 ? 'bg-surface/40' : ''}>
                 {fila.map((celda, j) => (
-                  <td key={j} className={`border-b border-surface-border/60 px-3 py-1.5 text-slate-200 ${typeof celda === 'number' ? 'text-right tabular-nums' : ''}`}>
+                  <td key={j} className={`border-b border-surface-border/60 px-3 py-1.5 ${tabla.resaltar?.filas?.includes(i) || tabla.resaltar?.columnas?.includes(j) ? 'bg-amber-300/20 font-medium text-amber-100' : 'text-slate-200'} ${typeof celda === 'number' ? 'text-right tabular-nums' : ''}`}>
                     {celda}
                   </td>
                 ))}
@@ -29,7 +29,12 @@ export function TablaDatosVista({ tabla }: { tabla: TablaDatos }) {
           </tbody>
         </table>
       </div>
-      {tabla.nota && <figcaption className="mt-1 text-xs text-slate-400">{tabla.nota}</figcaption>}
+      {(tabla.leyenda || tabla.nota) && (
+        <figcaption className="mt-1 text-xs text-slate-400">
+          {tabla.leyenda && <span className="mr-2 rounded bg-amber-300/20 px-1.5 py-0.5 text-amber-100">{tabla.leyenda}</span>}
+          {tabla.nota}
+        </figcaption>
+      )}
     </figure>
   )
 }
