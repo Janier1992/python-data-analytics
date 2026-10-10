@@ -66,7 +66,7 @@ test('el certificado «AI Academy» sigue contando solo las 96 lecciones de los 
 })
 
 test('siguiente curso con contenido', () => {
-  assert.equal(siguienteCurso('estadistica-inferencial')?.id, 'python-datos') // Excel aún no tiene contenido
+  assert.equal(siguienteCurso('estadistica-inferencial')?.id, 'excel')
   assert.equal(siguienteCurso('machine-learning')?.id, undefined)
-  assert.equal(cursosDisponibles.length, 8)
+  assert.equal(cursosDisponibles.length, 9)
 })

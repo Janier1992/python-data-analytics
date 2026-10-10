@@ -6,6 +6,10 @@
 //   · que la `solucion` de la práctica guiada y del reto se ejecuta y PASA su `validar`;
 //   · que el `codigoInicial` NO pasa `validar` (el ejercicio no debe resolverse solo).
 //
+// Las lecciones de Excel (`motor: 'excel'`) se comprueban con el motor de fórmulas en lugar de Python:
+// cada fórmula de ejemplo da el resultado declarado, la `solucion` de cada ejercicio pasa y la
+// `formulaInicial` no pasa.
+//
 // Ejecuta el código con un Python real (por defecto `python3`, o la variable PYTHON). Para
 // reproducir lo que ve el estudiante usa las versiones de tests/requirements.txt (las de Pyodide).
 //
@@ -13,6 +17,7 @@
 //       npm test -- 14 19              (solo los módulos 14 y 19)
 //       npm test -- --strict           (las advertencias de Python, p. ej. ConvergenceWarning, también fallan)
 import { cargarLecciones, listarModulos } from './lib/cargar-modulos.mjs'
+import { cargarMotorExcel } from './lib/motor-excel.mjs'
 import { PYTHON, conConcurrencia, ejecutarPython, ultimasLineas } from './lib/python-runner.mjs'
 
 const CONCURRENCIA = Math.max(2, Number(process.env.TEST_CONCURRENCY) || 4)
@@ -34,9 +39,18 @@ function comprobarEstructura(l, numeroModulo, fallos) {
   const falla = (m) => fallos.push({ leccion: l.id, que: 'estructura', detalle: m })
   if (l.moduloId !== `modulo-${numeroModulo}`) falla(`moduloId "${l.moduloId}" no coincide con modulo-${numeroModulo}`)
   if (!new RegExp(`^m${numeroModulo}-l\\d+$`).test(l.id)) falla(`id "${l.id}" no sigue el patrón m${numeroModulo}-lN`)
-  for (const campo of ['titulo', 'objetivo', 'porQueImporta', 'concepto', 'ejemploMinimo', 'ejemploAplicado', 'proximoPaso']) {
+  const esExcel = l.motor === 'excel'
+  for (const campo of ['titulo', 'objetivo', 'porQueImporta', 'concepto', 'proximoPaso']) {
     if (typeof l[campo] !== 'string' || !l[campo].trim()) falla(`campo "${campo}" vacío o ausente`)
   }
+  for (const campo of ['ejemploMinimo', 'ejemploAplicado']) {
+    const e = l[campo]
+    if (esExcel) {
+      if (!e || typeof e !== 'object' || !Array.isArray(e.hoja?.celdas) || !Array.isArray(e.formulas) || e.formulas.length === 0) falla(`${campo} debe ser una hoja con fórmulas (lección de Excel)`)
+      else for (const f of e.formulas) if (typeof f.formula !== 'string' || !f.formula.startsWith('=') || f.esperado === undefined) falla(`${campo}: fórmula sin «=» o sin resultado esperado (${JSON.stringify(f.formula)})`)
+    } else if (typeof e !== 'string' || !e.trim()) falla(`campo "${campo}" vacío o ausente`)
+  }
+  if (!esExcel && l.motor !== undefined && l.motor !== 'python') falla(`motor desconocido: ${l.motor}`)
   if (!l.errorFrecuente?.codigo?.trim() || !l.errorFrecuente?.explicacion?.trim()) falla('errorFrecuente incompleto')
   if (!Array.isArray(l.conceptos) || l.conceptos.length === 0) falla('conceptos vacío')
   if (!Array.isArray(l.resumen) || l.resumen.length === 0) falla('resumen vacío')
@@ -46,10 +60,21 @@ function comprobarEstructura(l, numeroModulo, fallos) {
       continue
     }
     if (!ej.id?.startsWith(`${l.id}-`)) falla(`${clave}.id "${ej.id}" debería empezar por "${l.id}-"`)
-    for (const campo of ['enunciado', 'codigoInicial', 'solucion']) {
-      if (typeof ej[campo] !== 'string' || !ej[campo].trim()) falla(`${clave}.${campo} vacío`)
+    if (esExcel) {
+      for (const campo of ['enunciado', 'celda', 'formulaInicial', 'solucion']) {
+        if (typeof ej[campo] !== 'string' || !ej[campo].trim()) falla(`${clave}.${campo} vacío`)
+      }
+      if (!Array.isArray(ej.hoja?.celdas) || ej.hoja.celdas.length === 0) falla(`${clave}.hoja sin celdas`)
+      if (typeof ej.solucion === 'string' && !ej.solucion.startsWith('=')) falla(`${clave}.solucion debe empezar por «=»`)
+      if (ej.esperado === undefined) falla(`${clave}.esperado ausente`)
+      if (ej.rellenarFilas !== undefined && (!Array.isArray(ej.esperado) || ej.esperado.length !== ej.rellenarFilas)) falla(`${clave}: con rellenarFilas, esperado debe ser una lista de ese tamaño`)
+      if (ej.rellenarFilas === undefined && Array.isArray(ej.esperado)) falla(`${clave}: esperado es una lista pero falta rellenarFilas`)
+    } else {
+      for (const campo of ['enunciado', 'codigoInicial', 'solucion']) {
+        if (typeof ej[campo] !== 'string' || !ej[campo].trim()) falla(`${clave}.${campo} vacío`)
+      }
+      if (typeof ej.validar !== 'function') falla(`${clave}.validar no es una función`)
     }
-    if (typeof ej.validar !== 'function') falla(`${clave}.validar no es una función`)
     if (!Array.isArray(ej.pistas) || ej.pistas.length === 0) falla(`${clave} sin pistas`)
   }
   if (!Array.isArray(l.verificacion) || l.verificacion.length === 0) falla('verificacion vacía')
@@ -114,6 +139,7 @@ let tareasEjecutadas = 0
 const idsEjercicio = new Set()
 
 const porModulo = []
+const motorExcel = await cargarMotorExcel()
 for (const n of modulos) {
   const contenido = await cargarLecciones(n)
   lecciones += contenido.length
@@ -126,9 +152,30 @@ for (const n of modulos) {
       }
     }
   }
-  const tareas = contenido.filter((l) => l.practicaGuiada && l.reto).flatMap(tareasDeLeccion)
+  const tareas = contenido.filter((l) => l.motor !== 'excel' && l.practicaGuiada && l.reto).flatMap(tareasDeLeccion)
   const resultados = await conConcurrencia(tareas, CONCURRENCIA, async (t) => ({ t, r: await ejecutarPython(t.codigo) }))
   let falloModulo = 0
+  let comprobacionesExcel = 0
+  for (const l of contenido.filter((x) => x.motor === 'excel')) {
+    const falla = (que, detalle) => {
+      falloModulo++
+      fallos.push({ leccion: l.id, que, detalle })
+    }
+    for (const campo of ['ejemploMinimo', 'ejemploAplicado']) {
+      comprobacionesExcel++
+      if (l[campo] && typeof l[campo] === 'object') for (const f of motorExcel.verificarEjemplo(l[campo])) falla(campo, f)
+    }
+    for (const clave of ['practicaGuiada', 'reto']) {
+      const ej = l[clave]
+      if (!ej || typeof ej !== 'object' || !ej.solucion) continue
+      comprobacionesExcel += 2
+      const sol = motorExcel.comprobarEjercicio(ej, ej.solucion)
+      if (!sol.ok) falla(`${clave}.solucion`, `la solución no pasa: ${sol.mensaje}`)
+      const ini = motorExcel.comprobarEjercicio(ej, ej.formulaInicial)
+      if (ini.ok) falla(`${clave}.formulaInicial`, 'la fórmula inicial ya pasa sin que el estudiante haga nada')
+    }
+  }
+  tareasEjecutadas += comprobacionesExcel
   for (const { t, r } of resultados) {
     tareasEjecutadas++
     const ev = evaluar(t, r)
@@ -138,8 +185,8 @@ for (const n of modulos) {
       fallos.push({ leccion: t.leccion, que: t.que, detalle: ev.detalle ?? `advertencia de Python: ${ev.advertencias[0]}` })
     }
   }
-  porModulo.push({ n, lecciones: contenido.length, tareas: tareas.length, falloModulo })
-  console.log(`  módulo ${String(n).padStart(2)}: ${String(contenido.length).padStart(2)} lecciones, ${String(tareas.length).padStart(3)} ejecuciones ${falloModulo ? `✗ ${falloModulo} con fallos` : '✓'}`)
+  porModulo.push({ n, lecciones: contenido.length, tareas: tareas.length + comprobacionesExcel, falloModulo })
+  console.log(`  módulo ${String(n).padStart(2)}: ${String(contenido.length).padStart(2)} lecciones, ${String(tareas.length + comprobacionesExcel).padStart(3)} ${comprobacionesExcel ? 'comprobaciones de fórmulas' : 'ejecuciones'} ${falloModulo ? `✗ ${falloModulo} con fallos` : '✓'}`)
 }
 
 const segundos = ((Date.now() - inicio) / 1000).toFixed(1)
@@ -150,7 +197,7 @@ if (advertencias.length) {
 if (fallos.length) {
   console.log(`\n✗ ${fallos.length} fallo(s):\n`)
   for (const f of fallos) console.log(`  [${f.leccion}] ${f.que}\n    ${f.detalle.replace(/\n/g, '\n    ')}\n`)
-  console.log(`${lecciones} lecciones, ${tareasEjecutadas} ejecuciones de Python en ${segundos}s`)
+  console.log(`${lecciones} lecciones, ${tareasEjecutadas} ejecuciones de Python y comprobaciones de fórmulas en ${segundos}s`)
   process.exit(1)
 }
-console.log(`\n✓ Todo en orden: ${lecciones} lecciones, ${tareasEjecutadas} ejecuciones de Python en ${segundos}s`)
+console.log(`\n✓ Todo en orden: ${lecciones} lecciones, ${tareasEjecutadas} ejecuciones de Python y comprobaciones de fórmulas en ${segundos}s`)
