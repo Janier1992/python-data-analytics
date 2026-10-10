@@ -208,6 +208,22 @@ export const lessonIndex: LessonSummary[] = [
   { id: "m46-l1", moduloId: "modulo-46", titulo: "Diseñar el informe en Power BI: visuales, interacción y rendimiento" },
   { id: "m46-l2", moduloId: "modulo-46", titulo: "Publicar, actualizar y proteger datos con seguridad por filas (RLS)" },
   { id: "m46-l3", moduloId: "modulo-46", titulo: "Proyecto: tablero de ventas de la tienda Aurora" },
+  { id: "m47-l1", moduloId: "modulo-47", titulo: "Qué es un modelo de lenguaje: tokens, contexto y costo" },
+  { id: "m47-l2", moduloId: "modulo-47", titulo: "Cómo elige el modelo el siguiente token: probabilidades y temperatura" },
+  { id: "m47-l3", moduloId: "modulo-47", titulo: "Límites de los modelos: alucinaciones, fecha de corte y verificación" },
+  { id: "m47-l4", moduloId: "modulo-47", titulo: "Embeddings y búsqueda semántica" },
+  { id: "m48-l1", moduloId: "modulo-48", titulo: "Anatomía de un buen prompt" },
+  { id: "m48-l2", moduloId: "modulo-48", titulo: "Ejemplos (few-shot) y razonamiento paso a paso" },
+  { id: "m48-l3", moduloId: "modulo-48", titulo: "Salidas estructuradas (JSON) y validación" },
+  { id: "m48-l4", moduloId: "modulo-48", titulo: "Evaluar un prompt: conjunto de pruebas y métricas" },
+  { id: "m49-l1", moduloId: "modulo-49", titulo: "RAG: responder con tus propios documentos" },
+  { id: "m49-l2", moduloId: "modulo-49", titulo: "Herramientas: que el modelo consulte datos y ejecute funciones" },
+  { id: "m49-l3", moduloId: "modulo-49", titulo: "Agentes: el ciclo de decidir, actuar y observar" },
+  { id: "m49-l4", moduloId: "modulo-49", titulo: "Automatizar tareas de analista: clasificar, extraer y decidir si vale la pena" },
+  { id: "m50-l1", moduloId: "modulo-50", titulo: "Privacidad y seguridad: datos personales e inyección de instrucciones" },
+  { id: "m50-l2", moduloId: "modulo-50", titulo: "Sesgo y equidad: medir si el sistema trata distinto a distintos grupos" },
+  { id: "m50-l3", moduloId: "modulo-50", titulo: "Gobernanza y regulación de la IA: marcos y buenas prácticas" },
+  { id: "m50-l4", moduloId: "modulo-50", titulo: "Proyecto: asistente de preguntas frecuentes responsable" },
 ]
 
 export const moduleLoaders: Record<string, () => Promise<Lesson[]>> = {
@@ -258,4 +274,8 @@ export const moduleLoaders: Record<string, () => Promise<Lesson[]>> = {
   'modulo-44': () => import('./modules/module44').then((m) => m.module44Lessons),
   'modulo-45': () => import('./modules/module45').then((m) => m.module45Lessons),
   'modulo-46': () => import('./modules/module46').then((m) => m.module46Lessons),
+  'modulo-47': () => import('./modules/module47').then((m) => m.module47Lessons),
+  'modulo-48': () => import('./modules/module48').then((m) => m.module48Lessons),
+  'modulo-49': () => import('./modules/module49').then((m) => m.module49Lessons),
+  'modulo-50': () => import('./modules/module50').then((m) => m.module50Lessons),
 }

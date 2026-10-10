@@ -84,6 +84,7 @@ test('las ampliaciones de SQL (módulos 38–42) pertenecen al curso SQL y no cu
 
 test('siguiente curso con contenido', () => {
   assert.equal(siguienteCurso('estadistica-inferencial')?.id, 'excel')
-  assert.equal(siguienteCurso('machine-learning')?.id, undefined)
-  assert.equal(cursosDisponibles.length, 10)
+  assert.equal(siguienteCurso('machine-learning')?.id, 'ia-aplicada')
+  assert.equal(siguienteCurso('ia-aplicada')?.id, undefined) // el proyecto final aún no tiene contenido
+  assert.equal(cursosDisponibles.length, 11)
 })
