@@ -193,6 +193,21 @@ export const lessonIndex: LessonSummary[] = [
   { id: "m42-l1", moduloId: "modulo-42", titulo: "Proyecto, parte 1: calidad de datos y KPIs" },
   { id: "m42-l2", moduloId: "modulo-42", titulo: "Proyecto, parte 2: evolución mensual y rankings" },
   { id: "m42-l3", moduloId: "modulo-42", titulo: "Proyecto, parte 3: segmentación de clientes y reporte final" },
+  { id: "m43-l1", moduloId: "modulo-43", titulo: "Elegir el gráfico según la pregunta" },
+  { id: "m43-l2", moduloId: "modulo-43", titulo: "Diseño que comunica: orden, color y ejes honestos" },
+  { id: "m43-l3", moduloId: "modulo-43", titulo: "Tableros: KPI, jerarquía visual y semáforos" },
+  { id: "m43-l4", moduloId: "modulo-43", titulo: "Accesibilidad, contraste y storytelling" },
+  { id: "m44-l1", moduloId: "modulo-44", titulo: "Power BI: el flujo de trabajo y la calidad de los datos" },
+  { id: "m44-l2", moduloId: "modulo-44", titulo: "Power Query: transformaciones y su equivalente en pandas" },
+  { id: "m44-l3", moduloId: "modulo-44", titulo: "Modelo en estrella: hechos, dimensiones y relaciones" },
+  { id: "m44-l4", moduloId: "modulo-44", titulo: "La tabla de fechas (calendario) y el tiempo en el modelo" },
+  { id: "m45-l1", moduloId: "modulo-45", titulo: "DAX: medidas, columnas calculadas y contexto de filtro" },
+  { id: "m45-l2", moduloId: "modulo-45", titulo: "CALCULATE: modificar el contexto de filtro" },
+  { id: "m45-l3", moduloId: "modulo-45", titulo: "Inteligencia de tiempo: acumulado del año y año anterior" },
+  { id: "m45-l4", moduloId: "modulo-45", titulo: "Variables, condicionales y rankings en DAX" },
+  { id: "m46-l1", moduloId: "modulo-46", titulo: "Diseñar el informe en Power BI: visuales, interacción y rendimiento" },
+  { id: "m46-l2", moduloId: "modulo-46", titulo: "Publicar, actualizar y proteger datos con seguridad por filas (RLS)" },
+  { id: "m46-l3", moduloId: "modulo-46", titulo: "Proyecto: tablero de ventas de la tienda Aurora" },
 ]
 
 export const moduleLoaders: Record<string, () => Promise<Lesson[]>> = {
@@ -239,4 +254,8 @@ export const moduleLoaders: Record<string, () => Promise<Lesson[]>> = {
   'modulo-40': () => import('./modules/module40').then((m) => m.module40Lessons),
   'modulo-41': () => import('./modules/module41').then((m) => m.module41Lessons),
   'modulo-42': () => import('./modules/module42').then((m) => m.module42Lessons),
+  'modulo-43': () => import('./modules/module43').then((m) => m.module43Lessons),
+  'modulo-44': () => import('./modules/module44').then((m) => m.module44Lessons),
+  'modulo-45': () => import('./modules/module45').then((m) => m.module45Lessons),
+  'modulo-46': () => import('./modules/module46').then((m) => m.module46Lessons),
 }
