@@ -14,7 +14,8 @@ export const cursos: Curso[] = [
     nivel: 'Básico',
     icono: '📊',
     aprenderas: ['Clasificar variables y escalas de medición', 'Calcular e interpretar media, mediana, desviación y cuartiles', 'Detectar valores atípicos y medir correlaciones', 'Presentar un estudio descriptivo con conclusiones y límites'],
-    requisitos: 'Ninguno. Solo necesitas modificar pequeños fragmentos de código ya escritos.',
+    requisitos: 'Ninguno. No necesitas programar: los ejercicios se resuelven con la calculadora incluida en la plataforma.',
+    sinProgramacion: true,
     certifica: false,
   },
   {
@@ -25,8 +26,9 @@ export const cursos: Curso[] = [
     descripcion: 'La base teórica de la inferencia: cómo razonar con incertidumbre y modelar fenómenos aleatorios con distribuciones.',
     nivel: 'Básico',
     icono: '🎲',
-    aprenderas: ['Aplicar las reglas de probabilidad y el teorema de Bayes', 'Modelar conteos con binomial y Poisson', 'Calcular probabilidades con la normal y la exponencial', 'Estimar probabilidades por simulación Monte Carlo'],
-    requisitos: 'Estadística descriptiva (recomendado).',
+    aprenderas: ['Aplicar las reglas de probabilidad y el teorema de Bayes', 'Modelar conteos con binomial y Poisson', 'Calcular probabilidades con la normal y la exponencial', 'Estimar probabilidades por simulación Monte Carlo (con dígitos aleatorios)'],
+    requisitos: 'Estadística descriptiva (recomendado). Sin programación: calculadora y tablas estadísticas incluidas.',
+    sinProgramacion: true,
     certifica: false,
   },
   {
@@ -38,7 +40,8 @@ export const cursos: Curso[] = [
     nivel: 'Intermedio',
     icono: '🧪',
     aprenderas: ['Construir e interpretar intervalos de confianza', 'Contrastar hipótesis con pruebas t, z y chi-cuadrado', 'Diseñar y analizar un A/B test', 'Ajustar regresiones y comparar grupos con ANOVA'],
-    requisitos: 'Probabilidad y distribuciones (recomendado).',
+    requisitos: 'Probabilidad y distribuciones (recomendado). Sin programación: calculadora y tablas estadísticas incluidas.',
+    sinProgramacion: true,
     certifica: false,
   },
   {
@@ -51,6 +54,7 @@ export const cursos: Curso[] = [
     icono: '📗',
     aprenderas: ['Fórmulas y funciones de análisis con práctica verificada en el navegador', 'Condiciones, búsquedas y estadística descriptiva con fórmulas', 'Limpieza y preparación de datos', 'Un proyecto completo de reporte con fórmulas'],
     requisitos: 'Ninguno.',
+    avisoCertificado: 'Las prácticas de fórmulas se corrigen con un motor de fórmulas propio de la plataforma, no con Microsoft Excel; las tablas dinámicas y los gráficos se estudian como concepto.',
     certifica: false,
   },
   {
@@ -96,6 +100,7 @@ export const cursos: Curso[] = [
     icono: '📈',
     aprenderas: ['Elegir y diseñar gráficos que comunican (color, ejes, contraste, accesibilidad)', 'Preparar datos con Power Query y modelarlos en estrella con tabla de fechas', 'Entender DAX: medidas, contexto de filtro, CALCULATE, inteligencia de tiempo y rankings', 'Diseñar, publicar y proteger un tablero, y verificarlo con cifras de control'],
     requisitos: 'Excel y SQL (recomendado). Para el proyecto, Power BI Desktop en Windows.',
+    avisoCertificado: 'Este curso no ejecuta Power BI: explica Power Query y DAX y corrige la lógica con Python. No evalúa archivos de Power BI.',
     certifica: false,
   },
   {
@@ -130,6 +135,7 @@ export const cursos: Curso[] = [
     icono: '✨',
     aprenderas: ['Entender tokens, contexto, costos, temperatura y límites de los modelos de lenguaje', 'Escribir prompts claros, usar ejemplos y obtener salidas estructuradas validadas', 'Construir flujos con RAG, herramientas y agentes con controles', 'Proteger datos, medir sesgos y conocer marcos de gobernanza (UE, NIST, Colombia)'],
     requisitos: 'Python para datos (recomendado).',
+    avisoCertificado: 'Los ejercicios usan modelos de lenguaje simulados: el curso no llama a ningún modelo real ni evalúa aplicaciones con servicios externos.',
     certifica: false,
   },
   {
@@ -142,6 +148,7 @@ export const cursos: Curso[] = [
     icono: '🏆',
     aprenderas: ['Plantear una pregunta de negocio y validar el alcance', 'Organizar un repositorio reproducible y controlar la calidad de los datos', 'Modelar con línea base y evitar fugas de información', 'Comunicar el impacto con supuestos explícitos y publicar el proyecto'],
     requisitos: 'Haber completado varios de los cursos anteriores (Python para datos, estadística y SQL como base).',
+    avisoCertificado: 'Certifica el estudio del método y la resolución del caso guiado con datos sintéticos; no evalúa ni califica el proyecto personal del estudiante.',
     certifica: false,
   },
 ]
@@ -257,6 +264,17 @@ export function certificacionDeCurso(cursoId: string): 'todo' | 'parcial' | 'nin
   const cuentan = ids.filter((id) => leccionesCertificables.includes(id)).length
   if (cuentan === 0) return 'ninguno'
   return cuentan === ids.length ? 'todo' : 'parcial'
+}
+
+/** Id del curso al que pertenece una lección. */
+export function cursoDeLeccion(leccionId: string): string | undefined {
+  const leccion = lessonIndex.find((l) => l.id === leccionId)
+  return leccion ? getModulo(leccion.moduloId)?.cursoId : undefined
+}
+
+/** Módulo → ids de lecciones de un curso (para calcular el avance hacia el certificado del curso). */
+export function moduloLeccionesDeCurso(cursoId: string): Record<string, string[]> {
+  return Object.fromEntries(modulosDeCurso(cursoId).map((m) => [m.id, m.lessonIds]))
 }
 
 export function getLeccion(id: string): LessonSummary | undefined {

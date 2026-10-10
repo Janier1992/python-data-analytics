@@ -2,294 +2,853 @@ import type { Lesson } from '../../types'
 
 export const module30Lessons: Lesson[] = [
   {
-    id: "m30-l1",
-    moduloId: "modulo-30",
-    titulo: "Muestreo y sesgo de selección",
-    objetivo: "Distinguir los principales tipos de muestreo y reconocer el sesgo de selección y de no respuesta.",
-    porQueImporta:
-      "La estadística inferencial supone que la muestra representa a la población. Si el muestreo es malo, ningún cálculo posterior lo corrige: es el error más caro y más difícil de detectar.",
-    concepto: "La **inferencia** consiste en sacar conclusiones sobre una población a partir de una muestra. Todo depende de cómo se eligió esa muestra:\n\n- **Muestreo aleatorio simple**: cada individuo tiene la misma probabilidad de ser elegido.\n- **Muestreo estratificado**: se divide la población en grupos (estratos) y se toma una muestra proporcional de cada uno. Garantiza que los grupos pequeños queden representados.\n- **Muestreo por conveniencia**: se toma a quien es fácil de alcanzar. Es barato, pero casi siempre sesgado.\n\nFuentes de sesgo frecuentes:\n\n- **Sesgo de selección**: la forma de elegir favorece a ciertos individuos.\n- **Sesgo de no respuesta**: quienes responden son distintos de quienes no lo hacen (en una encuesta de satisfacción responden sobre todo los muy contentos o los muy molestos).\n\n```python\ndf.sample(n=50, random_state=0)                        # aleatorio simple\ndf.groupby(\"region\").sample(frac=0.2, random_state=0)  # estratificado: 20 % de cada región\n```",
-    ejemploMinimo: "import pandas as pd\n\ndf = pd.DataFrame({\"cliente\": range(1, 101)})\nmuestra = df.sample(n=10, random_state=0)\nprint(len(muestra))",
-    ejemploAplicado: "import pandas as pd\n\ndf = pd.DataFrame({\"region\": [\"norte\"] * 60 + [\"sur\"] * 30 + [\"este\"] * 10, \"id\": range(100)})\n\nestratificada = df.groupby(\"region\").sample(frac=0.2, random_state=1)\nprint(estratificada[\"region\"].value_counts())",
-    errorFrecuente: {
-      codigo: "import pandas as pd\n\ndf = pd.DataFrame({\"region\": [\"norte\"] * 60 + [\"sur\"] * 30 + [\"este\"] * 10})\nmuestra = df.head(20)\nprint(muestra[\"region\"].value_counts())",
-      explicacion:
-        "`head(20)` toma los primeros registros, que aquí son todos del norte: la muestra no representa a la población (faltan sur y este por completo). Tomar «los primeros» o «los más fáciles» es muestreo por conveniencia y produce sesgo. Hay que elegir al azar, idealmente estratificando.",
+    "id": "m30-l1",
+    "moduloId": "modulo-30",
+    "motor": "calculo",
+    "titulo": "Muestreo y sesgo de selección",
+    "objetivo": "Distinguir los principales tipos de muestreo y reconocer el sesgo de selección y de no respuesta.",
+    "porQueImporta": "La estadística inferencial supone que la muestra representa a la población. Si el muestreo es malo, ningún cálculo posterior lo corrige: es el error más caro y más difícil de detectar.",
+    "concepto": "La **inferencia** consiste en sacar conclusiones sobre una población a partir de una muestra. Todo depende de cómo se eligió esa muestra.\n\n**Muestreo probabilístico** (cada elemento tiene una probabilidad conocida de ser elegido):\n\n- **Aleatorio simple**: todos tienen la misma probabilidad; se sortea de la lista completa.\n- **Sistemático**: se elige uno cada `k = N ÷ n` elementos, con un arranque aleatorio.\n- **Estratificado**: se divide la población en grupos homogéneos (estratos) y se sortea dentro de cada uno; con **asignación proporcional**, cada estrato aporta a la muestra en proporción a su tamaño.\n- **Por conglomerados**: se sortean grupos completos (sucursales, barrios) y se encuesta a todos sus miembros.\n\n**Muestreo no probabilístico** (conveniencia, voluntarios): barato pero no permite generalizar con rigor.\n\n**Sesgos frecuentes**: de **selección** (algunos quedan fuera del marco), de **no respuesta** (quienes no contestan difieren de quienes sí) y de **supervivencia** (solo se observa a quienes «sobrevivieron»). Una muestra grande **no** corrige un sesgo.",
+    "ejemploMinimo": {
+      "tipo": "resuelto",
+      "titulo": "Una empresa de 1200 empleados quiere encuestar a 60",
+      "pasos": [
+        "Muestreo **sistemático**: k = N ÷ n = 1200 ÷ 60 = **20**.",
+        "Se elige un arranque al azar entre 1 y 20 (por ejemplo 7) y se toman los empleados 7, 27, 47, …",
+        "Muestreo **estratificado proporcional**: si hay 720 de planta, 360 administrativos y 120 gerentes, cada estrato aporta 60 × 720/1200 = **36**, 18 y 6."
+      ],
+      "conclusion": "El estratificado garantiza que cada tipo de empleado esté representado en proporción a su tamaño."
     },
-    practicaGuiada: {
-      id: "m30-l1-practica",
-      enunciado: "Toma una muestra **estratificada** del 20 % de cada región con `groupby(\"region\").sample(frac=0.2, random_state=1)` e imprime cuántos elementos de la región `\"norte\"` quedaron.",
-      codigoInicial: "import pandas as pd\n\ndf = pd.DataFrame({\"region\": [\"norte\"] * 60 + [\"sur\"] * 30 + [\"este\"] * 10})\n\nmuestra = df\nprint(len(muestra))",
-      solucion: "import pandas as pd\n\ndf = pd.DataFrame({\"region\": [\"norte\"] * 60 + [\"sur\"] * 30 + [\"este\"] * 10})\n\nmuestra = df.groupby(\"region\").sample(frac=0.2, random_state=1)\nprint((muestra[\"region\"] == \"norte\").sum())",
-      pistas: ["`df.groupby(\"region\").sample(frac=0.2, random_state=1)`", "Cuenta las filas con `region == \"norte\"`."],
-      validar: (stdout) => {
-        const ok = stdout.trim() === "12"
-        return { ok, mensaje: ok ? "Correcto: 20 % de 60 = 12." : "El resultado esperado es 12." }
-      },
+    "ejemploAplicado": {
+      "tipo": "resuelto",
+      "titulo": "Una encuesta con sesgo",
+      "pasos": [
+        "Se pregunta por satisfacción por correo y responde el 8 % de los clientes, casi todos muy contentos o muy molestos.",
+        "Es **sesgo de no respuesta**: los 92 % restantes pueden pensar distinto.",
+        "Aumentar la muestra no ayuda: hay que mejorar la tasa de respuesta o ponderar por segmentos."
+      ],
+      "conclusion": "Una muestra grande pero sesgada da una conclusión precisa… y equivocada."
     },
-    reto: {
-      id: "m30-l1-reto",
-      enunciado: "En una encuesta de satisfacción solo responden quienes dieron 4 o 5. Calcula cuánto **sobreestima** la media de los respondientes la media de toda la población (`media_respondientes - media_poblacion`, 2 decimales).",
-      codigoInicial: "import pandas as pd\n\npoblacion = pd.Series([2, 3, 3, 4, 4, 4, 5, 5, 5, 5])\nrespondientes = poblacion[poblacion >= 4]\n\nsesgo = 0\nprint(sesgo)",
-      solucion: "import pandas as pd\n\npoblacion = pd.Series([2, 3, 3, 4, 4, 4, 5, 5, 5, 5])\nrespondientes = poblacion[poblacion >= 4]\n\nsesgo = round(respondientes.mean() - poblacion.mean(), 2)\nprint(sesgo)",
-      pistas: ["Resta la media de `poblacion` a la media de `respondientes`."],
-      validar: (stdout) => {
-        const v = parseFloat(stdout.trim())
-        const ok = !Number.isNaN(v) && Math.abs(v - 0.57) <= 0.006
-        return { ok, mensaje: ok ? "Correcto: la encuesta sobreestima la satisfacción en 0.57 puntos." : "El resultado esperado es 0.57." }
-      },
+    "errorFrecuente": {
+      "codigo": "«Encuestamos a 5000 personas en una red social: es una muestra enorme, así que representa a todo el país.»",
+      "explicacion": "El tamaño no corrige el sesgo de selección. Solo están quienes usan esa red social y respondieron: no tienen la misma probabilidad de ser elegidos que el resto del país. Una muestra pequeña pero aleatoria suele ser mucho mejor."
     },
-    verificacion: [
+    "practicaGuiada": {
+      "id": "m30-l1-practica",
+      "enunciado": "Un colegio tiene 1500 estudiantes y quiere una muestra de 100.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "Intervalo del muestreo sistemático (k = N ÷ n)",
+          "valor": 15,
+          "calculo": "=1500/100"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Probabilidad de que un estudiante sea elegido en un muestreo aleatorio simple (4 decimales)",
+          "valor": 0.0667,
+          "calculo": "=100/1500"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Si hay 900 estudiantes de primaria, ¿cuántos entran en una muestra estratificada proporcional?",
+          "valor": 60,
+          "calculo": "=100*900/1500"
+        }
+      ],
+      "solucion": [
+        "k = 1500 ÷ 100 = 15.",
+        "Probabilidad = 100 ÷ 1500 = 0.0667.",
+        "Primaria aporta 100 × 900/1500 = 60."
+      ],
+      "pistas": [
+        "La asignación proporcional repite la proporción de la población."
+      ]
+    },
+    "reto": {
+      "id": "m30-l1-reto",
+      "enunciado": "Identifica el sesgo en cada caso.",
+      "preguntas": [
+        {
+          "tipo": "opcion",
+          "etiqueta": "Una tienda pregunta la satisfacción solo a los clientes que llegan a la caja en horario de oficina.",
+          "opciones": [
+            "Sesgo de selección",
+            "Sesgo de no respuesta",
+            "No hay sesgo"
+          ],
+          "correcta": 0
+        },
+        {
+          "tipo": "opcion",
+          "etiqueta": "Se estudian las empresas exitosas de hoy para ver «qué hicieron bien», ignorando las que quebraron.",
+          "opciones": [
+            "Sesgo de supervivencia",
+            "Sesgo de no respuesta",
+            "Muestreo estratificado"
+          ],
+          "correcta": 0
+        },
+        {
+          "tipo": "opcion",
+          "etiqueta": "Se envían 2000 encuestas y contestan 150 personas, casi todas jubiladas.",
+          "opciones": [
+            "Sesgo de no respuesta",
+            "Muestreo sistemático",
+            "Sesgo de confirmación"
+          ],
+          "correcta": 0
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Si se envían 2000 encuestas y contestan 150, la tasa de respuesta (%, 1 decimal) es",
+          "valor": 7.5,
+          "calculo": "=150/2000*100"
+        }
+      ],
+      "solucion": [
+        "El marco excluye a los clientes de otros horarios.",
+        "Solo se observan los que «sobrevivieron».",
+        "La tasa de respuesta es 150 ÷ 2000 = 7.5 %."
+      ],
+      "pistas": [
+        "Pregúntate quién queda fuera de la muestra y por qué."
+      ]
+    },
+    "verificacion": [
       {
-        id: "m30-l1-q1",
-        pregunta: "¿Qué ventaja tiene el muestreo estratificado?",
-        opciones: ["Es el más barato", "Asegura que los grupos pequeños queden representados", "Elimina todo el sesgo", "No necesita aleatoriedad"],
-        respuestaCorrecta: 1,
-        explicacion: "Se toma una muestra proporcional de cada estrato, así ningún grupo importante queda fuera.",
+        "id": "m30-l1-q1",
+        "pregunta": "En el muestreo estratificado:",
+        "opciones": [
+          "Se sortean grupos completos",
+          "Se divide en estratos homogéneos y se sortea dentro de cada uno",
+          "Se elige por conveniencia",
+          "Se usa siempre n = 30"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "Cada estrato queda representado."
       },
       {
-        id: "m30-l1-q2",
-        pregunta: "Una encuesta online voluntaria suele tener sesgo porque:",
-        opciones: ["Es demasiado grande", "Quienes responden no son representativos de quienes no responden", "Usa números", "Tiene preguntas"],
-        respuestaCorrecta: 1,
-        explicacion: "Es sesgo de autoselección / no respuesta: los que participan difieren de los que no.",
-      },
+        "id": "m30-l1-q2",
+        "pregunta": "Una muestra muy grande:",
+        "opciones": [
+          "Elimina el sesgo de selección",
+          "No corrige el sesgo de selección",
+          "Siempre es representativa",
+          "No tiene error"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "El tamaño reduce la variabilidad, no el sesgo."
+      }
     ],
-    resumen: ["La inferencia solo es válida si la muestra representa a la población.", "Aleatorio simple y estratificado reducen el sesgo; la conveniencia lo aumenta.", "Un tamaño de muestra enorme no corrige un muestreo sesgado."],
-    proximoPaso: "Veremos cómo se comportan los estimadores calculados a partir de una muestra.",
-    conceptos: ["muestreo", "sesgo-de-seleccion"],
+    "resumen": [
+      "El muestreo aleatorio es la base de la inferencia.",
+      "Estratificar, sistematizar o usar conglomerados.",
+      "El sesgo no se arregla con más datos."
+    ],
+    "proximoPaso": "Veremos los estimadores: media y varianza muestrales.",
+    "conceptos": [
+      "muestreo",
+      "sesgo-de-seleccion"
+    ]
   },
   {
-    id: "m30-l2",
-    moduloId: "modulo-30",
-    titulo: "Estimadores: media y varianza muestrales",
-    objetivo: "Usar la media y la varianza muestrales como estimadores de los parámetros poblacionales y entender por qué la varianza divide entre n - 1.",
-    porQueImporta:
-      "Casi nunca conocemos los parámetros de la población (μ, σ). Los estimamos con la muestra, y conviene saber si el estimador acierta en promedio (insesgado) o se equivoca de forma sistemática.",
-    concepto: "- **Parámetro**: un valor de la población (μ, σ², p). Es fijo y casi siempre desconocido.\n- **Estadístico / estimador**: un valor calculado de la muestra que sirve para estimar el parámetro (x̄, s², p̂). Cambia de muestra en muestra.\n\nUn estimador es **insesgado** si, en promedio sobre muchas muestras, da el valor del parámetro.\n\n- La **media muestral** x̄ es un estimador insesgado de μ.\n- La **varianza muestral** `s² = Σ(x - x̄)² / (n - 1)` es insesgada para σ². Si se dividiera entre `n`, subestimaría σ² sistemáticamente (porque las desviaciones se miden respecto a x̄, no a μ).\n\n```python\nserie.var()          # ddof=1: varianza muestral (insesgada)\nserie.var(ddof=0)    # divide entre n: sesgada como estimador de σ²\n```",
-    ejemploMinimo: "import pandas as pd\n\nx = pd.Series([12, 15, 11, 18, 14, 13, 16, 19])\nprint(x.mean(), round(x.var(), 2))",
-    ejemploAplicado: "import numpy as np\n\nrng = np.random.default_rng(42)\n# 100 000 muestras de tamaño 5 de una población con σ² = 4\nmuestras = rng.normal(10, 2, size=(100_000, 5))\n\nprint(\"Promedio de s² (ddof=1):\", round(muestras.var(axis=1, ddof=1).mean(), 2))\nprint(\"Promedio de s² (ddof=0):\", round(muestras.var(axis=1, ddof=0).mean(), 2))\nprint(\"σ² verdadera: 4\")",
-    errorFrecuente: {
-      codigo: "import pandas as pd\n\nx = pd.Series([12, 15, 11, 18, 14, 13, 16, 19])\nprint(\"Varianza muestral:\", x.var(ddof=0))",
-      explicacion:
-        "Con `ddof=0` se divide entre `n` y se obtiene la varianza **de esos datos como si fueran toda la población** (6.94). Para estimar la varianza de la población a partir de una muestra se usa `ddof=1` (7.93), que corrige el sesgo.",
+    "id": "m30-l2",
+    "moduloId": "modulo-30",
+    "motor": "calculo",
+    "titulo": "Estimadores: media y varianza muestrales",
+    "objetivo": "Distinguir parámetro, estadístico y estimador, y entender por qué la varianza muestral divide entre n − 1.",
+    "porQueImporta": "Rara vez conocemos la población completa. Estimamos sus parámetros con estadísticos de la muestra, y conviene saber cuándo un estimador es «bueno» (insesgado).",
+    "concepto": "- **Parámetro**: un valor de la población (`μ`, `σ²`, `p`). Es fijo y casi siempre desconocido.\n- **Estadístico**: un valor calculado con la muestra (`x̄`, `s²`, `p̂`). Cambia de muestra en muestra.\n- **Estimador**: la fórmula que usamos para estimar un parámetro.\n\nUn estimador es **insesgado** si, promediando sobre todas las muestras posibles, da el valor verdadero del parámetro.\n\n- `x̄ = Σx ÷ n` estima a `μ` sin sesgo.\n- `s² = Σ(x − x̄)² ÷ (n − 1)` estima a `σ²` sin sesgo. Con `n` en el denominador se subestimaría la varianza.\n\nEl **error estándar** mide cuánto varía un estimador de muestra en muestra.",
+    "ejemploMinimo": {
+      "tipo": "resuelto",
+      "titulo": "Una población diminuta {1, 3, 5} y todas las muestras de tamaño 2 (con reemplazo)",
+      "datos": [
+        {
+          "columnas": [
+            "Muestra",
+            "Media x̄",
+            "s² (÷ n−1)",
+            "Con ÷ n"
+          ],
+          "filas": [
+            [
+              "(1, 1)",
+              "1",
+              "0",
+              "0"
+            ],
+            [
+              "(1, 3)",
+              "2",
+              "2",
+              "1"
+            ],
+            [
+              "(1, 5)",
+              "3",
+              "8",
+              "4"
+            ],
+            [
+              "(3, 1)",
+              "2",
+              "2",
+              "1"
+            ],
+            [
+              "(3, 3)",
+              "3",
+              "0",
+              "0"
+            ],
+            [
+              "(3, 5)",
+              "4",
+              "2",
+              "1"
+            ],
+            [
+              "(5, 1)",
+              "3",
+              "8",
+              "4"
+            ],
+            [
+              "(5, 3)",
+              "4",
+              "2",
+              "1"
+            ],
+            [
+              "(5, 5)",
+              "5",
+              "0",
+              "0"
+            ],
+            [
+              "Promedio",
+              "3",
+              "2.667",
+              "1.333"
+            ]
+          ]
+        }
+      ],
+      "pasos": [
+        "Población: μ = 3; σ² = ((1−3)² + 0 + (5−3)²) ÷ 3 = 2.667.",
+        "El promedio de todas las x̄ es **3** = μ: la media muestral es insesgada.",
+        "El promedio de s² con n − 1 es **2.667** = σ²; con n es solo **1.333** (la mitad): subestima."
+      ],
+      "conclusion": "Dividir entre n − 1 corrige el sesgo de la varianza muestral."
     },
-    practicaGuiada: {
-      id: "m30-l2-practica",
-      enunciado: "Calcula la **varianza muestral** (`ddof=1`, el valor por defecto de pandas) de `x` e imprímela con 2 decimales.",
-      codigoInicial: "import pandas as pd\n\nx = pd.Series([12, 15, 11, 18, 14, 13, 16, 19])\n\nvarianza = x.var(ddof=0)\nprint(round(varianza, 2))",
-      solucion: "import pandas as pd\n\nx = pd.Series([12, 15, 11, 18, 14, 13, 16, 19])\n\nvarianza = x.var()\nprint(round(varianza, 2))",
-      pistas: ["`x.var()` ya usa `ddof=1` por defecto."],
-      validar: (stdout) => {
-        const v = parseFloat(stdout.trim())
-        const ok = !Number.isNaN(v) && Math.abs(v - 7.93) <= 0.006
-        return { ok, mensaje: ok ? "Correcto: s² = 7.93." : "El resultado esperado es 7.93." }
-      },
+    "ejemploAplicado": {
+      "tipo": "resuelto",
+      "titulo": "Estimar con una muestra real: tiempos de respuesta (segundos)",
+      "datos": [
+        {
+          "columnas": [
+            "Dato",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "filas": [
+            [
+              "Tiempo",
+              12,
+              15,
+              11,
+              18,
+              14
+            ]
+          ]
+        }
+      ],
+      "pasos": [
+        "x̄ = 70 ÷ 5 = **14** s (estima μ).",
+        "s² = 30 ÷ 4 = **7.5** s² (estima σ²) y s = √7.5 = **2.74** s.",
+        "Error estándar de la media = s ÷ √n = 2.74 ÷ 2.236 = **1.22** s."
+      ],
+      "conclusion": "Con estos cinco datos estimamos que el tiempo medio es ≈ 14 s, con una incertidumbre típica de 1.22 s."
     },
-    reto: {
-      id: "m30-l2-reto",
-      enunciado: "Comprueba por simulación que `ddof=1` es **insesgado**: imprime el promedio de la varianza muestral (`ddof=1`) de 100 000 muestras de tamaño 5 de una normal con σ² = 4, redondeado a 1 decimal.",
-      codigoInicial: "import numpy as np\n\nrng = np.random.default_rng(42)\nmuestras = rng.normal(10, 2, size=(100_000, 5))\n\npromedio = muestras.var(axis=1, ddof=0).mean()\nprint(round(promedio, 1))",
-      solucion: "import numpy as np\n\nrng = np.random.default_rng(42)\nmuestras = rng.normal(10, 2, size=(100_000, 5))\n\npromedio = muestras.var(axis=1, ddof=1).mean()\nprint(round(promedio, 1))",
-      pistas: ["Cambia `ddof=0` por `ddof=1`."],
-      validar: (stdout) => {
-        const v = parseFloat(stdout.trim())
-        const ok = !Number.isNaN(v) && Math.abs(v - 4.0) <= 0.15
-        return { ok, mensaje: ok ? "Correcto: en promedio la estimación es 4, el valor real de σ²." : "El resultado debería rondar 4.0." }
-      },
+    "errorFrecuente": {
+      "codigo": "«x̄ = 14, así que la media poblacional μ es exactamente 14.»",
+      "explicacion": "x̄ es solo una estimación: otra muestra daría otro valor. La media muestral varía en torno a μ con un error estándar. Por eso la estadística inferencial acompaña las estimaciones con intervalos y pruebas."
     },
-    verificacion: [
+    "practicaGuiada": {
+      "id": "m30-l2-practica",
+      "enunciado": "Una muestra de 6 pedidos tiene estos tiempos de entrega (días): 3, 5, 4, 6, 2, 4.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "Media muestral x̄",
+          "valor": 4,
+          "calculo": "=PROMEDIO(3;5;4;6;2;4)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Varianza muestral s² (÷ n − 1)",
+          "valor": 2,
+          "calculo": "=VAR.S(3;5;4;6;2;4)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "s (3 decimales)",
+          "valor": 1.414,
+          "calculo": "=DESVEST.M(3;5;4;6;2;4)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Error estándar de la media (3 decimales)",
+          "valor": 0.577,
+          "calculo": "=DESVEST.M(3;5;4;6;2;4)/RAIZ(6)"
+        }
+      ],
+      "solucion": [
+        "x̄ = 24 ÷ 6 = 4.",
+        "Desviaciones: −1, 1, 0, 2, −2, 0 → cuadrados 1, 1, 0, 4, 4, 0 = 10. s² = 10 ÷ 5 = 2.",
+        "s = 1.414; EE = 1.414 ÷ 2.449 = 0.577."
+      ],
+      "pistas": [
+        "Divide la suma de cuadrados entre n − 1 = 5."
+      ]
+    },
+    "reto": {
+      "id": "m30-l2-reto",
+      "enunciado": "Con los mismos datos.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "Varianza si se dividiera (erróneamente) entre n (3 decimales)",
+          "valor": 1.667
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Cociente entre la varianza correcta y la errónea",
+          "valor": 1.2,
+          "calculo": "=(6/5)"
+        },
+        {
+          "tipo": "opcion",
+          "etiqueta": "Dividir entre n en lugar de n − 1 hace que la varianza estimada sea…",
+          "opciones": [
+            "Mayor que la verdadera",
+            "Menor en promedio: subestima",
+            "Igual"
+          ],
+          "correcta": 1
+        }
+      ],
+      "solucion": [
+        "10 ÷ 6 = 1.667.",
+        "La razón entre ambas es n ÷ (n − 1) = 6 ÷ 5 = 1.2.",
+        "Dividir entre n subestima la varianza poblacional."
+      ],
+      "pistas": [
+        "El cociente entre las varianzas es n/(n−1)."
+      ]
+    },
+    "verificacion": [
       {
-        id: "m30-l2-q1",
-        pregunta: "¿Qué significa que un estimador sea insesgado?",
-        opciones: ["Que siempre acierta", "Que en promedio, sobre muchas muestras, da el valor del parámetro", "Que usa muchos datos", "Que no varía"],
-        respuestaCorrecta: 1,
-        explicacion: "Puede errar en una muestra concreta, pero no se equivoca de forma sistemática.",
+        "id": "m30-l2-q1",
+        "pregunta": "Un estimador insesgado es aquel que…",
+        "opciones": [
+          "Siempre acierta",
+          "En promedio sobre todas las muestras da el valor del parámetro",
+          "Tiene varianza cero",
+          "Usa muestras grandes"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "No tiene error sistemático."
       },
       {
-        id: "m30-l2-q2",
-        pregunta: "La varianza muestral divide entre n - 1 para:",
-        opciones: ["Hacerla más pequeña", "Corregir el sesgo de usar x̄ en lugar de μ", "Evitar dividir entre cero", "Que sume 1"],
-        respuestaCorrecta: 1,
-        explicacion: "Las desviaciones respecto a x̄ son más pequeñas que respecto a μ; n - 1 lo compensa.",
-      },
+        "id": "m30-l2-q2",
+        "pregunta": "Un parámetro es…",
+        "opciones": [
+          "Un valor de la muestra",
+          "Un valor fijo de la población",
+          "Una fórmula",
+          "Un gráfico"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "Describe a la población."
+      }
     ],
-    resumen: ["Los parámetros son de la población; los estadísticos, de la muestra.", "x̄ es insesgada para μ; s² (con n - 1) lo es para σ².", "Un estadístico cambia de muestra en muestra: tiene su propia distribución."],
-    proximoPaso: "Mediremos cuánto varía una media muestral con el error estándar y veremos qué tamaño de muestra necesitas.",
-    conceptos: ["estimador-insesgado", "varianza-muestral"],
+    "resumen": [
+      "Parámetro (población) vs estadístico (muestra).",
+      "x̄ y s² (÷ n−1) son insesgados.",
+      "El error estándar mide la variación del estimador."
+    ],
+    "proximoPaso": "Calcularemos el error estándar y el tamaño de muestra necesario.",
+    "conceptos": [
+      "estimador-insesgado",
+      "varianza-muestral"
+    ]
   },
   {
-    id: "m30-l3",
-    moduloId: "modulo-30",
-    titulo: "Error estándar y tamaño de muestra",
-    objetivo: "Calcular el error estándar de la media y determinar el tamaño de muestra necesario para un margen de error dado.",
-    porQueImporta:
-      "Antes de hacer una encuesta o un experimento hay que decidir cuántos datos recoger: pocos dan resultados imprecisos; demasiados cuestan dinero. El error estándar y el margen de error ordenan esa decisión.",
-    concepto: "Por el teorema central del límite, la media muestral tiene un **error estándar**:\n\n```\nEE = σ / √n        (se estima con s / √n)\n```\n\nMide cuánto suele variar la media entre muestras. Para duplicar la precisión hay que **cuadruplicar** n.\n\nEl **margen de error** de una media con confianza del 95 % es aproximadamente `1.96 · EE`.\n\nPara elegir el **tamaño de muestra** que da un margen de error `E` (con σ conocida o estimada):\n\n```\nn = (z · σ / E)²        (redondeado hacia arriba)\n```\n\ncon z = 1.96 para el 95 % de confianza.\n\n```python\nimport math\nn = math.ceil((1.96 * sigma / margen) ** 2)\n```",
-    ejemploMinimo: "import numpy as np\n\nprint(12 / np.sqrt(36))",
-    ejemploAplicado: "import math\n\nsigma = 10        # desviación estándar estimada\nfor margen in (4, 2, 1):\n    n = math.ceil((1.96 * sigma / margen) ** 2)\n    print(f\"Margen ±{margen}: n = {n}\")",
-    errorFrecuente: {
-      codigo: "import math\n\nsigma, margen = 10, 2\nn = (1.96 * sigma / margen)\nprint(math.ceil(n))",
-      explicacion:
-        "Falta elevar al cuadrado: la fórmula es `n = (z·σ/E)²`. Sin el cuadrado se obtiene 10 (en lugar de 97), una muestra diez veces demasiado pequeña. Y al reducir a la mitad el margen de error, el tamaño de muestra se cuadruplica.",
+    "id": "m30-l3",
+    "moduloId": "modulo-30",
+    "motor": "calculo",
+    "titulo": "Error estándar y tamaño de muestra",
+    "objetivo": "Calcular el error estándar de una media y de una proporción y determinar el tamaño de muestra para una precisión deseada.",
+    "porQueImporta": "Antes de recoger datos hay que decidir cuántos hacen falta. Muy pocos dan estimaciones inútiles; demasiados cuestan dinero y tiempo.",
+    "concepto": "**Error estándar** (EE): la desviación típica de un estimador.\n\n- Media: `EE = s ÷ √n` (o `σ ÷ √n`).\n- Proporción: `EE = √(p̂(1 − p̂) ÷ n)`.\n\n**Margen de error** = valor crítico × EE. Con 95 % de confianza el valor crítico de la normal es `z = 1.96`.\n\n**Tamaño de muestra** para un margen de error `E` deseado:\n\n- Media: `n = (z · σ ÷ E)²`.\n- Proporción: `n = z² · p(1 − p) ÷ E²` (si no hay estimación previa, usa `p = 0.5`, el caso más exigente).\n\nSiempre se **redondea hacia arriba**. Como el EE depende de `√n`, para reducir el margen a la mitad hay que cuadruplicar la muestra.",
+    "ejemploMinimo": {
+      "tipo": "resuelto",
+      "titulo": "¿Cuántos clientes hay que medir para estimar el gasto medio con margen ±3?",
+      "pasos": [
+        "Se conoce por estudios previos σ ≈ 15 pesos; se quiere E = 3 con 95 % de confianza (z = 1.96).",
+        "n = (1.96 × 15 ÷ 3)² = (9.8)² = 96.04 → **97** clientes."
+      ],
+      "conclusion": "Con 97 clientes el margen de error del 95 % no supera ±3."
     },
-    practicaGuiada: {
-      id: "m30-l3-practica",
-      enunciado: "Calcula el **error estándar** de la media con `s = 12` y `n = 36` (`s / √n`) e imprímelo.",
-      codigoInicial: "import numpy as np\n\ns, n = 12, 36\n\nerror_estandar = 0\nprint(error_estandar)",
-      solucion: "import numpy as np\n\ns, n = 12, 36\n\nerror_estandar = s / np.sqrt(n)\nprint(error_estandar)",
-      pistas: ["`s / np.sqrt(n)`"],
-      validar: (stdout) => {
-        const v = parseFloat(stdout.trim())
-        const ok = !Number.isNaN(v) && Math.abs(v - 2.0) <= 0.0005
-        return { ok, mensaje: ok ? "Correcto: EE = 2." : "El resultado esperado es 2.0." }
-      },
+    "ejemploAplicado": {
+      "tipo": "resuelto",
+      "titulo": "Sondeo de proporción con margen ±4 %",
+      "pasos": [
+        "Sin estimación previa se usa p = 0.5 (máxima variabilidad).",
+        "n = 1.96² × 0.5 × 0.5 ÷ 0.04² = 600.23 → **601** personas."
+      ],
+      "conclusion": "Los sondeos de ~600 personas tienen un margen de error cercano a ±4 %."
     },
-    reto: {
-      id: "m30-l3-reto",
-      enunciado: "¿Qué tamaño de muestra se necesita para un **margen de error de ±2** con 95 % de confianza si σ ≈ 10? Usa `n = (1.96 · σ / E)²` redondeado hacia arriba con `math.ceil`.",
-      codigoInicial: "import math\n\nsigma, margen = 10, 2\n\nn = math.ceil((2 * sigma / margen) ** 2)      # usa z = 1.96, no 2\nprint(n)",
-      solucion: "import math\n\nsigma, margen = 10, 2\n\nn = math.ceil((1.96 * sigma / margen) ** 2)\nprint(n)",
-      pistas: ["Reemplaza el 2 por 1.96, que es el valor z del 95 %."],
-      validar: (stdout) => {
-        const ok = stdout.trim() === "97"
-        return { ok, mensaje: ok ? "Correcto: se necesitan 97 observaciones (96.04 redondeado hacia arriba)." : "El resultado esperado es 97." }
-      },
+    "errorFrecuente": {
+      "codigo": "«Para estimar con la mitad de margen basta con duplicar la muestra.»",
+      "explicacion": "El EE decrece con √n: duplicar n solo lo reduce a 1/√2 ≈ 0.71. Para dividir el margen entre 2 hay que cuadruplicar la muestra."
     },
-    verificacion: [
+    "practicaGuiada": {
+      "id": "m30-l3-practica",
+      "enunciado": "Una muestra de n = 49 pagos tiene media 800 y desviación s = 70.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "Error estándar de la media",
+          "valor": 10,
+          "calculo": "=70/RAIZ(49)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Margen de error al 95 % con z = 1.96 (1 decimal)",
+          "valor": 19.6,
+          "calculo": "=1.96*10"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Tamaño necesario para un margen de ±10 con σ = 70 (redondea hacia arriba)",
+          "valor": 189
+        }
+      ],
+      "solucion": [
+        "EE = 70 ÷ 7 = 10.",
+        "Margen = 1.96 × 10 = 19.6.",
+        "n = (1.96 × 70 ÷ 10)² = 13.72² = 188.2 → 189."
+      ],
+      "pistas": [
+        "Redondea siempre hacia arriba."
+      ]
+    },
+    "reto": {
+      "id": "m30-l3-reto",
+      "enunciado": "Una startup quiere estimar la proporción de usuarios que usarían una función nueva.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "n para un margen de ±5 % con 95 % (p = 0.5)",
+          "valor": 385
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "EE de una proporción p̂ = 0.3 con n = 400 (4 decimales)",
+          "valor": 0.0229,
+          "calculo": "=RAIZ(0.3*0.7/400)"
+        },
+        {
+          "tipo": "opcion",
+          "etiqueta": "Para reducir el margen de ±5 % a ±2.5 % hay que…",
+          "opciones": [
+            "Duplicar n",
+            "Cuadruplicar n",
+            "Aumentar n un 10 %"
+          ],
+          "correcta": 1
+        }
+      ],
+      "solucion": [
+        "n = 1.96² × 0.25 ÷ 0.05² = 384.1 → 385.",
+        "EE = √(0.21 ÷ 400) = 0.0229.",
+        "Para dividir el margen entre 2 se necesita 4 veces la muestra."
+      ],
+      "pistas": [
+        "Con p desconocido, usa p = 0.5."
+      ]
+    },
+    "verificacion": [
       {
-        id: "m30-l3-q1",
-        pregunta: "Para reducir a la mitad el error estándar, el tamaño de muestra debe:",
-        opciones: ["Duplicarse", "Cuadruplicarse", "Triplicarse", "Mantenerse"],
-        respuestaCorrecta: 1,
-        explicacion: "EE = σ/√n: para dividirlo entre 2 hay que multiplicar n por 4.",
+        "id": "m30-l3-q1",
+        "pregunta": "Duplicar el tamaño de muestra hace que el error estándar…",
+        "opciones": [
+          "Se reduzca a la mitad",
+          "Se multiplique por 0.71 (1/√2)",
+          "Se duplique",
+          "No cambie"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "EE ∝ 1/√n."
       },
       {
-        id: "m30-l3-q2",
-        pregunta: "El tamaño de muestra se redondea siempre hacia arriba porque:",
-        opciones: ["Es más bonito", "Con un valor menor no se alcanzaría el margen de error deseado", "Lo exige Python", "Así crece σ"],
-        respuestaCorrecta: 1,
-        explicacion: "Redondear hacia abajo dejaría un margen de error mayor al buscado.",
-      },
+        "id": "m30-l3-q2",
+        "pregunta": "Si no se conoce p, para el tamaño de muestra se usa:",
+        "opciones": [
+          "p = 0",
+          "p = 0.5",
+          "p = 1",
+          "p = 0.1"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "p = 0.5 maximiza p(1 − p)."
+      }
     ],
-    resumen: ["EE = σ/√n mide la variabilidad de la media muestral.", "Margen de error ≈ 1.96 · EE (95 % de confianza).", "n = (z·σ/E)²: reducir el margen a la mitad cuadruplica n."],
-    proximoPaso: "Con el error estándar construiremos intervalos de confianza para la media.",
-    conceptos: ["error-estandar-media", "tamano-de-muestra"],
+    "resumen": [
+      "EE = s/√n; EE(p̂) = √(p̂(1−p̂)/n).",
+      "n = (zσ/E)² o z²p(1−p)/E².",
+      "Margen a la mitad = muestra × 4."
+    ],
+    "proximoPaso": "Construiremos intervalos de confianza para la media.",
+    "conceptos": [
+      "error-estandar-media",
+      "tamano-de-muestra"
+    ]
   },
   {
-    id: "m30-l4",
-    moduloId: "modulo-30",
-    titulo: "Intervalo de confianza para la media",
-    objetivo: "Construir e interpretar un intervalo de confianza del 95 % para una media usando la distribución t.",
-    porQueImporta:
-      "Un promedio solo es una estimación. El intervalo de confianza dice entre qué valores plausibles podría estar la media real y es la forma correcta de reportar un resultado de muestra.",
-    concepto: "Un **intervalo de confianza (IC)** para la media da un rango de valores plausibles del parámetro:\n\n```\nx̄ ± t* · (s / √n)\n```\n\n`t*` viene de la distribución **t de Student** con `n - 1` grados de libertad (se usa en lugar de z porque s es una estimación y las muestras suelen ser pequeñas).\n\n```python\nfrom scipy import stats\n\nn = len(datos)\nmedia = datos.mean()\nee = stats.sem(datos)                       # s / √n\nstats.t.interval(0.95, df=n - 1, loc=media, scale=ee)\n```\n\n**Interpretación correcta**: si repitiéramos el muestreo muchas veces y construyéramos el intervalo cada vez, el 95 % de esos intervalos contendría la media real. **No** significa «hay un 95 % de probabilidad de que μ esté en este intervalo concreto».\n\nUn IC más estrecho indica estimación más precisa (más datos o menos variabilidad).",
-    ejemploMinimo: "from scipy import stats\n\nprint(round(stats.t.ppf(0.975, df=9), 3))",
-    ejemploAplicado: "import pandas as pd\nfrom scipy import stats\n\ndatos = pd.Series([52, 48, 55, 60, 47, 53, 58, 51, 49, 56])\nn = len(datos)\n\nee = stats.sem(datos)\nbajo, alto = stats.t.interval(0.95, df=n - 1, loc=datos.mean(), scale=ee)\nprint(f\"Media = {datos.mean():.1f}  ·  IC 95 % = [{bajo:.2f}, {alto:.2f}]\")",
-    errorFrecuente: {
-      codigo: "import pandas as pd\n\ndatos = pd.Series([52, 48, 55, 60, 47, 53, 58, 51, 49, 56])\nee = datos.std() / len(datos) ** 0.5\nprint(datos.mean() - 1.96 * ee, datos.mean() + 1.96 * ee)",
-      explicacion:
-        "Con una muestra pequeña (n = 10) usar z = 1.96 da un intervalo demasiado estrecho: el valor t correcto con 9 grados de libertad es 2.262, bastante mayor. Un intervalo muy estrecho promete más precisión de la que hay. Para medias con s estimada, usa la distribución t.",
+    "id": "m30-l4",
+    "moduloId": "modulo-30",
+    "motor": "calculo",
+    "titulo": "Intervalo de confianza para la media",
+    "objetivo": "Construir e interpretar un intervalo de confianza para la media con la distribución t.",
+    "porQueImporta": "Una estimación puntual como «el tiempo medio es 52 minutos» no dice cuánta confianza merece. El intervalo de confianza da un rango razonable para el verdadero valor y una medida de la incertidumbre.",
+    "concepto": "Cuando `σ` es desconocida (lo habitual), el intervalo de confianza para la media usa la **distribución t de Student**:\n\n`x̄ ± t* · (s ÷ √n)`\n\ndonde `t*` es el valor crítico con `n − 1` **grados de libertad** (gl). En la calculadora: `=INV.T.2C(1 − nivel; gl)`; por ejemplo `=INV.T.2C(0.05; 15)` para 95 % con 16 datos.\n\n**Interpretación**: «con 95 % de confianza, la media poblacional está entre A y B». Significa que el *método* captura la media verdadera en el 95 % de las muestras; **no** que haya un 95 % de probabilidad de que μ esté en este intervalo concreto.\n\nMás confianza → intervalo más ancho. Más datos → más estrecho. La distribución t tiene colas más pesadas que la normal; con muestras grandes se parecen.",
+    "ejemploMinimo": {
+      "tipo": "resuelto",
+      "titulo": "Muestra de n = 16: x̄ = 52 y s = 8",
+      "pasos": [
+        "Error estándar = 8 ÷ √16 = **2**.",
+        "t* para 95 % con gl = 15 → **2.131**.",
+        "Margen = 2.131 × 2 = 4.26.",
+        "Intervalo = 52 ± 4.26 → **(47.74; 56.26)**."
+      ],
+      "conclusion": "Con 95 % de confianza, la media poblacional está entre 47.7 y 56.3."
     },
-    practicaGuiada: {
-      id: "m30-l4-practica",
-      enunciado: "Calcula el **error estándar** de `datos` con `stats.sem` e imprímelo redondeado a 2 decimales.",
-      codigoInicial: "import pandas as pd\nfrom scipy import stats\n\ndatos = pd.Series([52, 48, 55, 60, 47, 53, 58, 51, 49, 56])\n\nee = 0\nprint(ee)",
-      solucion: "import pandas as pd\nfrom scipy import stats\n\ndatos = pd.Series([52, 48, 55, 60, 47, 53, 58, 51, 49, 56])\n\nee = round(stats.sem(datos), 2)\nprint(ee)",
-      pistas: ["`stats.sem(datos)` devuelve s / √n."],
-      validar: (stdout) => {
-        const v = parseFloat(stdout.trim())
-        const ok = !Number.isNaN(v) && Math.abs(v - 1.37) <= 0.006
-        return { ok, mensaje: ok ? "Correcto: EE = 1.37." : "El resultado esperado es 1.37." }
-      },
+    "ejemploAplicado": {
+      "tipo": "resuelto",
+      "titulo": "Efecto del nivel de confianza",
+      "datos": [
+        {
+          "columnas": [
+            "Confianza",
+            "t* (gl = 15)",
+            "Margen",
+            "Intervalo"
+          ],
+          "filas": [
+            [
+              "90 %",
+              "1.753",
+              "3.51",
+              "(48.49; 55.51)"
+            ],
+            [
+              "95 %",
+              "2.131",
+              "4.26",
+              "(47.74; 56.26)"
+            ],
+            [
+              "99 %",
+              "2.947",
+              "5.89",
+              "(46.11; 57.89)"
+            ]
+          ]
+        }
+      ],
+      "pasos": [
+        "Con los mismos datos, subir la confianza amplía el intervalo.",
+        "Es el costo de estar más seguro: menos precisión."
+      ],
+      "conclusion": "Hay un equilibrio entre confianza y precisión."
     },
-    reto: {
-      id: "m30-l4-reto",
-      enunciado: "Construye el **IC del 95 %** para la media con la distribución t (`stats.t.interval`) e imprime sus límites con 2 decimales, separados por un espacio (por ejemplo `49.80 56.00`).",
-      codigoInicial: "import pandas as pd\nfrom scipy import stats\n\ndatos = pd.Series([52, 48, 55, 60, 47, 53, 58, 51, 49, 56])\nee = stats.sem(datos)\n\nbajo = datos.mean() - 1.96 * ee      # usa la distribución t, no 1.96\nalto = datos.mean() + 1.96 * ee\nprint(f\"{bajo:.2f} {alto:.2f}\")",
-      solucion: "import pandas as pd\nfrom scipy import stats\n\ndatos = pd.Series([52, 48, 55, 60, 47, 53, 58, 51, 49, 56])\nee = stats.sem(datos)\n\nbajo, alto = stats.t.interval(0.95, df=len(datos) - 1, loc=datos.mean(), scale=ee)\nprint(f\"{bajo:.2f} {alto:.2f}\")",
-      pistas: ["`stats.t.interval(0.95, df=n-1, loc=media, scale=ee)` devuelve (límite inferior, límite superior)."],
-      validar: (stdout) => {
-        const ok = stdout.trim() === "49.80 56.00"
-        return { ok, mensaje: ok ? "Correcto: IC 95 % = [49.80, 56.00]." : "El resultado esperado es «49.80 56.00»." }
-      },
+    "errorFrecuente": {
+      "codigo": "«Con 95 % de confianza, el 95 % de los clientes tarda entre 47.7 y 56.3 minutos.»",
+      "explicacion": "El intervalo es para la media poblacional, no para los datos individuales. Los datos individuales varían mucho más (desviación 8); el intervalo de la media es más estrecho porque usa el error estándar (2)."
     },
-    verificacion: [
+    "practicaGuiada": {
+      "id": "m30-l4-practica",
+      "enunciado": "Una muestra de n = 25 compras tiene x̄ = 120 y s = 15. Construye el IC del 95 %.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "Error estándar",
+          "valor": 3.0,
+          "calculo": "=15/RAIZ(25)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "t* con gl = 24 (3 decimales)",
+          "valor": 2.064,
+          "calculo": "=INV.T.2C(0.05;24)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Margen de error (2 decimales)",
+          "valor": 6.19
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite inferior (2 decimales)",
+          "valor": 113.81
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite superior (2 decimales)",
+          "valor": 126.19
+        }
+      ],
+      "solucion": [
+        "EE = 15 ÷ 5 = 3.",
+        "t* = 2.064 (gl = 24).",
+        "Margen = 2.064 × 3 = 6.19.",
+        "IC = (113.81; 126.19)."
+      ],
+      "pistas": [
+        "Usa =INV.T.2C(0.05; 24) para t*."
+      ]
+    },
+    "reto": {
+      "id": "m30-l4-reto",
+      "enunciado": "Con los mismos datos, compara y razona.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "t* para 99 % con gl = 24 (3 decimales)",
+          "valor": 2.797,
+          "calculo": "=INV.T.2C(0.01;24)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite inferior del IC del 99 % (2 decimales)",
+          "valor": 111.61
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite superior del IC del 99 % (2 decimales)",
+          "valor": 128.39
+        },
+        {
+          "tipo": "opcion",
+          "etiqueta": "El IC del 99 % es…",
+          "opciones": [
+            "Más estrecho que el del 95 %",
+            "Más ancho que el del 95 %",
+            "Igual"
+          ],
+          "correcta": 1
+        }
+      ],
+      "solucion": [
+        "t*(99 %) = 2.797.",
+        "Margen = 8.39.",
+        "IC = (111.61; 128.39), más ancho que el del 95 %."
+      ],
+      "pistas": [
+        "Cambia 0.05 por 0.01 en INV.T.2C."
+      ]
+    },
+    "verificacion": [
       {
-        id: "m30-l4-q1",
-        pregunta: "La interpretación correcta de un IC del 95 % es:",
-        opciones: ["Hay 95 % de probabilidad de que μ esté en este intervalo concreto", "El 95 % de los intervalos construidos así contendría la media real", "El 95 % de los datos está dentro del intervalo", "La media muestral tiene error 5 %"],
-        respuestaCorrecta: 1,
-        explicacion: "La confianza describe el procedimiento a largo plazo, no un intervalo individual.",
+        "id": "m30-l4-q1",
+        "pregunta": "Si aumentas el nivel de confianza (con los mismos datos), el intervalo:",
+        "opciones": [
+          "Se estrecha",
+          "Se ensancha",
+          "No cambia",
+          "Desaparece"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "Más confianza exige más margen."
       },
       {
-        id: "m30-l4-q2",
-        pregunta: "Si aumentas el tamaño de la muestra (con la misma variabilidad), el intervalo de confianza:",
-        opciones: ["Se ensancha", "Se estrecha", "No cambia", "Desaparece"],
-        respuestaCorrecta: 1,
-        explicacion: "Un n mayor reduce el error estándar y estrecha el intervalo.",
-      },
+        "id": "m30-l4-q2",
+        "pregunta": "La interpretación correcta de un IC del 95 % es:",
+        "opciones": [
+          "El 95 % de los datos está dentro",
+          "El método captura la media verdadera en el 95 % de las muestras",
+          "μ tiene 95 % de probabilidad de estar en este intervalo concreto",
+          "x̄ es exacta"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "La confianza se refiere al procedimiento."
+      }
     ],
-    resumen: ["IC = x̄ ± t*·(s/√n), con t de Student y n - 1 grados de libertad.", "`stats.t.interval` y `stats.sem` lo calculan en pocas líneas.", "La confianza describe el método, no un intervalo en particular."],
-    proximoPaso: "Haremos lo mismo para una proporción, el caso típico de las encuestas.",
-    conceptos: ["intervalo-de-confianza-media", "distribucion-t"],
+    "resumen": [
+      "IC = x̄ ± t*·s/√n con gl = n − 1.",
+      "Más confianza → más ancho; más n → más estrecho.",
+      "Es un intervalo para la media, no para los datos."
+    ],
+    "proximoPaso": "Haremos lo mismo para una proporción.",
+    "conceptos": [
+      "intervalo-de-confianza-media",
+      "distribucion-t"
+    ]
   },
   {
-    id: "m30-l5",
-    moduloId: "modulo-30",
-    titulo: "Intervalo de confianza para una proporción",
-    objetivo: "Estimar una proporción poblacional con su margen de error e intervalo de confianza.",
-    porQueImporta:
-      "Encuestas de opinión, tasas de conversión y porcentajes de defectos son proporciones. Reportar «56 %» sin su margen de error es incompleto y puede llevar a conclusiones equivocadas.",
-    concepto: "Para una proporción muestral `p̂ = éxitos / n`, el error estándar es:\n\n```\nEE = √( p̂ · (1 - p̂) / n )\n```\n\ny el intervalo de confianza del 95 % (aproximación normal):\n\n```\np̂ ± 1.96 · EE\n```\n\nLa aproximación es razonable cuando `n·p̂ ≥ 10` y `n·(1 - p̂) ≥ 10`.\n\n```python\nimport math\np_hat = 224 / 400\nee = math.sqrt(p_hat * (1 - p_hat) / 400)\nmargen = 1.96 * ee\n```\n\nEl margen de error es máximo cuando `p̂ = 0.5`; por eso las encuestas usan ese valor para calcular el tamaño de muestra en el peor caso.",
-    ejemploMinimo: "import math\n\np_hat, n = 0.56, 400\nprint(round(math.sqrt(p_hat * (1 - p_hat) / n), 4))",
-    ejemploAplicado: "import math\n\nexitos, n = 224, 400\np_hat = exitos / n\nee = math.sqrt(p_hat * (1 - p_hat) / n)\nmargen = 1.96 * ee\n\nprint(f\"p̂ = {p_hat:.2f} ± {margen:.4f}\")\nprint(f\"IC 95 %: [{p_hat - margen:.4f}, {p_hat + margen:.4f}]\")",
-    errorFrecuente: {
-      codigo: "p_hat, n = 0.56, 400\nprint(\"Margen de error:\", 1.96 * (p_hat * (1 - p_hat) / n))",
-      explicacion:
-        "Falta la raíz cuadrada: el error estándar es `√(p̂(1-p̂)/n)`. Sin ella, el resultado es 0.0006 (en vez de un margen de ±0.0486): el intervalo parecería absurdamente preciso.",
+    "id": "m30-l5",
+    "moduloId": "modulo-30",
+    "motor": "calculo",
+    "titulo": "Intervalo de confianza para una proporción",
+    "objetivo": "Estimar una proporción poblacional con un intervalo de confianza y verificar sus condiciones.",
+    "porQueImporta": "Tasas de conversión, de satisfacción o de defectos son proporciones. Reportar «55 % de aprobación» sin un intervalo oculta cuánto puede variar la cifra.",
+    "concepto": "Para una proporción muestral `p̂ = éxitos ÷ n`:\n\n`p̂ ± z* · √(p̂(1 − p̂) ÷ n)`\n\ncon `z* = 1.96` para 95 % (`=INV.NORM.ESTAND(0.975)`), 1.645 para 90 % y 2.576 para 99 %.\n\n**Condición**: que haya al menos unos 10 éxitos y 10 fracasos (`n·p̂ ≥ 10` y `n·(1 − p̂) ≥ 10`). Con pocos datos o `p̂` muy cercana a 0 o 1 el intervalo normal no es fiable.\n\nEl **margen de error** `E = z*·EE` es lo que se reporta como «±». Para 95 % con `p̂ = 0.5` el margen es aproximadamente `1 ÷ √n`.",
+    "ejemploMinimo": {
+      "tipo": "resuelto",
+      "titulo": "Encuesta: 220 de 400 usuarios aprueban la nueva función",
+      "pasos": [
+        "p̂ = 220 ÷ 400 = **0.55**.",
+        "EE = √(0.55 × 0.45 ÷ 400) = **0.0249**.",
+        "Margen = 1.96 × 0.0249 = **0.0488**.",
+        "IC 95 % = **(0.501; 0.599)**."
+      ],
+      "conclusion": "Con 95 % de confianza, la aprobación está entre 50.1 % y 59.9 %: no se puede asegurar que sea mayoría."
     },
-    practicaGuiada: {
-      id: "m30-l5-practica",
-      enunciado: "Con `p_hat = 0.56` y `n = 400`, calcula el **margen de error** del 95 % (`1.96 · EE`) e imprímelo con 4 decimales.",
-      codigoInicial: "import math\n\np_hat, n = 0.56, 400\n\nmargen = 0\nprint(margen)",
-      solucion: "import math\n\np_hat, n = 0.56, 400\n\nmargen = round(1.96 * math.sqrt(p_hat * (1 - p_hat) / n), 4)\nprint(margen)",
-      pistas: ["EE = `math.sqrt(p_hat * (1 - p_hat) / n)`; después multiplica por 1.96."],
-      validar: (stdout) => {
-        const v = parseFloat(stdout.trim())
-        const ok = !Number.isNaN(v) && Math.abs(v - 0.0486) <= 6e-05
-        return { ok, mensaje: ok ? "Correcto: el margen de error es ±4.86 puntos." : "El resultado esperado es 0.0486." }
-      },
+    "ejemploAplicado": {
+      "tipo": "resuelto",
+      "titulo": "Condiciones y lectura",
+      "pasos": [
+        "Éxitos: 220 ≥ 10 y fracasos: 180 ≥ 10: se cumple la condición.",
+        "El 50 % está dentro del intervalo (0.501; 0.599): con estos datos no hay evidencia clara de que más de la mitad apruebe."
+      ],
+      "conclusion": "Un intervalo que contiene 0.5 no permite afirmar mayoría."
     },
-    reto: {
-      id: "m30-l5-reto",
-      enunciado: "Imprime los límites del **IC del 95 %** para la proporción (inferior y superior, 4 decimales, separados por un espacio).",
-      codigoInicial: "import math\n\np_hat, n = 0.56, 400\nee = math.sqrt(p_hat * (1 - p_hat) / n)\n\nprint(f\"{p_hat:.4f} {p_hat:.4f}\")      # falta restar y sumar el margen de error",
-      solucion: "import math\n\np_hat, n = 0.56, 400\nee = math.sqrt(p_hat * (1 - p_hat) / n)\nmargen = 1.96 * ee\n\nprint(f\"{p_hat - margen:.4f} {p_hat + margen:.4f}\")",
-      pistas: ["Límite inferior: `p_hat - margen`; superior: `p_hat + margen`."],
-      validar: (stdout) => {
-        const ok = stdout.trim() === "0.5114 0.6086"
-        return { ok, mensaje: ok ? "Correcto: IC 95 % = [0.5114, 0.6086]." : "El resultado esperado es «0.5114 0.6086»." }
-      },
+    "errorFrecuente": {
+      "codigo": "«55 % de aprobación, así que la mayoría aprueba.»",
+      "explicacion": "El 55 % es solo la estimación de la muestra. Con n = 400 el margen es ±4.9 puntos y el intervalo incluye valores por debajo del 50 %. Sin el intervalo se sobre-interpreta una diferencia que puede ser ruido."
     },
-    verificacion: [
+    "practicaGuiada": {
+      "id": "m30-l5-practica",
+      "enunciado": "De 250 clientes encuestados, 100 dijeron que recomendarían el servicio.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "Proporción muestral p̂",
+          "valor": 0.4,
+          "calculo": "=100/250"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Error estándar (4 decimales)",
+          "valor": 0.031,
+          "calculo": "=RAIZ(0.4*0.6/250)"
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Margen de error al 95 % (4 decimales)",
+          "valor": 0.0607
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite inferior (3 decimales)",
+          "valor": 0.339
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite superior (3 decimales)",
+          "valor": 0.461
+        }
+      ],
+      "solucion": [
+        "p̂ = 100 ÷ 250 = 0.4.",
+        "EE = √(0.4 × 0.6 ÷ 250) = 0.0310.",
+        "Margen = 1.96 × 0.0310 = 0.0607.",
+        "IC = (0.339; 0.461)."
+      ],
+      "pistas": [
+        "Usa z* = 1.96."
+      ]
+    },
+    "reto": {
+      "id": "m30-l5-reto",
+      "enunciado": "Una fábrica inspecciona 500 piezas y encuentra 30 defectuosas.",
+      "preguntas": [
+        {
+          "tipo": "numero",
+          "etiqueta": "p̂ (3 decimales)",
+          "valor": 0.06
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite inferior del IC 95 % (3 decimales)",
+          "valor": 0.039
+        },
+        {
+          "tipo": "numero",
+          "etiqueta": "Límite superior del IC 95 % (3 decimales)",
+          "valor": 0.081
+        },
+        {
+          "tipo": "opcion",
+          "etiqueta": "Si la meta es tener a lo sumo 5 % de defectuosas, ¿qué se puede concluir?",
+          "opciones": [
+            "Se cumple con seguridad",
+            "El 5 % está dentro del intervalo: no se puede descartar que se cumpla ni que se incumpla",
+            "Se incumple seguro"
+          ],
+          "correcta": 1
+        }
+      ],
+      "solucion": [
+        "p̂ = 30 ÷ 500 = 0.06.",
+        "EE = √(0.06 × 0.94 ÷ 500) = 0.0106; margen = 0.0208.",
+        "IC = (0.039; 0.081) contiene 0.05."
+      ],
+      "pistas": [
+        "El intervalo contiene 0.05 si el límite inferior es menor que 0.05."
+      ]
+    },
+    "verificacion": [
       {
-        id: "m30-l5-q1",
-        pregunta: "Una encuesta con n = 400 y p̂ = 0.56 tiene un margen de error de aproximadamente:",
-        opciones: ["±0.5 puntos", "±5 puntos", "±15 puntos", "±0.05 puntos"],
-        respuestaCorrecta: 1,
-        explicacion: "1.96·√(0.56·0.44/400) ≈ 0.0486, es decir, unos 5 puntos porcentuales.",
+        "id": "m30-l5-q1",
+        "pregunta": "El margen de error de una proporción depende de:",
+        "opciones": [
+          "Solo de p̂",
+          "De p̂, n y el nivel de confianza",
+          "Solo de n",
+          "De la media"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "E = z*·√(p̂(1−p̂)/n)."
       },
       {
-        id: "m30-l5-q2",
-        pregunta: "¿Con qué valor de p̂ el margen de error es máximo?",
-        opciones: ["0", "0.5", "1", "Es igual siempre"],
-        respuestaCorrecta: 1,
-        explicacion: "p̂(1 - p̂) es máximo cuando p̂ = 0.5.",
-      },
+        "id": "m30-l5-q2",
+        "pregunta": "El intervalo normal para proporciones requiere:",
+        "opciones": [
+          "n < 10",
+          "Al menos ~10 éxitos y ~10 fracasos",
+          "p̂ = 0.5",
+          "Que σ sea conocida"
+        ],
+        "respuestaCorrecta": 1,
+        "explicacion": "Para aproximar con la normal."
+      }
     ],
-    resumen: ["EE de una proporción = √(p̂(1-p̂)/n).", "IC 95 % = p̂ ± 1.96·EE.", "Reporta siempre una proporción con su margen de error."],
-    proximoPaso: "En el siguiente módulo pasamos de estimar a decidir: pruebas de hipótesis.",
-    conceptos: ["intervalo-de-confianza-proporcion"],
-  },
+    "resumen": [
+      "IC = p̂ ± z*·√(p̂(1−p̂)/n).",
+      "Verifica ≥ 10 éxitos y fracasos.",
+      "Si el intervalo contiene el valor de referencia, no hay evidencia clara."
+    ],
+    "proximoPaso": "Pasaremos de estimar a contrastar: la lógica de las pruebas de hipótesis.",
+    "conceptos": [
+      "intervalo-de-confianza-proporcion"
+    ]
+  }
 ]

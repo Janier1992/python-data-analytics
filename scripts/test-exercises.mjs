@@ -6,6 +6,10 @@
 //   · que la `solucion` de la práctica guiada y del reto se ejecuta y PASA su `validar`;
 //   · que el `codigoInicial` NO pasa `validar` (el ejercicio no debe resolverse solo).
 //
+// Las lecciones de fundamentos sin programación (`motor: 'calculo'`) se comprueban sin Python: ejemplos resueltos y
+// ejercicios de cálculo bien formados, respuestas contrastadas con su fórmula de comprobación y, en los cursos con
+// `sinProgramacion`, ninguna aparición de código ni de librerías de Python.
+//
 // Las lecciones de Excel (`motor: 'excel'`) se comprueban con el motor de fórmulas en lugar de Python:
 // cada fórmula de ejemplo da el resultado declarado, la `solucion` de cada ejercicio pasa y la
 // `formulaInicial` no pasa.
@@ -17,6 +21,8 @@
 //       npm test -- 14 19              (solo los módulos 14 y 19)
 //       npm test -- --strict           (las advertencias de Python, p. ej. ConvergenceWarning, también fallan)
 import { cargarLecciones, listarModulos } from './lib/cargar-modulos.mjs'
+import { cargarCalculo, comprobarEjemplo, comprobarEjercicio, sinCodigo } from './lib/calculo.mjs'
+import { modulosSinProgramacion } from './lib/curriculum.mjs'
 import { cargarMotorExcel } from './lib/motor-excel.mjs'
 import { PYTHON, conConcurrencia, ejecutarPython, ultimasLineas } from './lib/python-runner.mjs'
 
@@ -35,22 +41,28 @@ function validar(ejercicio, stdout) {
 }
 
 /** Comprobaciones de estructura (rápidas, sin Python). */
-function comprobarEstructura(l, numeroModulo, fallos) {
+function comprobarEstructura(l, numeroModulo, fallos, ctx = {}) {
   const falla = (m) => fallos.push({ leccion: l.id, que: 'estructura', detalle: m })
   if (l.moduloId !== `modulo-${numeroModulo}`) falla(`moduloId "${l.moduloId}" no coincide con modulo-${numeroModulo}`)
   if (!new RegExp(`^m${numeroModulo}-l\\d+$`).test(l.id)) falla(`id "${l.id}" no sigue el patrón m${numeroModulo}-lN`)
   const esExcel = l.motor === 'excel'
+  const esCalculo = l.motor === 'calculo'
   for (const campo of ['titulo', 'objetivo', 'porQueImporta', 'concepto', 'proximoPaso']) {
     if (typeof l[campo] !== 'string' || !l[campo].trim()) falla(`campo "${campo}" vacío o ausente`)
   }
   for (const campo of ['ejemploMinimo', 'ejemploAplicado']) {
     const e = l[campo]
-    if (esExcel) {
+    if (esCalculo) comprobarEjemplo(e, falla, campo)
+    else if (esExcel) {
       if (!e || typeof e !== 'object' || !Array.isArray(e.hoja?.celdas) || !Array.isArray(e.formulas) || e.formulas.length === 0) falla(`${campo} debe ser una hoja con fórmulas (lección de Excel)`)
       else for (const f of e.formulas) if (typeof f.formula !== 'string' || !f.formula.startsWith('=') || f.esperado === undefined) falla(`${campo}: fórmula sin «=» o sin resultado esperado (${JSON.stringify(f.formula)})`)
     } else if (typeof e !== 'string' || !e.trim()) falla(`campo "${campo}" vacío o ausente`)
   }
-  if (!esExcel && l.motor !== undefined && l.motor !== 'python') falla(`motor desconocido: ${l.motor}`)
+  if (l.motor !== undefined && !['python', 'excel', 'calculo'].includes(l.motor)) falla(`motor desconocido: ${l.motor}`)
+  if (ctx.sinProgramacion) {
+    if (!esCalculo) falla("el curso es de fundamentos sin programación: la lección debe ser motor: 'calculo'")
+    sinCodigo(l, falla)
+  }
   if (!l.errorFrecuente?.codigo?.trim() || !l.errorFrecuente?.explicacion?.trim()) falla('errorFrecuente incompleto')
   if (!Array.isArray(l.conceptos) || l.conceptos.length === 0) falla('conceptos vacío')
   if (!Array.isArray(l.resumen) || l.resumen.length === 0) falla('resumen vacío')
@@ -60,7 +72,9 @@ function comprobarEstructura(l, numeroModulo, fallos) {
       continue
     }
     if (!ej.id?.startsWith(`${l.id}-`)) falla(`${clave}.id "${ej.id}" debería empezar por "${l.id}-"`)
-    if (esExcel) {
+    if (esCalculo) {
+      comprobarEjercicio(ej, falla, clave, ctx.motores)
+    } else if (esExcel) {
       for (const campo of ['enunciado', 'celda', 'formulaInicial', 'solucion']) {
         if (typeof ej[campo] !== 'string' || !ej[campo].trim()) falla(`${clave}.${campo} vacío`)
       }
@@ -140,11 +154,13 @@ const idsEjercicio = new Set()
 
 const porModulo = []
 const motorExcel = await cargarMotorExcel()
+const motoresCalculo = await cargarCalculo()
+const sinProgramacion = await modulosSinProgramacion()
 for (const n of modulos) {
   const contenido = await cargarLecciones(n)
   lecciones += contenido.length
   for (const l of contenido) {
-    comprobarEstructura(l, n, fallos)
+    comprobarEstructura(l, n, fallos, { sinProgramacion: sinProgramacion.has(n), motores: motoresCalculo })
     for (const ej of [l.practicaGuiada, l.reto]) {
       if (ej?.id) {
         if (idsEjercicio.has(ej.id)) fallos.push({ leccion: l.id, que: 'estructura', detalle: `id de ejercicio repetido: ${ej.id}` })
@@ -152,7 +168,7 @@ for (const n of modulos) {
       }
     }
   }
-  const tareas = contenido.filter((l) => l.motor !== 'excel' && l.practicaGuiada && l.reto).flatMap(tareasDeLeccion)
+  const tareas = contenido.filter((l) => (l.motor === undefined || l.motor === 'python') && l.practicaGuiada && l.reto).flatMap(tareasDeLeccion)
   const resultados = await conConcurrencia(tareas, CONCURRENCIA, async (t) => ({ t, r: await ejecutarPython(t.codigo) }))
   let falloModulo = 0
   let comprobacionesExcel = 0

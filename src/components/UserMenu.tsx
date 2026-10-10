@@ -76,8 +76,8 @@ export function UserMenu() {
             <p className="truncate text-xs text-slate-400">{cuenta.email}</p>
           </div>
           <div className="pt-1">
-            <Link role="menuitem" to="/certificado" onClick={() => setAbierto(false)} className={itemClase}>
-              🎓 Mi certificado
+            <Link role="menuitem" to="/certificados" onClick={() => setAbierto(false)} className={itemClase}>
+              🎓 Mis certificados
             </Link>
             <button role="menuitem" type="button" onClick={() => abrir('nombre')} className={itemClase}>
               ✏️ Editar mi nombre

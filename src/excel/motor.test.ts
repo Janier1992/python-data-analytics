@@ -296,3 +296,39 @@ test('comprobación de un ejercicio: correcta, incorrecta, copia hacia abajo', (
   const texto: EjercicioHoja = { ...base, solucion: '=A2&B2', esperado: 'ANorte' }
   assert.equal(comprobarEjercicio(texto, '=A2&B2').ok, true)
 })
+
+test('funciones de distribución: nombres en español y en inglés, y errores de dominio', () => {
+  const hoja = { celdas: [[null]] }
+  const calcular = (f: string) => evaluarFormula(f, hoja)
+  const num = (f: string) => {
+    const r = calcular(f)
+    assert.ok(r.ok, f)
+    return (r as { ok: true; valor: unknown }).valor as number
+  }
+  assert.ok(Math.abs(num('=DISTR.NORM.ESTAND.N(1.96;VERDADERO)') - 0.9750021048517795) < 1e-9)
+  assert.equal(num('=NORM.S.DIST(1.96;TRUE)'), num('=DISTR.NORM.ESTAND.N(1.96;VERDADERO)'))
+  assert.ok(Math.abs(num('=INV.NORM.ESTAND(0.975)') - 1.959963984540054) < 1e-8)
+  assert.ok(Math.abs(num('=DISTR.NORM.N(110;100;15;VERDADERO)') - 0.7475074624530771) < 1e-9)
+  assert.ok(Math.abs(num('=DISTR.BINOM.N(3;10;0.5;FALSO)') - 0.1171875) < 1e-12)
+  assert.ok(Math.abs(num('=INV.T.2C(0.05;9)') - 2.2621571627409915) < 1e-8)
+  assert.ok(Math.abs(num('=INV.CHICUAD.CD(0.05;4)') - 9.487729036781158) < 1e-7)
+  assert.ok(Math.abs(num('=INV.F.CD(0.05;3;20)') - 3.098391212140781) < 1e-7)
+  const dominio = calcular('=INV.NORM.ESTAND(1.5)')
+  assert.ok(dominio.ok && String((dominio as { valor: { codigo?: string } }).valor.codigo).includes('NUM'))
+})
+
+test('funciones matemáticas para probabilidad: LN, EXP, LOG, FACT, COMBINAT, PERMUTACIONES, PI', () => {
+  const num = (f: string) => {
+    const r = evaluarFormula(f, { celdas: [[null]] })
+    assert.ok(r.ok, f)
+    return (r as { ok: true; valor: unknown }).valor as number
+  }
+  assert.ok(Math.abs(num('=LN(EXP(2))') - 2) < 1e-12)
+  assert.equal(num('=LOG(1000)'), 3)
+  assert.ok(Math.abs(num('=LOG(8;2)') - 3) < 1e-12)
+  assert.equal(num('=FACT(5)'), 120)
+  assert.equal(num('=COMBINAT(10;3)'), 120)
+  assert.equal(num('=COMBIN(52;5)'), 2598960)
+  assert.equal(num('=PERMUTACIONES(5;2)'), 20)
+  assert.ok(Math.abs(num('=PI()') - Math.PI) < 1e-15)
+})

@@ -10,7 +10,7 @@ type Opcion = { id: string; grupo: string; titulo: string; detalle?: string; ico
 const PAGINAS: Opcion[] = [
   { id: 'pag-ruta', grupo: 'Páginas', titulo: 'Mi ruta de aprendizaje', icono: '🧭', destino: '/curso' },
   { id: 'pag-ref', grupo: 'Páginas', titulo: 'Guía de referencia', detalle: 'Funciones, métodos y sentencias de Python y SQL', icono: '📚', destino: '/referencia' },
-  { id: 'pag-cert', grupo: 'Páginas', titulo: 'Mi certificado', icono: '🎓', destino: '/certificado' },
+  { id: 'pag-cert', grupo: 'Páginas', titulo: 'Mis certificados', icono: '🎓', destino: '/certificados' },
 ]
 
 /**

@@ -7,7 +7,8 @@ import type {
   Mastery,
   StudentState,
 } from '../types'
-import { leccionesCertificables } from '../content/curriculum'
+import { cursoDeLeccion, cursos, leccionesCertificables, leccionesDeCurso } from '../content/curriculum'
+import { completarCursosPendientes, registrarInicio, registrarTiempo } from '../lib/certificadoCurso'
 
 interface ProgressActions {
   completarOnboarding: (diagnostico: DiagnosticAnswers, nivelInicial: number) => void
@@ -21,7 +22,8 @@ interface ProgressActions {
   iniciarPrograma: () => void
   verificarFinalizacion: () => void
   registrarLeccionVista: (leccionId: string) => void
-  sumarTiempoActivo: (segundos: number) => void
+  sumarTiempoActivo: (segundos: number, cursoId?: string | null) => void
+  verificarFinalizacionCursos: () => void
   resetProgreso: () => void
 }
 
@@ -43,6 +45,12 @@ const estadoInicial: StudentState = {
   tiempoActivoSeg: 0,
   diasActivos: [],
   ultimaLeccionId: null,
+  cursosProgreso: {},
+}
+
+/** Lecciones de cada curso con contenido, para calcular cuándo se completa cada uno. */
+function leccionesPorCurso(): Record<string, string[]> {
+  return Object.fromEntries(cursos.filter((c) => !c.proximamente).map((c) => [c.id, leccionesDeCurso(c.id)]))
 }
 
 /** AAAA-MM-DD en hora local. */
@@ -110,10 +118,15 @@ export const useProgressStore = create<StudentState & ProgressActions>()(
         const { completedLessons, completadoEn } = get()
         if (completedLessons.includes(leccionId)) return
         const nuevas = [...completedLessons, leccionId]
+        const cursoId = cursoDeLeccion(leccionId)
         set({
           completedLessons: nuevas,
           // la fecha de finalización se fija una sola vez, al completar la última lección
           completadoEn: completadoEn ?? (programaCompleto(nuevas) ? Date.now() : null),
+          // y la del curso, al completar la última lección del curso
+          cursosProgreso: cursoId
+            ? completarCursosPendientes(get().cursosProgreso, nuevas, leccionesPorCurso(), Date.now(), get().inicioEn, cursoId)
+            : get().cursosProgreso,
         })
       },
 
@@ -157,14 +170,28 @@ export const useProgressStore = create<StudentState & ProgressActions>()(
 
       registrarLeccionVista: (leccionId) => {
         if (get().ultimaLeccionId !== leccionId) set({ ultimaLeccionId: leccionId })
+        const cursoId = cursoDeLeccion(leccionId)
+        if (cursoId) {
+          const actual = get().cursosProgreso
+          const nuevo = registrarInicio(actual, cursoId, Date.now())
+          if (nuevo !== actual) set({ cursosProgreso: nuevo })
+        }
       },
 
-      sumarTiempoActivo: (segundos) => {
+      // Cursos ya completos sin fecha guardada (progreso anterior a los certificados de curso o importado)
+      verificarFinalizacionCursos: () => {
+        const { cursosProgreso, completedLessons, inicioEn } = get()
+        const nuevo = completarCursosPendientes(cursosProgreso, completedLessons, leccionesPorCurso(), Date.now(), inicioEn)
+        if (nuevo !== cursosProgreso) set({ cursosProgreso: nuevo })
+      },
+
+      sumarTiempoActivo: (segundos, cursoId) => {
         const hoy = claveDia()
-        const { tiempoActivoSeg, diasActivos } = get()
+        const { tiempoActivoSeg, diasActivos, cursosProgreso } = get()
         set({
           tiempoActivoSeg: tiempoActivoSeg + segundos,
           diasActivos: diasActivos.includes(hoy) ? diasActivos : [...diasActivos, hoy],
+          cursosProgreso: cursoId ? registrarTiempo(cursosProgreso, cursoId, segundos, Date.now()) : cursosProgreso,
         })
       },
 

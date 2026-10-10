@@ -48,14 +48,15 @@ export function diasDeEstudio(diasActivos: string[]): number {
  * Código de constancia legible a partir de los datos del certificado (SHA-256 truncado):
  * mismos datos → mismo código. Identifica el documento; no se verifica en ningún servidor.
  */
-export async function codigoDeConstancia(datos: { cuentaId: string; nombre: string; inicioEn: number; completadoEn: number }): Promise<string> {
-  const entrada = new TextEncoder().encode(`${datos.cuentaId}|${datos.nombre}|${datos.inicioEn}|${datos.completadoEn}`)
+export async function codigoDeConstancia(datos: { cuentaId: string; nombre: string; inicioEn: number; completadoEn: number; cursoId?: string }): Promise<string> {
+  const entrada = new TextEncoder().encode(`${datos.cuentaId}|${datos.nombre}|${datos.inicioEn}|${datos.completadoEn}${datos.cursoId ? `|${datos.cursoId}` : ''}`)
   const huella = await globalThis.crypto.subtle.digest('SHA-256', entrada)
   const hex = Array.from(new Uint8Array(huella), (b) => b.toString(16).padStart(2, '0'))
     .join('')
     .toUpperCase()
     .slice(0, 12)
-  return `AIA-${hex.slice(0, 4)}-${hex.slice(4, 8)}-${hex.slice(8, 12)}`
+  // AIA = programa «AI Academy»; AIC = certificado de un curso
+  return `${datos.cursoId ? 'AIC' : 'AIA'}-${hex.slice(0, 4)}-${hex.slice(4, 8)}-${hex.slice(8, 12)}`
 }
 
 export interface AvanceCertificado {
