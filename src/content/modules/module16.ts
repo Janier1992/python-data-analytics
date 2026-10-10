@@ -455,7 +455,7 @@ Para clasificar texto:
 2. Entrena un clasificador (\`LogisticRegression\` es una gran primera opción; \`MultinomialNB\` también es clásico para texto).
 3. **Mételos juntos en un \`Pipeline\`**: así el vectorizador se ajusta solo con los textos de entrenamiento, y al predecir recibes texto crudo directamente.
 
-Evalúa con las métricas del Módulo 14 (precisión, recall, F1), y recuerda que el desbalance de clases también afecta al texto.`,
+Evalúa con las métricas del módulo de aprendizaje supervisado (precisión, recall, F1), y recuerda que el desbalance de clases también afecta al texto.`,
     ejemploMinimo: `from sklearn.feature_extraction.text import TfidfVectorizer
 
 textos = ["gato come pescado", "gato duerme", "perro come"]
@@ -538,7 +538,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y)`,
       'Evalúa con precisión, recall y F1, igual que en cualquier clasificación.',
     ],
     proximoPaso:
-      'Con series temporales y texto cubiertos, en el Módulo 17 damos el salto a las redes neuronales: cómo funciona una neurona y cómo entrenar una red pequeña.',
+      'Con series temporales y texto cubiertos, en el siguiente módulo damos el salto a las redes neuronales: cómo funciona una neurona y cómo entrenar una red pequeña.',
     conceptos: ['tf-idf', 'clasificacion-de-texto', 'pipeline-nlp'],
   },
 ]

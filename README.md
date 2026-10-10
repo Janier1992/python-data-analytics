@@ -17,7 +17,7 @@ El curso se organiza en 4 **rutas** (`src/content/curriculum.ts`), siguiendo una
 | **3. Ciencia de Datos y Machine Learning** | 12–18 | ✅ Completo (7 módulos: ML fundamentos, feature engineering, supervisado, no supervisado, series temporales + NLP, redes neuronales y proyecto integrador de abandono de clientes) |
 | **4. Herramientas complementarias** | 19–21 | ✅ Completo (SQL con SQLite, línea de comandos y Git con ejercicios que reproducen su lógica en Python, y BI + portafolio + entrevistas) |
 
-**Hay 34 módulos disponibles (0–33): los 22 del curso de Python y datos (0–21), los del Curso 1 de Estadística descriptiva (22–25), los del Curso 2 de Probabilidad y distribuciones (26–29) y los del Curso 3 de Estadística inferencial (30–33).** Cada módulo tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
+**Hay 34 módulos disponibles (0–33): los 22 del curso de Python y datos (0–21), los del Curso 1 de Estadística descriptiva (22–25), los del Curso 2 de Probabilidad y distribuciones (26–29) y los del Curso 3 de Estadística inferencial (30–33).** Los módulos se agrupan en **cursos independientes** (definidos en `src/content/curriculum.ts`, con su paso en la ruta, nivel y requisitos), que el estudiante ve como tarjetas. Cada módulo tiene su archivo en `src/content/modules/moduleN.ts` con un array de `Lesson`. Los módulos no listados ahí todavía aparecen en el dashboard marcados como "Próximamente" (ver `disponible: false` en `curriculum.ts`).
 
 ### Próximos pasos (en orden)
 

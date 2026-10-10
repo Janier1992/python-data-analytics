@@ -178,7 +178,7 @@ print("Estructura de datos de ejemplo:", datos)`,
       'Python ejecuta de arriba hacia abajo: una variable debe existir antes de usarse.',
       '`NameError` indica que usaste algo que no habías definido todavía.',
     ],
-    proximoPaso: 'Con el entorno claro, en el Módulo 1 construimos los fundamentos: variables, tipos de datos y operadores.',
+    proximoPaso: 'Con el entorno claro, en el siguiente módulo construimos los fundamentos: variables, tipos de datos y operadores.',
     conceptos: ['notebooks-vs-scripts', 'orden-ejecucion'],
   },
 ]

@@ -592,7 +592,7 @@ print("Recomiendo la red neuronal para producción")`,
       'Un buen cierre combina métricas, factores, recomendaciones accionables y limitaciones.',
     ],
     proximoPaso:
-      'Con esto cierras la Ruta 3: Ciencia de Datos y Machine Learning. En la Ruta 4 complementarás tu perfil con herramientas del día a día: SQL, línea de comandos y Git, y BI.',
+      'Con esto cierras el curso de Machine Learning. Para complementar tu perfil, los cursos de SQL, Terminal y Git, y Comunicación y negocio cubren las herramientas del día a día.',
     conceptos: ['comparacion-modelos', 'interpretacion-modelo', 'comunicacion-resultados', 'proyecto-integrador-ds'],
   },
 ]

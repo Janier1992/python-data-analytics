@@ -696,7 +696,7 @@ $ git rm config.env && git commit -m "Quita config" && git push
       'GitHub: clone, push, pull y Pull Requests para colaborar y mostrar tu portafolio.',
     ],
     proximoPaso:
-      'Cierras la Ruta 4 en el Módulo 21: herramientas de BI (dashboards y comunicación de resultados) y la preparación profesional para buscar empleo.',
+      'Sigues con el curso de Comunicación y negocio: dashboards, comunicación de resultados y la preparación profesional para buscar empleo.',
     conceptos: ['ramas-git', 'gitignore', 'github-flujo', 'seguridad-secretos'],
   },
 ]

@@ -293,7 +293,7 @@ print(ventas["precio"])`,
       'Se accede combinando índice de lista y clave de diccionario: `lista[i]["clave"]`.',
       'Esta estructura es el antecedente directo de un DataFrame de pandas.',
     ],
-    proximoPaso: 'En el Módulo 4 aprenderás a organizar este tipo de lógica en funciones reutilizables.',
+    proximoPaso: 'En el siguiente módulo aprenderás a organizar este tipo de lógica en funciones reutilizables.',
     conceptos: ['estructuras-anidadas', 'lista-de-diccionarios'],
   },
 ]

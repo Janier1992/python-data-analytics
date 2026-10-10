@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { NOMBRE_ACADEMIA, NOMBRE_PROGRAMA } from '../brand'
-import { curriculum, todasLasLecciones } from '../content/curriculum'
+import { cursos, cursosDisponibles, todasLasLecciones } from '../content/curriculum'
 import { validarRegistro } from '../lib/auth'
 import type { ErroresRegistro } from '../lib/auth'
 import { useAccountStore } from '../state/accountStore'
@@ -11,7 +11,7 @@ import { Boton, Campo, Logo } from './ui'
 type Modo = 'crear' | 'ingresar'
 
 const BENEFICIOS = [
-  [`${curriculum.length} módulos, ${todasLasLecciones.length} lecciones`, 'De la estadística descriptiva a la ciencia de datos, con SQL, Git y BI y proyectos de portafolio.'],
+  [`${cursos.length} cursos en una sola ruta`, `${cursosDisponibles.length} ya disponibles (${todasLasLecciones.length} lecciones): de la estadística y Python al machine learning, con SQL, Git y BI.`],
   ['Python real en tu navegador', 'Ejercicios con validación automática, sin instalar nada.'],
   ['Guía de referencia', 'Funciones, parámetros y sentencias SQL explicadas, siempre a la mano.'],
   ['Certificado de finalización', 'Con tu nombre completo y el tiempo que te tomó completar el programa.'],

@@ -298,7 +298,7 @@ print(math.sqrt(9))`,
       'El alias (`as`) es el patrón estándar para librerías de datos (`pd`, `np`, `plt`).',
       'Organizar código en módulos facilita la reutilización en proyectos grandes.',
     ],
-    proximoPaso: 'En el Módulo 5 veremos manejo de errores, archivos, JSON/CSV y buenas prácticas profesionales de Python.',
+    proximoPaso: 'En el siguiente módulo veremos manejo de errores, archivos, JSON/CSV y buenas prácticas profesionales de Python.',
     conceptos: ['imports', 'modulos'],
   },
 ]

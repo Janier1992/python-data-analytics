@@ -352,7 +352,7 @@ print(combinado["valor"])`,
       'Columnas con el mismo nombre en ambas tablas (distintas de la clave) se renombran automáticamente con sufijos `_x`/`_y`.',
     ],
     proximoPaso:
-      'Con los datos ya limpios y combinados, en el Módulo 8 aprenderás a transformarlos y agregarlos para calcular métricas de negocio reales.',
+      'Con los datos ya limpios y combinados, en el siguiente módulo aprenderás a transformarlos y agregarlos para calcular métricas de negocio reales.',
     conceptos: ['concat', 'merge', 'combinar-datasets'],
   },
 ]

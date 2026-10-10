@@ -434,7 +434,7 @@ print("Son diferentes porque p-value es", p_value)`,
       'Un resultado estadísticamente significativo no es una certeza absoluta, es evidencia dentro de un marco probabilístico.',
     ],
     proximoPaso:
-      'Con EDA y estadística aplicada dominados, en el Módulo 11 construyes tu primer proyecto integrador de portafolio como Analista de Datos.',
+      'Con EDA y estadística aplicada dominados, en el siguiente módulo construyes tu primer proyecto integrador de portafolio como Analista de Datos.',
     conceptos: ['pruebas-hipotesis', 'p-value'],
   },
 ]
