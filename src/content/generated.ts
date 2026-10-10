@@ -224,6 +224,11 @@ export const lessonIndex: LessonSummary[] = [
   { id: "m50-l2", moduloId: "modulo-50", titulo: "Sesgo y equidad: medir si el sistema trata distinto a distintos grupos" },
   { id: "m50-l3", moduloId: "modulo-50", titulo: "Gobernanza y regulación de la IA: marcos y buenas prácticas" },
   { id: "m50-l4", moduloId: "modulo-50", titulo: "Proyecto: asistente de preguntas frecuentes responsable" },
+  { id: "m51-l1", moduloId: "modulo-51", titulo: "Elegir el proyecto y plantear la pregunta de negocio" },
+  { id: "m51-l2", moduloId: "modulo-51", titulo: "Datos del proyecto: estructura del repositorio y control de calidad" },
+  { id: "m52-l1", moduloId: "modulo-52", titulo: "Análisis y modelo: línea base, validación y fugas de información" },
+  { id: "m52-l2", moduloId: "modulo-52", titulo: "Comunicar resultados: impacto de negocio y recomendaciones" },
+  { id: "m52-l3", moduloId: "modulo-52", titulo: "Documentar, revisar y publicar el proyecto" },
 ]
 
 export const moduleLoaders: Record<string, () => Promise<Lesson[]>> = {
@@ -278,4 +283,6 @@ export const moduleLoaders: Record<string, () => Promise<Lesson[]>> = {
   'modulo-48': () => import('./modules/module48').then((m) => m.module48Lessons),
   'modulo-49': () => import('./modules/module49').then((m) => m.module49Lessons),
   'modulo-50': () => import('./modules/module50').then((m) => m.module50Lessons),
+  'modulo-51': () => import('./modules/module51').then((m) => m.module51Lessons),
+  'modulo-52': () => import('./modules/module52').then((m) => m.module52Lessons),
 }

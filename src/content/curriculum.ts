@@ -136,13 +136,13 @@ export const cursos: Curso[] = [
     id: 'proyecto-final',
     paso: 12,
     titulo: 'Proyecto final de portafolio',
-    resumen: 'Un caso completo con datos reales: de la pregunta al reporte, evaluado.',
-    descripcion: 'Integra todo lo aprendido en un proyecto de punta a punta para tu portafolio.',
+    resumen: 'De la pregunta al reporte: un método, un caso guiado y herramientas de autoevaluación para tu portafolio.',
+    descripcion: 'Integra lo aprendido en un proyecto de punta a punta. El curso te da el método (pregunta de negocio, datos, línea base, impacto, README), un caso guiado con datos sintéticos corregido automáticamente y una rúbrica de autoevaluación. No puede calificar tu proyecto personal: para eso, busca retroalimentación de una persona con experiencia.',
     nivel: 'Avanzado',
     icono: '🏆',
-    aprenderas: ['Plantear una pregunta de negocio', 'Limpiar y analizar datos reales', 'Modelar y validar resultados', 'Presentar conclusiones y recomendaciones'],
-    requisitos: 'Haber completado los cursos anteriores.',
-    proximamente: true,
+    aprenderas: ['Plantear una pregunta de negocio y validar el alcance', 'Organizar un repositorio reproducible y controlar la calidad de los datos', 'Modelar con línea base y evitar fugas de información', 'Comunicar el impacto con supuestos explícitos y publicar el proyecto'],
+    requisitos: 'Haber completado varios de los cursos anteriores (Python para datos, estadística y SQL como base).',
+    certifica: false,
   },
 ]
 
@@ -232,6 +232,8 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-48', cursoId: 'ia-aplicada', numero: 48, titulo: 'Prompts y salidas estructuradas', descripcion: 'Anatomía de un prompt, ejemplos (few-shot), salidas JSON validadas y evaluación de prompts.', disponible: true, lessonIds: idsDe('modulo-48') },
   { id: 'modulo-49', cursoId: 'ia-aplicada', numero: 49, titulo: 'Aplicaciones: RAG, herramientas y agentes', descripcion: 'Recuperación de información, uso de herramientas, agentes con límites y automatización de tareas de analista.', disponible: true, lessonIds: idsDe('modulo-49') },
   { id: 'modulo-50', cursoId: 'ia-aplicada', numero: 50, titulo: 'Uso responsable y proyecto', descripcion: 'Privacidad y seguridad, sesgo y equidad, gobernanza y regulación, y un asistente de preguntas frecuentes responsable.', disponible: true, lessonIds: idsDe('modulo-50') },
+  { id: 'modulo-51', cursoId: 'proyecto-final', numero: 51, titulo: 'Planteamiento y datos del proyecto', descripcion: 'Elegir el proyecto y la pregunta de negocio, organizar el repositorio y controlar la calidad de los datos.', disponible: true, lessonIds: idsDe('modulo-51') },
+  { id: 'modulo-52', cursoId: 'proyecto-final', numero: 52, titulo: 'Análisis, comunicación y entrega', descripcion: 'Línea base y fugas de información, impacto de negocio con sensibilidad, README, rúbrica y publicación.', disponible: true, lessonIds: idsDe('modulo-52') },
   { id: 'modulo-20', cursoId: 'terminal-git', numero: 20, titulo: 'Herramientas de desarrollo', descripcion: 'Línea de comandos, Git y GitHub para trabajo colaborativo.', disponible: true, lessonIds: idsDe('modulo-20') },
   { id: 'modulo-21', cursoId: 'comunicacion-negocio', numero: 21, titulo: 'Introducción a BI y preparación profesional', descripcion: 'KPIs, diseño de dashboards, storytelling con datos, portafolio en GitHub y entrevistas.', disponible: true, lessonIds: idsDe('modulo-21') },
 ]
