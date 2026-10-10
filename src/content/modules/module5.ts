@@ -443,7 +443,7 @@ assert calcular_iva(100) == 20, "El IVA de 100 debería ser 20"`,
       '`assert condicion, mensaje` es la forma más simple de probar que tu código hace lo que crees que hace.',
     ],
     proximoPaso:
-      'Con los fundamentos de Python profesional listos, el Módulo 6 (próximamente) te introduce a NumPy y pandas: las herramientas centrales para trabajar con datos reales.',
+      'Con los fundamentos de Python profesional listos, el siguiente módulo te introduce a NumPy y pandas: las herramientas centrales para trabajar con datos reales.',
     conceptos: ['pep8', 'debugging', 'testing-basico'],
   },
 ]

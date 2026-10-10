@@ -344,7 +344,7 @@ plt.pie(valores, labels=categorias)`,
       'Principio clave: un gráfico, un mensaje.',
     ],
     proximoPaso:
-      'En el Módulo 10 combinamos visualización con estadística: análisis exploratorio de datos (EDA), correlaciones, outliers y pruebas de hipótesis.',
+      'En el siguiente módulo combinamos visualización con estadística: análisis exploratorio de datos (EDA), correlaciones, outliers y pruebas de hipótesis.',
     conceptos: ['storytelling-datos', 'seleccion-grafico'],
   },
 ]

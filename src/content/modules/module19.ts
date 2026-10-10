@@ -579,7 +579,7 @@ df = pd.read_sql_query(f"SELECT * FROM clientes WHERE ciudad = '{ciudad}'", conn
       'Los parámetros sirven para valores, no para nombres de tablas o columnas.',
     ],
     proximoPaso:
-      'Con SQL listo, el Módulo 20 te enseña la línea de comandos y Git: las herramientas para moverte en un proyecto y versionar tu trabajo.',
+      'Con SQL listo, el curso de Terminal y Git te enseña la línea de comandos y Git: las herramientas para moverte en un proyecto y versionar tu trabajo.',
     conceptos: ['sql-pandas', 'consultas-parametrizadas', 'inyeccion-sql'],
   },
 ]

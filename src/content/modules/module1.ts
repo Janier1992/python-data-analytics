@@ -302,7 +302,7 @@ print("Tengo " + edad + " años")`,
       'Lee el traceback empezando por la última línea.',
     ],
     proximoPaso:
-      'Con los fundamentos sólidos, el Módulo 2 (próximamente) introduce control de flujo: if/elif/else, for y while.',
+      'Con los fundamentos sólidos, el siguiente módulo introduce control de flujo: if/elif/else, for y while.',
     conceptos: ['f-strings', 'errores-basicos', 'traceback'],
   },
 ]

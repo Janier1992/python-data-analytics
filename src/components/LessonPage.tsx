@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import { getLeccion, getLeccionesAdyacentes, getModulo, getTrack, moduloLeccionesMap } from '../content/curriculum'
+import { getCurso, getLeccion, getLeccionesAdyacentes, getModulo, modulosDeCurso, moduloLeccionesMap } from '../content/curriculum'
 import { cargarLeccion, leccionEnCache } from '../content/lessonLoader'
 import { cargarTodasLasColecciones } from '../content/reference'
 import type { Lesson } from '../types'
@@ -97,7 +97,8 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
   }, [leccionId, registrarLeccionVista])
 
   const modulo = getModulo(leccion.moduloId)
-  const track = modulo ? getTrack(modulo.trackId) : undefined
+  const curso = modulo ? getCurso(modulo.cursoId) : undefined
+  const numeroModulo = modulo ? modulosDeCurso(modulo.cursoId).findIndex((m) => m.id === modulo.id) + 1 : 0
   const { anterior, siguiente } = getLeccionesAdyacentes(leccion.id)
   const completada = completedLessons.includes(leccion.id)
 
@@ -153,10 +154,14 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
             Inicio
           </Link>
           <span aria-hidden="true">/</span>
-          <span>{track?.titulo}</span>
+          {curso ? (
+            <Link to={`/cursos/${curso.id}`} className="hover:text-slate-200">
+              {curso.titulo}
+            </Link>
+          ) : null}
           <span aria-hidden="true">/</span>
           <span className="text-slate-300">
-            Módulo {modulo?.numero} · {modulo?.titulo}
+            Módulo {numeroModulo} · {modulo?.titulo}
           </span>
         </nav>
 

@@ -4,6 +4,7 @@ import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { useAccountStore } from './state/accountStore'
 import { useProgressStore } from './state/progressStore'
 import { AuthPage } from './components/AuthPage'
+import { CursoPage } from './components/CursoPage'
 import { Dashboard } from './components/Dashboard'
 import { Layout } from './components/Layout'
 import { NotFound } from './components/NotFound'
@@ -71,6 +72,7 @@ export default function App() {
       />
       <Route element={<AreaProtegida />}>
         <Route path="/curso" element={<Dashboard />} />
+        <Route path="/cursos/:cursoId" element={<CursoPage />} />
         <Route path="/leccion/:leccionId" element={<LessonPage />} />
         <Route path="/referencia" element={<ReferenciaPage />} />
         <Route path="/referencia/:coleccionId" element={<ReferenciaPage />} />

@@ -210,7 +210,7 @@ print(ventas[ventas["es_fin_de_semana"]]["monto"].mean())`,
 df = pd.DataFrame({"fecha": ["2024-01-05"]})
 print(df["fecha"].dt.dayofweek)`,
       explicacion:
-        'Igual que vimos en el Módulo 7, el accesor `.dt` solo funciona si la columna ya es de tipo fecha. Aquí "fecha" sigue siendo texto: hay que convertirla primero con `pd.to_datetime()`.',
+        'Igual que vimos en el módulo de limpieza de datos, el accesor `.dt` solo funciona si la columna ya es de tipo fecha. Aquí "fecha" sigue siendo texto: hay que convertirla primero con `pd.to_datetime()`.',
     },
     practicaGuiada: {
       id: 'm13-l3-practica',
@@ -343,10 +343,10 @@ train, test = train_test_split(df, test_size=0.3, random_state=0)`,
     resumen: [
       'Data leakage: cuando información del conjunto de prueba (o del futuro) se filtra hacia el entrenamiento.',
       'Regla de oro: divide primero, calcula estadísticas de preparación solo con train, aplica igual a test.',
-      'Un Pipeline (Módulo 12) ayuda a evitar leakage automáticamente al encapsular estos pasos.',
+      'Un Pipeline (visto en Fundamentos de Machine Learning) ayuda a evitar leakage automáticamente al encapsular estos pasos.',
     ],
     proximoPaso:
-      'Con los datos bien preparados, en el Módulo 14 nos enfocamos en aprendizaje supervisado: regresión y clasificación con métricas específicas.',
+      'Con los datos bien preparados, en el siguiente módulo nos enfocamos en aprendizaje supervisado: regresión y clasificación con métricas específicas.',
     conceptos: ['data-leakage'],
   },
 ]

@@ -364,8 +364,8 @@ print("validación cruzada estratificada de 5 pliegues y F1 de 0.45.")
       'Quien te evalúa revisa tu GitHub en pocos minutos. Un portafolio con 3–4 proyectos bien explicados demuestra más que una lista de cursos: enseña que sabes plantear un problema, trabajar con datos y comunicar.',
     concepto: `**Qué proyectos incluir** (3 a 4 buenos mejor que 10 mediocres):
 
-1. Un **proyecto de análisis** de punta a punta: pregunta de negocio, limpieza, EDA, visualizaciones y recomendaciones (como el Módulo 11).
-2. Un **proyecto de machine learning**: problema, línea base, validación correcta, métricas adecuadas e interpretación (como el Módulo 18).
+1. Un **proyecto de análisis** de punta a punta: pregunta de negocio, limpieza, EDA, visualizaciones y recomendaciones (como el proyecto del curso de Python para datos).
+2. Un **proyecto de machine learning**: problema, línea base, validación correcta, métricas adecuadas e interpretación (como el proyecto del curso de Machine Learning).
 3. Un **proyecto con SQL**: consultas sobre una base de datos y un reporte.
 4. Opcional: un **dashboard** o una pequeña herramienta de línea de comandos.
 
@@ -500,10 +500,10 @@ for seccion in requeridas:
 
 **Preguntas técnicas frecuentes:**
 
-- **SQL**: JOINs, agregaciones con \`GROUP BY\` y \`HAVING\`, encontrar duplicados, el segundo valor más alto, top-N por grupo, CTE (Módulo 19).
-- **Python/pandas**: limpiar datos, \`groupby\`, \`merge\`, valores nulos, duplicados (Módulos 6–10).
+- **SQL**: JOINs, agregaciones con \`GROUP BY\` y \`HAVING\`, encontrar duplicados, el segundo valor más alto, top-N por grupo, CTE (curso de SQL).
+- **Python/pandas**: limpiar datos, \`groupby\`, \`merge\`, valores nulos, duplicados (curso de Python para datos).
 - **Estadística**: media vs mediana, qué es un valor-p, sesgo de selección, correlación vs causalidad.
-- **Machine learning**: sobreajuste, validación cruzada, qué métrica elegir y por qué, data leakage (Módulos 12–18).
+- **Machine learning**: sobreajuste, validación cruzada, qué métrica elegir y por qué, data leakage (curso de Machine Learning).
 - **Negocio**: ¿cómo medirías el éxito de una campaña?, ¿qué KPI mirarías?
 
 **Cómo responder en una prueba en vivo:**

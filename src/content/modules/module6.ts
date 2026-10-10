@@ -254,7 +254,7 @@ mayores = df[df["edad"] >= 18 and df["edad"] < 60]`,
       'Con múltiples condiciones, usa `&`/`|` y paréntesis, nunca `and`/`or`.',
       '`.loc` selecciona por etiqueta/condición; `.iloc` selecciona por posición numérica.',
     ],
-    proximoPaso: 'En el Módulo 7 profundizamos en limpieza de datos: duplicados, valores ausentes y combinación de varias fuentes.',
+    proximoPaso: 'En el siguiente módulo profundizamos en limpieza de datos: duplicados, valores ausentes y combinación de varias fuentes.',
     conceptos: ['filtrado-pandas', 'loc-iloc'],
   },
   {
@@ -344,7 +344,7 @@ print(df.shape)`,
       'Un separador incorrecto en `read_csv` es un error silencioso común: siempre revisa cómo quedaron las columnas.',
     ],
     proximoPaso:
-      'En el Módulo 7 nos enfocamos de lleno en limpieza de datos: corregir duplicados, valores ausentes y combinar múltiples fuentes, tal como lo hace un analista profesional.',
+      'En el siguiente módulo nos enfocamos de lleno en limpieza de datos: corregir duplicados, valores ausentes y combinar múltiples fuentes, tal como lo hace un analista profesional.',
     conceptos: ['read-csv', 'exploracion-datos'],
   },
 ]

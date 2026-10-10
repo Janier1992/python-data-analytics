@@ -379,7 +379,7 @@ print(modelo.predict(X_escalado[:1]))`,
       '`.score()` en modelos de regresión de scikit-learn devuelve R² por defecto (1.0 es ajuste perfecto).',
     ],
     proximoPaso:
-      'En el Módulo 13 veremos ingeniería de características: cómo preparar variables categóricas y prevenir el data leakage de forma más general.',
+      'En el siguiente módulo veremos ingeniería de características: cómo preparar variables categóricas y prevenir el data leakage de forma más general.',
     conceptos: ['pipeline', 'standardscaler'],
   },
 ]

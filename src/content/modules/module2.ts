@@ -310,7 +310,7 @@ dobles = [x * 2 for x in numeros if]`,
       'Son el estilo idiomático de Python para transformar/filtrar colecciones.',
       'Forma general: `[expresion for item in secuencia if condicion]`.',
     ],
-    proximoPaso: 'En el Módulo 3 profundizamos en las estructuras de datos: listas, tuplas, diccionarios y conjuntos.',
+    proximoPaso: 'En el siguiente módulo profundizamos en las estructuras de datos: listas, tuplas, diccionarios y conjuntos.',
     conceptos: ['comprension-listas'],
   },
 ]

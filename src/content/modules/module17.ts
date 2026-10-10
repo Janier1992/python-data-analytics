@@ -573,7 +573,7 @@ print(red.score(X_train, y_train))   # 1.0 -> "¡modelo perfecto!"
       'En datos tabulares pequeños, empieza con modelos simples; las redes brillan con imágenes, audio, texto y grandes volúmenes.',
     ],
     proximoPaso:
-      'Con las redes neuronales cubiertas, en el Módulo 18 integras todo lo aprendido en la Ruta 3 con un proyecto de Ciencia de Datos de principio a fin.',
+      'Con las redes neuronales cubiertas, en el siguiente módulo integras todo lo aprendido en este curso con un proyecto de Ciencia de Datos de principio a fin.',
     conceptos: ['arquitectura-red', 'sobreajuste-redes', 'regularizacion-alpha'],
   },
 ]

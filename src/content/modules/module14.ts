@@ -538,7 +538,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
       'Cualquier remuestreo se aplica solo al conjunto de entrenamiento.',
     ],
     proximoPaso:
-      'Con regresión, clasificación, métricas y validación cruzada dominadas, en el Módulo 15 exploramos el aprendizaje no supervisado: K-Means, DBSCAN y PCA.',
+      'Con regresión, clasificación, métricas y validación cruzada dominadas, en el siguiente módulo exploramos el aprendizaje no supervisado: K-Means, DBSCAN y PCA.',
     conceptos: ['datos-desbalanceados', 'stratify', 'class-weight'],
   },
 ]

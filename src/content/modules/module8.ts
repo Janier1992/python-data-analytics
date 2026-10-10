@@ -345,7 +345,7 @@ print(margen)`,
       'Siempre valida que el denominador no sea cero antes de calcular una razón.',
     ],
     proximoPaso:
-      'En el Módulo 9 convertimos estas métricas en visualizaciones claras: gráficos que cuentan una historia, no solo números.',
+      'En el siguiente módulo convertimos estas métricas en visualizaciones claras: gráficos que cuentan una historia, no solo números.',
     conceptos: ['metricas-negocio', 'pct-change'],
   },
 ]

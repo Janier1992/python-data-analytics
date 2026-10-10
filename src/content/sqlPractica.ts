@@ -1,5 +1,5 @@
 // Base de datos de práctica en memoria (clientes, productos y pedidos) y el código Python que la
-// usa. Lo comparten el Módulo 19 (SQL) y la guía de referencia, para que los ejemplos coincidan.
+// usa. Lo comparten el curso de SQL y la guía de referencia, para que los ejemplos coincidan.
 
 export const SQL_SETUP = `import sqlite3
 

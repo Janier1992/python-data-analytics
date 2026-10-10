@@ -100,7 +100,7 @@ print(df.shape())`,
     id: 'm11-l2',
     moduloId: 'modulo-11',
     titulo: 'Proyecto: limpia el dataset',
-    objetivo: 'Aplicar en conjunto las técnicas de limpieza del Módulo 7 sobre el dataset real del proyecto: duplicados, ausentes y categorías inconsistentes.',
+    objetivo: 'Aplicar en conjunto las técnicas de limpieza del módulo de limpieza de datos sobre el dataset real del proyecto: duplicados, ausentes y categorías inconsistentes.',
     porQueImporta:
       'Ningún hallazgo del proyecto es confiable si no se corrigen antes los problemas de calidad detectados en el paso anterior. Esta es la etapa que más tiempo toma en un proyecto real — y la más importante.',
     concepto: `Plan de limpieza para "Tienda Aurora", basado en lo que detectamos:
@@ -272,7 +272,7 @@ print(resumen[0])`,
       '`groupby().sum().sort_values(ascending=False)` es un patrón habitual para encontrar al "líder" de una categoría.',
       'Un gráfico de barras simple comunica claramente el resultado de este tipo de agregación.',
     ],
-    proximoPaso: 'Cerramos el proyecto (y la Ruta 2 completa) con la etapa final: comunicar las conclusiones en un reporte ejecutivo.',
+    proximoPaso: 'Cerramos el proyecto (y el curso completo) con la etapa final: comunicar las conclusiones en un reporte ejecutivo.',
     conceptos: ['proyecto-metricas', 'proyecto-visualizacion'],
   },
   {
@@ -360,7 +360,7 @@ print(f"Ingreso mal formateado: {ingreso:.0f,}")`,
       'Completaste el ciclo completo de un proyecto de analista: definir, limpiar, analizar y comunicar.',
     ],
     proximoPaso:
-      '¡Felicidades, completaste la Ruta 2! En la Ruta 3 (próximamente) darás el salto de analizar datos a construir modelos predictivos con Machine Learning.',
+      '¡Felicidades, completaste el curso de Python para datos! El siguiente paso es el curso de Machine Learning, donde das el salto de analizar datos a construir modelos predictivos.',
     conceptos: ['proyecto-conclusiones', 'f-strings-formato'],
   },
 ]

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LEMA_ACADEMIA, NOMBRE_ACADEMIA, NOMBRE_PROGRAMA } from '../brand'
-import { curriculum, leccionesCertificables, moduloLeccionesCertificablesMap, todasLasLecciones } from '../content/curriculum'
+import { cursos, leccionesCertificables, leccionesDeCurso, moduloLeccionesCertificablesMap, todasLasLecciones } from '../content/curriculum'
 import { avanceCertificado, codigoDeConstancia, diasDeEstudio, formatearDuracion, formatearFecha, formatearTiempoEstudio } from '../lib/certificado'
 import { useCuentaActual } from '../state/accountStore'
 import { useProgressStore } from '../state/progressStore'
@@ -158,7 +158,11 @@ export function CertificadoPage() {
   }, [emitible, cuenta, inicioEn, completadoEn])
 
   const siguiente = todasLasLecciones.find((l) => leccionesCertificables.includes(l.id) && !completedLessons.includes(l.id))
-  const pendientes = curriculum.filter((m) => m.disponible && m.lessonIds.some((id) => leccionesCertificables.includes(id) && !completedLessons.includes(id)))
+  // Cursos que cuentan para el certificado y aún tienen lecciones pendientes
+  const pendientes = cursos
+    .filter((c) => c.certifica !== false && !c.proximamente)
+    .map((c) => ({ curso: c, lecciones: leccionesDeCurso(c.id) }))
+    .filter(({ lecciones }) => lecciones.some((id) => !completedLessons.includes(id)))
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
@@ -171,9 +175,9 @@ export function CertificadoPage() {
             <div className="flex items-start gap-4">
               <span aria-hidden="true" className="text-4xl">🎓</span>
               <div className="min-w-0 flex-1">
-                <h2 className="text-xl font-bold text-slate-50">Aún no has terminado el programa</h2>
+                <h2 className="text-xl font-bold text-slate-50">Aún no has completado los cursos del certificado</h2>
                 <p className="mt-1 text-slate-300">
-                  Al completar las {avance.leccionesTotales} lecciones (aprobando la verificación de cada una con 70 % o más) recibirás un certificado de finalización de {NOMBRE_ACADEMIA} con tu nombre completo y el tiempo que tardaste.
+                  Al completar los cursos marcados con 🎓 ({avance.leccionesTotales} lecciones, aprobando la verificación de cada una con 70 % o más) recibirás un certificado de finalización de {NOMBRE_ACADEMIA} con tu nombre completo y el tiempo que tardaste.
                 </p>
                 <div className="mt-4">
                   <div className="mb-1.5 flex justify-between text-sm text-slate-300">
@@ -195,16 +199,19 @@ export function CertificadoPage() {
 
           {pendientes.length > 0 && (
             <Tarjeta className="p-5">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">Módulos con lecciones pendientes</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">Cursos con lecciones pendientes</h2>
               <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
-                {pendientes.map((m) => {
-                  const hechas = m.lessonIds.filter((id) => completedLessons.includes(id)).length
-                  const primera = m.lessonIds.find((id) => !completedLessons.includes(id))!
+                {pendientes.map(({ curso, lecciones }) => {
+                  const hechas = lecciones.filter((id) => completedLessons.includes(id)).length
                   return (
-                    <li key={m.id} className="min-w-0">
-                      <Link to={`/leccion/${primera}`} className="flex min-w-0 items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-surface">
-                        <span className="min-w-0 truncate">{m.numero}. {m.titulo}</span>
-                        <span className="shrink-0 text-xs text-slate-400">{hechas}/{m.lessonIds.length}</span>
+                    <li key={curso.id} className="min-w-0">
+                      <Link to={`/cursos/${curso.id}`} className="flex min-w-0 items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-surface">
+                        <span className="min-w-0 truncate">
+                          {curso.icono} {curso.titulo}
+                        </span>
+                        <span className="shrink-0 text-xs text-slate-400">
+                          {hechas}/{lecciones.length}
+                        </span>
                       </Link>
                     </li>
                   )

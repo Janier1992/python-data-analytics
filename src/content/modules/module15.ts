@@ -513,7 +513,7 @@ print(pca.explained_variance_ratio_)   # [0.99999...] "¡una componente lo expli
       'Escala antes de aplicarlo; las componentes pierden interpretabilidad directa.',
     ],
     proximoPaso:
-      'Con el aprendizaje no supervisado cubierto, en el Módulo 16 trabajamos datos con estructura especial: series temporales y texto (NLP básico).',
+      'Con el aprendizaje no supervisado cubierto, en el siguiente módulo trabajamos datos con estructura especial: series temporales y texto (NLP básico).',
     conceptos: ['pca', 'reduccion-dimensionalidad', 'varianza-explicada'],
   },
 ]

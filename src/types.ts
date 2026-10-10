@@ -49,18 +49,32 @@ export interface Lesson {
 /** Datos mínimos de una lección para navegación (el contenido completo se carga bajo demanda). */
 export type LessonSummary = Pick<Lesson, 'id' | 'moduloId' | 'titulo'>
 
-export interface Track {
+export type NivelCurso = 'Básico' | 'Intermedio' | 'Avanzado'
+
+/** Un curso independiente dentro de la ruta de estudio. */
+export interface Curso {
   id: string
-  orden: number
+  /** Posición del curso en la ruta recomendada (1 = por dónde empezar). */
+  paso: number
   titulo: string
+  /** Frase corta para la tarjeta. */
+  resumen: string
   descripcion: string
+  nivel: NivelCurso
+  icono: string
+  /** Lo que el estudiante sabrá hacer al terminar. */
+  aprenderas: string[]
+  /** Qué conviene saber antes de empezar. */
+  requisitos: string
   /** Si sus lecciones cuentan para el certificado «AI Academy» actual. Por defecto sí; los cursos nuevos lo desactivan hasta tener certificado propio. */
   certifica?: boolean
+  /** `true` si el curso aún no tiene contenido: se muestra como «Próximamente». */
+  proximamente?: boolean
 }
 
 export interface ModuleMeta {
   id: string
-  trackId: string
+  cursoId: string
   numero: number
   titulo: string
   descripcion: string
