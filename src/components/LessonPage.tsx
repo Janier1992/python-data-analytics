@@ -197,7 +197,18 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
 
         <Seccion id="concepto" titulo="Concepto">
           <div className="prose prose-invert prose-slate max-w-none prose-pre:bg-slate-950">
-            <ReactMarkdown>{leccion.concepto}</ReactMarkdown>
+            <ReactMarkdown
+              components={{
+                // Los archivos de datos del curso (/datos/…) se descargan en lugar de abrirse en la página.
+                a: ({ href, children }) => (
+                  <a href={href} download={href?.startsWith('/datos/') ? '' : undefined}>
+                    {children}
+                  </a>
+                ),
+              }}
+            >
+              {leccion.concepto}
+            </ReactMarkdown>
           </div>
         </Seccion>
 
