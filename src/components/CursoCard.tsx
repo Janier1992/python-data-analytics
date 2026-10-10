@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { certificacionDeCurso } from '../content/curriculum'
 import { horasEstimadas } from '../lib/cursos'
 import type { ProgresoCurso } from '../lib/cursos'
 import type { Curso, NivelCurso } from '../types'
@@ -63,8 +64,8 @@ export function CursoCard({ curso, progreso, modulos }: { curso: Curso; progreso
           {ACCION[progreso.estado]}
           {!proximamente && <span aria-hidden="true"> →</span>}
         </span>
-        {!proximamente && curso.certifica !== false && (
-          <span className="rounded-full bg-brand-600/15 px-2 py-0.5 text-[11px] font-medium text-brand-200" title="Sus lecciones cuentan para el certificado «AI Academy»">
+        {!proximamente && certificacionDeCurso(curso.id) !== 'ninguno' && (
+          <span className="rounded-full bg-brand-600/15 px-2 py-0.5 text-[11px] font-medium text-brand-200" title={certificacionDeCurso(curso.id) === 'todo' ? 'Sus lecciones cuentan para el certificado «AI Academy»' : 'Solo sus módulos básicos cuentan para el certificado «AI Academy»'}>
             🎓 Certificado
           </span>
         )}

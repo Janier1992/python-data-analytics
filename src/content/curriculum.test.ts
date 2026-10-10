@@ -4,6 +4,7 @@ import {
   curriculum,
   cursos,
   cursosDisponibles,
+  certificacionDeCurso,
   leccionesCertificables,
   leccionesDeCurso,
   rutasPorObjetivo,
@@ -63,6 +64,22 @@ test('el certificado «AI Academy» sigue contando solo las 96 lecciones de los 
   for (const id of ['estadistica-descriptiva', 'probabilidad', 'estadistica-inferencial']) {
     assert.equal(cursos.find((c) => c.id === id)?.certifica, false)
   }
+})
+
+test('las ampliaciones de SQL (módulos 38–42) pertenecen al curso SQL y no cuentan para el certificado', () => {
+  const ampliaciones = curriculum.filter((m) => m.numero >= 38 && m.numero <= 42)
+  assert.equal(ampliaciones.length, 5)
+  for (const m of ampliaciones) {
+    assert.equal(m.cursoId, 'sql')
+    assert.equal(m.certifica, false)
+    assert.ok(m.lessonIds.length > 0)
+    for (const id of m.lessonIds) assert.ok(!leccionesCertificables.includes(id))
+  }
+  assert.ok(leccionesCertificables.includes('m19-l1')) // el módulo 19 original sí cuenta
+  assert.equal(leccionesDeCurso('sql').length, 23)
+  assert.equal(certificacionDeCurso('sql'), 'parcial')
+  assert.equal(certificacionDeCurso('python-datos'), 'todo')
+  assert.equal(certificacionDeCurso('excel'), 'ninguno')
 })
 
 test('siguiente curso con contenido', () => {
