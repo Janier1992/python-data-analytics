@@ -1,4 +1,4 @@
-import type { Curso, LessonSummary, ModuleMeta } from '../types'
+import type { Curso, LessonSummary, ModuleMeta, RutaObjetivo } from '../types'
 import { lessonIndex } from './generated'
 
 // La plataforma se organiza en cursos independientes que siguen una misma ruta, del más básico al más
@@ -143,6 +143,31 @@ export const cursos: Curso[] = [
     aprenderas: ['Plantear una pregunta de negocio', 'Limpiar y analizar datos reales', 'Modelar y validar resultados', 'Presentar conclusiones y recomendaciones'],
     requisitos: 'Haber completado los cursos anteriores.',
     proximamente: true,
+  },
+]
+
+/** Rutas sugeridas según el objetivo. Los cursos en preparación se marcan como «Próximamente» donde aparecen. */
+export const rutasPorObjetivo: RutaObjetivo[] = [
+  {
+    id: 'analista-datos',
+    titulo: 'Analista de datos',
+    icono: '📊',
+    descripcion: 'Para quien quiere describir, consultar y comunicar datos para apoyar decisiones de negocio.',
+    cursoIds: ['estadistica-descriptiva', 'probabilidad', 'estadistica-inferencial', 'excel', 'python-datos', 'sql', 'power-bi', 'comunicacion-negocio'],
+  },
+  {
+    id: 'cientifico-datos',
+    titulo: 'Científico de datos',
+    icono: '🤖',
+    descripcion: 'Para quien quiere construir modelos predictivos, con bases sólidas de estadística y programación.',
+    cursoIds: ['estadistica-descriptiva', 'probabilidad', 'estadistica-inferencial', 'python-datos', 'sql', 'terminal-git', 'machine-learning', 'ia-aplicada'],
+  },
+  {
+    id: 'empezar-programando',
+    titulo: 'Empezar por la programación',
+    icono: '🐍',
+    descripcion: 'Si ya te manejas con los conceptos y quieres ir directo a las herramientas: Python, SQL y trabajo con código.',
+    cursoIds: ['python-datos', 'sql', 'terminal-git', 'machine-learning'],
   },
 ]
 

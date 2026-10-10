@@ -72,6 +72,16 @@ export interface Curso {
   proximamente?: boolean
 }
 
+/** Ruta sugerida según el objetivo del estudiante: una secuencia de cursos. */
+export interface RutaObjetivo {
+  id: string
+  titulo: string
+  icono: string
+  descripcion: string
+  /** Ids de curso, en el orden recomendado. */
+  cursoIds: string[]
+}
+
 export interface ModuleMeta {
   id: string
   cursoId: string
