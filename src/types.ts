@@ -95,6 +95,8 @@ export interface ModuleMeta {
   descripcion: string
   disponible: boolean
   lessonIds: string[]
+  /** Si se indica, tiene prioridad sobre `Curso.certifica` para este módulo (ampliaciones que no cuentan para el certificado actual). */
+  certifica?: boolean
 }
 
 export interface ExerciseAttempt {

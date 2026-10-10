@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { cursos, getCurso, leccionesDeCurso, modulosDeCurso, siguienteCurso, todasLasLecciones } from '../content/curriculum'
+import { certificacionDeCurso, cursos, getCurso, leccionesDeCurso, modulosDeCurso, siguienteCurso, todasLasLecciones } from '../content/curriculum'
 import { horasEstimadas, progresoDeCurso } from '../lib/cursos'
 import { estadoDeModulo } from '../lib/progreso'
 import { useProgressStore } from '../state/progressStore'
@@ -51,8 +51,10 @@ export function CursoPage() {
             Paso {curso.paso} de {cursos.length}
           </span>
           <InsigniaNivel nivel={curso.nivel} />
-          {curso.certifica !== false && !proximamente && (
-            <span className="rounded-full bg-brand-600/15 px-2.5 py-0.5 text-xs font-medium text-brand-200">🎓 Cuenta para el certificado «AI Academy»</span>
+          {!proximamente && certificacionDeCurso(curso.id) !== 'ninguno' && (
+            <span className="rounded-full bg-brand-600/15 px-2.5 py-0.5 text-xs font-medium text-brand-200">
+              {certificacionDeCurso(curso.id) === 'todo' ? '🎓 Cuenta para el certificado «AI Academy»' : '🎓 Solo los módulos básicos cuentan para el certificado «AI Academy»'}
+            </span>
           )}
         </div>
         <div className="mt-4 flex items-start gap-4">

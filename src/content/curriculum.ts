@@ -68,11 +68,11 @@ export const cursos: Curso[] = [
     id: 'sql',
     paso: 6,
     titulo: 'SQL para analítica',
-    resumen: 'Consultas, agregaciones, JOIN, subconsultas y CTE sobre una base de datos real en tu navegador.',
-    descripcion: 'El lenguaje de las bases de datos, imprescindible para extraer y resumir información en cualquier empresa.',
+    resumen: 'De SELECT a funciones de ventana, CTE y subconsultas, con práctica en una base de datos en tu navegador.',
+    descripcion: 'El lenguaje de las bases de datos, imprescindible para extraer y resumir información en cualquier empresa. Se practica con SQLite en el navegador y se explica qué cambia en PostgreSQL, SQL Server y MySQL.',
     nivel: 'Intermedio',
     icono: '🗄️',
-    aprenderas: ['Consultar y filtrar tablas con SELECT', 'Resumir con GROUP BY y funciones de agregación', 'Combinar tablas con JOIN', 'Usar CASE, subconsultas y CTE; conectar SQL con pandas'],
+    aprenderas: ['Consultar, filtrar y resumir tablas con SELECT, GROUP BY y HAVING', 'Combinar tablas con todos los tipos de JOIN, conjuntos y subconsultas', 'Analizar con CTE y funciones de ventana (rankings, LAG, acumulados)', 'Modificar datos, usar vistas e índices y adaptar el SQL a otros motores'],
     requisitos: 'Python para datos (recomendado).',
   },
   {
@@ -219,6 +219,11 @@ export const curriculum: ModuleMeta[] = [
   { id: 'modulo-18', cursoId: 'machine-learning', numero: 18, titulo: 'Proyecto integrador: Ciencia de Datos', descripcion: 'Proyecto de abandono de clientes: de los datos al modelo, con línea base, métricas y conclusiones.', disponible: true, lessonIds: idsDe('modulo-18') },
 
   { id: 'modulo-19', cursoId: 'sql', numero: 19, titulo: 'SQL para análisis de datos', descripcion: 'SQLite en el navegador: SELECT, agregaciones, JOIN, CTE y consultas desde pandas.', disponible: true, lessonIds: idsDe('modulo-19') },
+  { id: 'modulo-38', cursoId: 'sql', numero: 38, titulo: 'Consultas con más precisión', descripcion: 'NULL, funciones de texto, números y fechas, y agregación condicional (tablas dinámicas en SQL).', disponible: true, certifica: false, lessonIds: idsDe('modulo-38') },
+  { id: 'modulo-39', cursoId: 'sql', numero: 39, titulo: 'Combinar tablas y subconsultas', descripcion: 'JOIN de varias tablas, anti-join, CROSS y SELF JOIN, UNION/INTERSECT/EXCEPT, IN, EXISTS y subconsultas correlacionadas.', disponible: true, certifica: false, lessonIds: idsDe('modulo-39') },
+  { id: 'modulo-40', cursoId: 'sql', numero: 40, titulo: 'CTE y funciones de ventana', descripcion: 'CTE encadenadas y recursivas, ROW_NUMBER/RANK, LAG/LEAD, acumulados, medias móviles y cuantiles.', disponible: true, certifica: false, lessonIds: idsDe('modulo-40') },
+  { id: 'modulo-41', cursoId: 'sql', numero: 41, titulo: 'Modificar datos, rendimiento y otros motores', descripcion: 'INSERT/UPDATE/DELETE, transacciones, upsert, vistas, índices y qué cambia entre SQLite, PostgreSQL, SQL Server y MySQL.', disponible: true, certifica: false, lessonIds: idsDe('modulo-41') },
+  { id: 'modulo-42', cursoId: 'sql', numero: 42, titulo: 'Proyecto integrador: análisis de una tienda', descripcion: 'Calidad de datos, KPIs, evolución mensual, rankings y segmentación de clientes con un reporte final.', disponible: true, certifica: false, lessonIds: idsDe('modulo-42') },
   { id: 'modulo-20', cursoId: 'terminal-git', numero: 20, titulo: 'Herramientas de desarrollo', descripcion: 'Línea de comandos, Git y GitHub para trabajo colaborativo.', disponible: true, lessonIds: idsDe('modulo-20') },
   { id: 'modulo-21', cursoId: 'comunicacion-negocio', numero: 21, titulo: 'Introducción a BI y preparación profesional', descripcion: 'KPIs, diseño de dashboards, storytelling con datos, portafolio en GitHub y entrevistas.', disponible: true, lessonIds: idsDe('modulo-21') },
 ]
@@ -230,11 +235,19 @@ export const todasLasLecciones: LessonSummary[] = [...curriculum]
 
 /** Módulos cuyas lecciones cuentan para el certificado actual. */
 function moduloCertifica(m: ModuleMeta): boolean {
-  return getCurso(m.cursoId)?.certifica !== false
+  return m.certifica ?? getCurso(m.cursoId)?.certifica !== false
 }
 
 /** Ids de las lecciones que cuentan para el certificado actual. */
 export const leccionesCertificables: string[] = curriculum.filter(moduloCertifica).flatMap((m) => m.lessonIds)
+
+/** Cuántas lecciones de un curso cuentan para el certificado: todas, solo algunas (ampliaciones) o ninguna. */
+export function certificacionDeCurso(cursoId: string): 'todo' | 'parcial' | 'ninguno' {
+  const ids = leccionesDeCurso(cursoId)
+  const cuentan = ids.filter((id) => leccionesCertificables.includes(id)).length
+  if (cuentan === 0) return 'ninguno'
+  return cuentan === ids.length ? 'todo' : 'parcial'
+}
 
 export function getLeccion(id: string): LessonSummary | undefined {
   return todasLasLecciones.find((l) => l.id === id)
