@@ -65,3 +65,13 @@ test('ejercicio completo: cuenta las respuestas correctas', () => {
   assert.match(parcial.mensaje, /1 de 2/)
   assert.match(comprobarCalculo(ej, ['', '']).mensaje, /ninguna/)
 })
+
+test('casillas: exige exactamente las opciones correctas', () => {
+  const p = { tipo: 'casillas' as const, etiqueta: '¿Cuáles?', opciones: ['a', 'b', 'c'], correctas: [0, 2] }
+  assert.equal(comprobarPregunta(p, '0,2').ok, true)
+  assert.equal(comprobarPregunta(p, '2,0').ok, true)
+  assert.equal(comprobarPregunta(p, '0').ok, false)
+  assert.match(comprobarPregunta(p, '0').mensaje, /Faltan/)
+  assert.match(comprobarPregunta(p, '0,1,2').mensaje, /no corresponde/)
+  assert.equal(comprobarPregunta(p, '').ok, false)
+})

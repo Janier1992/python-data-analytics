@@ -1,5 +1,6 @@
 import type { EjemploResuelto } from '../../calculo'
 import { Grafico } from './Grafico'
+import { PantallaPBI } from './PantallaPBI'
 import { TablaDatosVista } from './TablaDatosVista'
 import { TextoMd } from './TextoMd'
 
@@ -9,6 +10,7 @@ export function EjemploResueltoVista({ ejemplo }: { ejemplo: EjemploResuelto }) 
     <div className="space-y-3 rounded-xl border border-surface-border bg-surface-raised/50 p-4">
       {ejemplo.titulo && <h3 className="font-semibold text-slate-100">{ejemplo.titulo}</h3>}
       {ejemplo.datos?.map((t, i) => <TablaDatosVista key={i} tabla={t} />)}
+      {ejemplo.pantallas?.map((p, i) => <PantallaPBI key={i} spec={p} />)}
       {ejemplo.graficos?.map((g, i) => <Grafico key={i} spec={g} />)}
       <ol className="space-y-3">
         {ejemplo.pasos.map((paso, i) => (

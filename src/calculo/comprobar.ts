@@ -56,6 +56,17 @@ export function comprobarPregunta(pregunta: PreguntaCalculo, respuesta: string |
     if (respuesta === null || respuesta === undefined || respuesta === '') return { ok: false, mensaje: 'Elige una opción.' }
     return Number(respuesta) === pregunta.correcta ? { ok: true, mensaje: 'Correcto.' } : { ok: false, mensaje: 'Esa opción no es la correcta.' }
   }
+  if (pregunta.tipo === 'casillas') {
+    // la respuesta es la lista de posiciones marcadas, separadas por comas («0,2»)
+    const marcadas = String(respuesta ?? '').split(',').filter((x) => x !== '').map(Number)
+    if (marcadas.length === 0) return { ok: false, mensaje: 'Marca al menos una opción.' }
+    const correctas = new Set(pregunta.correctas)
+    const aciertos = marcadas.filter((m) => correctas.has(m)).length
+    const sobran = marcadas.length - aciertos
+    if (aciertos === correctas.size && sobran === 0) return { ok: true, mensaje: 'Correcto.' }
+    if (sobran > 0) return { ok: false, mensaje: 'Hay una opción marcada que no corresponde.' }
+    return { ok: false, mensaje: 'Faltan opciones por marcar.' }
+  }
   const texto = respuesta === null || respuesta === undefined ? '' : String(respuesta)
   if (texto.trim() === '') return { ok: false, mensaje: 'Escribe tu respuesta.' }
   const n = parsearNumero(texto)

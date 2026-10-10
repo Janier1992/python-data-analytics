@@ -198,7 +198,7 @@ export const lessonIndex: LessonSummary[] = [
   { id: "m43-l3", moduloId: "modulo-43", titulo: "Tableros: KPI, jerarquía visual y semáforos" },
   { id: "m43-l4", moduloId: "modulo-43", titulo: "Accesibilidad, contraste y storytelling" },
   { id: "m44-l1", moduloId: "modulo-44", titulo: "Power BI: el flujo de trabajo y la calidad de los datos" },
-  { id: "m44-l2", moduloId: "modulo-44", titulo: "Power Query: transformaciones y su equivalente en pandas" },
+  { id: "m44-l2", moduloId: "modulo-44", titulo: "Power Query: transformaciones esenciales" },
   { id: "m44-l3", moduloId: "modulo-44", titulo: "Modelo en estrella: hechos, dimensiones y relaciones" },
   { id: "m44-l4", moduloId: "modulo-44", titulo: "La tabla de fechas (calendario) y el tiempo en el modelo" },
   { id: "m45-l1", moduloId: "modulo-45", titulo: "DAX: medidas, columnas calculadas y contexto de filtro" },

@@ -6,6 +6,7 @@ import { useProgressStore } from '../../state/progressStore'
 import { Boton } from '../ui'
 import { Calculadora } from './Calculadora'
 import { Grafico } from './Grafico'
+import { PantallaPBI } from './PantallaPBI'
 import { TablaDatosVista } from './TablaDatosVista'
 import { TextoMd } from './TextoMd'
 
@@ -45,6 +46,7 @@ export function EjercicioCalculoBlock({ ejercicio, lessonId, titulo }: Props) {
       <TextoMd className="[&>*:first-child]:mt-0 [&>*:last-child]:mb-0">{ejercicio.enunciado}</TextoMd>
 
       {ejercicio.datos?.map((t, i) => <TablaDatosVista key={i} tabla={t} />)}
+      {ejercicio.pantallas?.map((p, i) => <PantallaPBI key={i} spec={p} />)}
       {ejercicio.graficos?.map((g, i) => <Grafico key={i} spec={g} />)}
 
       <form onSubmit={alComprobar} className="space-y-3">
@@ -61,6 +63,27 @@ export function EjercicioCalculoBlock({ ejercicio, lessonId, titulo }: Props) {
                     {p.opciones.map((o, k) => (
                       <label key={o} className="flex cursor-pointer items-start gap-2 text-sm text-slate-300">
                         <input type="radio" name={id} checked={respuestas[i] === String(k)} onChange={() => cambiar(i, String(k))} className="mt-1 accent-brand-500" />
+                        <TextoMd enLinea>{o}</TextoMd>
+                      </label>
+                    ))}
+                  </div>
+                  {r && <p className={`mt-2 text-xs ${r.ok ? 'text-emerald-300' : 'text-amber-300'}`}>{r.ok ? '✅' : '⚠️'} {r.mensaje}</p>}
+                </fieldset>
+              )
+            }
+            if (p.tipo === 'casillas') {
+              const marcadas = respuestas[i] === '' ? [] : respuestas[i].split(',')
+              const alternar = (k: number) => {
+                const nuevas = marcadas.includes(String(k)) ? marcadas.filter((x) => x !== String(k)) : [...marcadas, String(k)]
+                cambiar(i, nuevas.sort().join(','))
+              }
+              return (
+                <fieldset key={id} className={`rounded-lg border ${borde} bg-surface p-3`}>
+                  <legend className="px-1 text-sm font-medium text-slate-200"><TextoMd enLinea>{p.etiqueta}</TextoMd> <span className="text-xs font-normal text-slate-400">(marca todas las correctas)</span></legend>
+                  <div className="mt-1 space-y-1.5">
+                    {p.opciones.map((o, k) => (
+                      <label key={o} className="flex cursor-pointer items-start gap-2 text-sm text-slate-300">
+                        <input type="checkbox" checked={marcadas.includes(String(k))} onChange={() => alternar(k)} className="mt-1 accent-brand-500" />
                         <TextoMd enLinea>{o}</TextoMd>
                       </label>
                     ))}
