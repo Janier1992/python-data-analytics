@@ -14,7 +14,8 @@ export const cursos: Curso[] = [
     nivel: 'Básico',
     icono: '📊',
     aprenderas: ['Clasificar variables y escalas de medición', 'Calcular e interpretar media, mediana, desviación y cuartiles', 'Detectar valores atípicos y medir correlaciones', 'Presentar un estudio descriptivo con conclusiones y límites'],
-    requisitos: 'Ninguno. Solo necesitas modificar pequeños fragmentos de código ya escritos.',
+    requisitos: 'Ninguno. No necesitas programar: los ejercicios se resuelven con la calculadora incluida en la plataforma.',
+    sinProgramacion: true,
     certifica: false,
   },
   {
@@ -25,8 +26,9 @@ export const cursos: Curso[] = [
     descripcion: 'La base teórica de la inferencia: cómo razonar con incertidumbre y modelar fenómenos aleatorios con distribuciones.',
     nivel: 'Básico',
     icono: '🎲',
-    aprenderas: ['Aplicar las reglas de probabilidad y el teorema de Bayes', 'Modelar conteos con binomial y Poisson', 'Calcular probabilidades con la normal y la exponencial', 'Estimar probabilidades por simulación Monte Carlo'],
-    requisitos: 'Estadística descriptiva (recomendado).',
+    aprenderas: ['Aplicar las reglas de probabilidad y el teorema de Bayes', 'Modelar conteos con binomial y Poisson', 'Calcular probabilidades con la normal y la exponencial', 'Estimar probabilidades por simulación Monte Carlo (con dígitos aleatorios)'],
+    requisitos: 'Estadística descriptiva (recomendado). Sin programación: calculadora y tablas estadísticas incluidas.',
+    sinProgramacion: true,
     certifica: false,
   },
   {
@@ -38,7 +40,8 @@ export const cursos: Curso[] = [
     nivel: 'Intermedio',
     icono: '🧪',
     aprenderas: ['Construir e interpretar intervalos de confianza', 'Contrastar hipótesis con pruebas t, z y chi-cuadrado', 'Diseñar y analizar un A/B test', 'Ajustar regresiones y comparar grupos con ANOVA'],
-    requisitos: 'Probabilidad y distribuciones (recomendado).',
+    requisitos: 'Probabilidad y distribuciones (recomendado). Sin programación: calculadora y tablas estadísticas incluidas.',
+    sinProgramacion: true,
     certifica: false,
   },
   {

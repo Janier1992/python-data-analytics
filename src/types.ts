@@ -1,3 +1,4 @@
+import type { EjemploResuelto, EjercicioCalculo } from './calculo/tipos'
 import type { EjemploHoja, EjercicioHoja } from './excel/tipos'
 
 export type Mastery = 'NO_INICIADO' | 'EN_APRENDIZAJE' | 'PRACTICADO' | 'DOMINADO'
@@ -32,19 +33,19 @@ export interface Exercise {
 
 export interface Lesson {
   id: string
-  /** Con qué se practica: Python (por defecto) o fórmulas de hoja de cálculo. */
-  motor?: 'python' | 'excel'
+  /** Con qué se practica: Python (por defecto), fórmulas de hoja de cálculo o cálculo y razonamiento sin programación (`calculo`: cursos de fundamentos). */
+  motor?: 'python' | 'excel' | 'calculo'
   moduloId: string
   titulo: string
   objetivo: string
   porQueImporta: string
   concepto: string // markdown
   /** Ejemplos: código (texto) o, en las lecciones de Excel (`motor: 'excel'`), una hoja con fórmulas y su resultado. */
-  ejemploMinimo: string | EjemploHoja
-  ejemploAplicado: string | EjemploHoja
+  ejemploMinimo: string | EjemploHoja | EjemploResuelto
+  ejemploAplicado: string | EjemploHoja | EjemploResuelto
   errorFrecuente: { codigo: string; explicacion: string }
-  practicaGuiada: Exercise | EjercicioHoja
-  reto: Exercise | EjercicioHoja
+  practicaGuiada: Exercise | EjercicioHoja | EjercicioCalculo
+  reto: Exercise | EjercicioHoja | EjercicioCalculo
   verificacion: QuizQuestion[]
   resumen: string[]
   proximoPaso: string
@@ -75,6 +76,8 @@ export interface Curso {
   certifica?: boolean
   /** `true` si el curso aún no tiene contenido: se muestra como «Próximamente». */
   proximamente?: boolean
+  /** Curso de fundamentos sin programación: sus lecciones usan ejemplos resueltos y ejercicios de cálculo (`motor: 'calculo'`), sin scripts de Python. */
+  sinProgramacion?: boolean
   /** Aclaración que se imprime en el certificado del curso sobre lo que la plataforma sí y no evalúa (por ejemplo, que no se ejecuta Power BI). */
   avisoCertificado?: string
 }

@@ -1,12 +1,15 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import ReactMarkdown from 'react-markdown'
 import { getCurso, getLeccion, getLeccionesAdyacentes, getModulo, leccionesDeCurso, modulosDeCurso, moduloLeccionesMap } from '../content/curriculum'
 import { cursoCompleto } from '../lib/certificadoCurso'
 import { cargarLeccion, leccionEnCache } from '../content/lessonLoader'
 import { cargarTodasLasColecciones } from '../content/reference'
 import type { Lesson } from '../types'
+import { esEjemploResuelto, esEjercicioCalculo } from '../calculo'
 import { esEjercicioHoja } from '../excel'
+import { EjemploResueltoVista } from './calculo/EjemploResueltoVista'
+import { EjercicioCalculoBlock } from './calculo/EjercicioCalculoBlock'
+import { TextoMd } from './calculo/TextoMd'
 import { EjemploHojaVista } from './excel/EjemploHojaVista'
 import { EjercicioHojaBlock } from './excel/EjercicioHojaBlock'
 import { ExerciseBlock } from './ExerciseBlock'
@@ -199,39 +202,44 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
         </Seccion>
 
         <Seccion id="concepto" titulo="Concepto">
-          <div className="prose prose-invert prose-slate max-w-none prose-pre:bg-slate-950">
-            <ReactMarkdown
-              components={{
-                // Los archivos de datos del curso (/datos/…) se descargan en lugar de abrirse en la página.
-                a: ({ href, children }) => (
-                  <a href={href} download={href?.startsWith('/datos/') ? '' : undefined}>
-                    {children}
-                  </a>
-                ),
-              }}
-            >
-              {leccion.concepto}
-            </ReactMarkdown>
-          </div>
+          <TextoMd>{leccion.concepto}</TextoMd>
         </Seccion>
 
-        <ReferenciaRelacionada leccionId={leccion.id} />
+        {leccion.motor !== 'calculo' && <ReferenciaRelacionada leccionId={leccion.id} />}
 
         <Seccion id="ejemplo-minimo" titulo="Ejemplo mínimo">
-          {typeof leccion.ejemploMinimo === 'string' ? <CodeBlock code={leccion.ejemploMinimo} /> : <EjemploHojaVista ejemplo={leccion.ejemploMinimo} titulo="ejemplo mínimo" />}
+          {typeof leccion.ejemploMinimo === 'string' ? (
+            <CodeBlock code={leccion.ejemploMinimo} />
+          ) : esEjemploResuelto(leccion.ejemploMinimo) ? (
+            <EjemploResueltoVista ejemplo={leccion.ejemploMinimo} />
+          ) : (
+            <EjemploHojaVista ejemplo={leccion.ejemploMinimo} titulo="ejemplo mínimo" />
+          )}
         </Seccion>
 
         <Seccion id="ejemplo-aplicado" titulo="Ejemplo aplicado a datos">
-          {typeof leccion.ejemploAplicado === 'string' ? <CodeBlock code={leccion.ejemploAplicado} /> : <EjemploHojaVista ejemplo={leccion.ejemploAplicado} titulo="ejemplo aplicado" />}
+          {typeof leccion.ejemploAplicado === 'string' ? (
+            <CodeBlock code={leccion.ejemploAplicado} />
+          ) : esEjemploResuelto(leccion.ejemploAplicado) ? (
+            <EjemploResueltoVista ejemplo={leccion.ejemploAplicado} />
+          ) : (
+            <EjemploHojaVista ejemplo={leccion.ejemploAplicado} titulo="ejemplo aplicado" />
+          )}
         </Seccion>
 
         <Seccion id="error-frecuente" titulo="Error frecuente">
-          <CodeBlock code={leccion.errorFrecuente.codigo} />
+          {leccion.motor === 'calculo' ? (
+            <pre className="whitespace-pre-wrap rounded-lg border border-surface-border bg-slate-950 p-3 text-sm leading-relaxed text-slate-200">{leccion.errorFrecuente.codigo}</pre>
+          ) : (
+            <CodeBlock code={leccion.errorFrecuente.codigo} />
+          )}
           <p className="mt-2 text-sm text-slate-300">{leccion.errorFrecuente.explicacion}</p>
         </Seccion>
 
         <Seccion id="practica-guiada" titulo="Práctica guiada">
-          {esEjercicioHoja(leccion.practicaGuiada) ? (
+          {esEjercicioCalculo(leccion.practicaGuiada) ? (
+            <EjercicioCalculoBlock ejercicio={leccion.practicaGuiada} lessonId={leccion.id} titulo="Resuelve paso a paso" />
+          ) : esEjercicioHoja(leccion.practicaGuiada) ? (
             <EjercicioHojaBlock ejercicio={leccion.practicaGuiada} lessonId={leccion.id} titulo="Completa la fórmula" />
           ) : (
             <ExerciseBlock exercise={leccion.practicaGuiada} lessonId={leccion.id} titulo="Completa el código" />
@@ -239,7 +247,9 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
         </Seccion>
 
         <Seccion id="reto" titulo="Reto">
-          {esEjercicioHoja(leccion.reto) ? (
+          {esEjercicioCalculo(leccion.reto) ? (
+            <EjercicioCalculoBlock ejercicio={leccion.reto} lessonId={leccion.id} titulo="Resuélvelo por tu cuenta" />
+          ) : esEjercicioHoja(leccion.reto) ? (
             <EjercicioHojaBlock ejercicio={leccion.reto} lessonId={leccion.id} titulo="Resuélvelo por tu cuenta" />
           ) : (
             <ExerciseBlock exercise={leccion.reto} lessonId={leccion.id} titulo="Resuélvelo por tu cuenta" />

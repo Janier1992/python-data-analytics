@@ -1,5 +1,6 @@
 import { aLogico, aNumero, aTexto, comparar, dividir, fechaASerial, numeroATexto, redondear, serialAFecha, textoANumero } from './conversion'
 import { crearCriterio, patronAExpresion, tieneComodines } from './criterios'
+import { lnGamma as lnGammaLocal, cdfBinomial, cdfPoisson, cdfT, colaDerechaChi2, colaDerechaF, invChi2ColaDerecha, invFColaDerecha, invT, invT2Colas, pT2Colas, pmfBinomial, pmfPoisson, pnormEstandar, qnormEstandar } from './distribuciones'
 import { DIV0, ErrorExcel, NOD, NUM, REF, VALOR, esError, esMatriz } from './tipos'
 import type { Escalar, Matriz, Valor } from './tipos'
 
@@ -622,6 +623,84 @@ const POTENCIA: Impl = dosNumeros((a, b) => {
   return Number.isFinite(r) ? r : a === 0 && b <= 0 ? DIV0() : NUM()
 })
 const RAIZ: Impl = unNumero((n) => (n < 0 ? NUM() : Math.sqrt(n)))
+const factorial = (n: number): number => {
+  let r = 1
+  for (let i = 2; i <= n; i++) r *= i
+  return r
+}
+const LN: Impl = unNumero((n) => (n <= 0 ? NUM() : Math.log(n)))
+const LOG10: Impl = unNumero((n) => (n <= 0 ? NUM() : Math.log10(n)))
+const LOG: Impl = ([a, b]) => {
+  const x = numeroArg(a)
+  const base = b === undefined ? 10 : numeroArg(b)
+  if (esError(x)) return x
+  if (esError(base)) return base
+  if (x <= 0 || base <= 0 || base === 1) return NUM()
+  return base === 10 ? Math.log10(x) : base === 2 ? Math.log2(x) : Math.log(x) / Math.log(base)
+}
+const FACT: Impl = unNumero((n) => (n < 0 || n > 170 ? NUM() : factorial(Math.trunc(n))))
+const COMBINAT: Impl = dosNumeros((n, k) => {
+  n = Math.trunc(n)
+  k = Math.trunc(k)
+  if (n < 0 || k < 0 || k > n) return NUM()
+  let r = 1
+  for (let i = 1; i <= Math.min(k, n - k); i++) r = (r * (n - i + 1)) / i
+  return Math.round(r)
+})
+const PERMUTACIONES: Impl = dosNumeros((n, k) => {
+  n = Math.trunc(n)
+  k = Math.trunc(k)
+  if (n < 0 || k < 0 || k > n) return NUM()
+  let r = 1
+  for (let i = 0; i < k; i++) r *= n - i
+  return r
+})
+
+
+// ───────── Distribuciones de probabilidad ─────────
+
+/** Evalúa `fn` con los argumentos numéricos; el último puede ser un lógico (acumulado) si `ultimoLogico`. */
+function distribucion(fn: (n: number[], acum: boolean) => number, numericos: number, ultimoLogico: boolean): Impl {
+  return (args) => {
+    const n: number[] = []
+    for (let i = 0; i < numericos; i++) {
+      const x = numeroArg(args[i])
+      if (esError(x)) return x
+      n.push(x)
+    }
+    let acum = true
+    if (ultimoLogico) {
+      const l = aLogico(escalar(args[numericos]))
+      if (esError(l)) return l
+      acum = l
+    }
+    const r = fn(n, acum)
+    return Number.isFinite(r) ? r : NUM()
+  }
+}
+const sinNaN = (x: number) => (Number.isNaN(x) ? NaN : x)
+
+const DISTR_NORM_ESTAND = distribucion(([z], acum) => (acum ? pnormEstandar(z) : Math.exp((-z * z) / 2) / Math.sqrt(2 * Math.PI)), 1, true)
+const DISTR_NORM = distribucion(([x, mu, sigma], acum) => (sigma <= 0 ? NaN : acum ? pnormEstandar((x - mu) / sigma) : Math.exp(-(((x - mu) / sigma) ** 2) / 2) / (sigma * Math.sqrt(2 * Math.PI))), 3, true)
+const INV_NORM_ESTAND = distribucion(([p]) => qnormEstandar(p), 1, false)
+const INV_NORM = distribucion(([p, mu, sigma]) => (sigma <= 0 ? NaN : mu + sigma * qnormEstandar(p)), 3, false)
+const DISTR_BINOM = distribucion(([k, n, p], acum) => (n < 0 || p < 0 || p > 1 || k < 0 || k > n ? NaN : acum ? cdfBinomial(Math.trunc(k), Math.trunc(n), p) : pmfBinomial(Math.trunc(k), Math.trunc(n), p)), 3, true)
+const POISSON_DIST = distribucion(([k, mu], acum) => (k < 0 || mu < 0 ? NaN : acum ? cdfPoisson(Math.trunc(k), mu) : pmfPoisson(Math.trunc(k), mu)), 2, true)
+const DISTR_EXP = distribucion(([x, lambda], acum) => (x < 0 || lambda <= 0 ? NaN : acum ? 1 - Math.exp(-lambda * x) : lambda * Math.exp(-lambda * x)), 2, true)
+const DISTR_T = distribucion(([x, gl], acum) => (gl < 1 ? NaN : acum ? cdfT(x, Math.trunc(gl)) : sinNaN(Math.exp(lnDensidadT(x, Math.trunc(gl))))), 2, true)
+const DISTR_T_2C = distribucion(([x, gl]) => (x < 0 || gl < 1 ? NaN : pT2Colas(x, Math.trunc(gl))), 2, false)
+const DISTR_T_CD = distribucion(([x, gl]) => (x < 0 || gl < 1 ? NaN : pT2Colas(x, Math.trunc(gl)) / 2), 2, false)
+const INV_T = distribucion(([p, gl]) => (!(p > 0 && p < 1) || gl < 1 ? NaN : invT(p, Math.trunc(gl))), 2, false)
+const INV_T_2C = distribucion(([p, gl]) => (!(p > 0 && p <= 1) || gl < 1 ? NaN : invT2Colas(p, Math.trunc(gl))), 2, false)
+const DISTR_CHI_CD = distribucion(([x, gl]) => (x < 0 || gl < 1 ? NaN : colaDerechaChi2(x, Math.trunc(gl))), 2, false)
+const INV_CHI_CD = distribucion(([p, gl]) => (!(p > 0 && p < 1) || gl < 1 ? NaN : invChi2ColaDerecha(p, Math.trunc(gl))), 2, false)
+const DISTR_F_CD = distribucion(([x, g1, g2]) => (x < 0 || g1 < 1 || g2 < 1 ? NaN : colaDerechaF(x, Math.trunc(g1), Math.trunc(g2))), 3, false)
+const INV_F_CD = distribucion(([p, g1, g2]) => (!(p > 0 && p < 1) || g1 < 1 || g2 < 1 ? NaN : invFColaDerecha(p, Math.trunc(g1), Math.trunc(g2))), 3, false)
+
+/** Logaritmo de la densidad de la t de Student. */
+function lnDensidadT(x: number, gl: number): number {
+  return lnGammaLocal((gl + 1) / 2) - lnGammaLocal(gl / 2) - 0.5 * Math.log(gl * Math.PI) - ((gl + 1) / 2) * Math.log(1 + (x * x) / gl)
+}
 
 // ───────── Fechas ─────────
 
@@ -732,6 +811,30 @@ const REGISTRO: Record<string, Definicion> = {
   RESIDUO: { min: 2, max: 2, fn: RESIDUO },
   POTENCIA: { min: 2, max: 2, fn: POTENCIA },
   RAIZ: { min: 1, max: 1, fn: RAIZ },
+  LN: { min: 1, max: 1, fn: LN },
+  LOG: { min: 1, max: 2, fn: LOG },
+  LOG10: { min: 1, max: 1, fn: LOG10 },
+  EXP: { min: 1, max: 1, fn: unNumero((n) => Math.exp(n)) },
+  FACT: { min: 1, max: 1, fn: FACT },
+  COMBINAT: { min: 2, max: 2, fn: COMBINAT },
+  PERMUTACIONES: { min: 2, max: 2, fn: PERMUTACIONES },
+  PI: { min: 0, max: 0, fn: () => Math.PI },
+  'DISTR.NORM.ESTAND.N': { min: 2, max: 2, fn: DISTR_NORM_ESTAND },
+  'DISTR.NORM.N': { min: 4, max: 4, fn: DISTR_NORM },
+  'INV.NORM.ESTAND': { min: 1, max: 1, fn: INV_NORM_ESTAND },
+  'INV.NORM': { min: 3, max: 3, fn: INV_NORM },
+  'DISTR.BINOM.N': { min: 4, max: 4, fn: DISTR_BINOM },
+  'POISSON.DIST': { min: 3, max: 3, fn: POISSON_DIST },
+  'DISTR.EXP.N': { min: 3, max: 3, fn: DISTR_EXP },
+  'DISTR.T.N': { min: 3, max: 3, fn: DISTR_T },
+  'DISTR.T.2C': { min: 2, max: 2, fn: DISTR_T_2C },
+  'DISTR.T.CD': { min: 2, max: 2, fn: DISTR_T_CD },
+  'INV.T': { min: 2, max: 2, fn: INV_T },
+  'INV.T.2C': { min: 2, max: 2, fn: INV_T_2C },
+  'DISTR.CHICUAD.CD': { min: 2, max: 2, fn: DISTR_CHI_CD },
+  'INV.CHICUAD.CD': { min: 2, max: 2, fn: INV_CHI_CD },
+  'DISTR.F.CD': { min: 3, max: 3, fn: DISTR_F_CD },
+  'INV.F.CD': { min: 3, max: 3, fn: INV_F_CD },
   FECHA: { min: 3, max: 3, fn: FECHA },
   AÑO: { min: 1, max: 1, fn: ANIO },
   MES: { min: 1, max: 1, fn: MES },
@@ -817,6 +920,23 @@ const ALIAS: Record<string, string> = {
   MOD: 'RESIDUO',
   POWER: 'POTENCIA',
   SQRT: 'RAIZ',
+  COMBIN: 'COMBINAT',
+  PERMUT: 'PERMUTACIONES',
+  'NORM.S.DIST': 'DISTR.NORM.ESTAND.N',
+  'NORM.DIST': 'DISTR.NORM.N',
+  'NORM.S.INV': 'INV.NORM.ESTAND',
+  'NORM.INV': 'INV.NORM',
+  'BINOM.DIST': 'DISTR.BINOM.N',
+  'EXPON.DIST': 'DISTR.EXP.N',
+  'T.DIST': 'DISTR.T.N',
+  'T.DIST.2T': 'DISTR.T.2C',
+  'T.DIST.RT': 'DISTR.T.CD',
+  'T.INV': 'INV.T',
+  'T.INV.2T': 'INV.T.2C',
+  'CHISQ.DIST.RT': 'DISTR.CHICUAD.CD',
+  'CHISQ.INV.RT': 'INV.CHICUAD.CD',
+  'F.DIST.RT': 'DISTR.F.CD',
+  'F.INV.RT': 'INV.F.CD',
   DATE: 'FECHA',
   YEAR: 'AÑO',
   ANO: 'AÑO',

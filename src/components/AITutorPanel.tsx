@@ -33,7 +33,7 @@ export function AITutorPanel({ leccionContexto }: { leccionContexto: Lesson }) {
     setError(null)
     try {
       const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
-      const contexto = `Lección actual: "${leccionContexto.titulo}" (Objetivo: ${leccionContexto.objetivo}). Conceptos clave: ${leccionContexto.conceptos.join(', ')}.${leccionContexto.motor === 'excel' ? ' Esta lección es de Excel (fórmulas de hoja de cálculo con nombres de función en español), no de Python.' : ''}`
+      const contexto = `Lección actual: "${leccionContexto.titulo}" (Objetivo: ${leccionContexto.objetivo}). Conceptos clave: ${leccionContexto.conceptos.join(', ')}.${leccionContexto.motor === 'excel' ? ' Esta lección es de Excel (fórmulas de hoja de cálculo con nombres de función en español), no de Python.' : leccionContexto.motor === 'calculo' ? ' Esta lección es de un curso de fundamentos sin programación: explica con cálculos, tablas y razonamiento, sin código de Python.' : ''}`
       const respuesta = await client.messages.create({
         model: modelo,
         max_tokens: 700,
