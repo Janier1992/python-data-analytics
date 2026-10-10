@@ -5,6 +5,9 @@ import { getCurso, getLeccion, getLeccionesAdyacentes, getModulo, modulosDeCurso
 import { cargarLeccion, leccionEnCache } from '../content/lessonLoader'
 import { cargarTodasLasColecciones } from '../content/reference'
 import type { Lesson } from '../types'
+import { esEjercicioHoja } from '../excel'
+import { EjemploHojaVista } from './excel/EjemploHojaVista'
+import { EjercicioHojaBlock } from './excel/EjercicioHojaBlock'
 import { ExerciseBlock } from './ExerciseBlock'
 import { QuizBlock } from './QuizBlock'
 import { programaCompleto, useProgressStore } from '../state/progressStore'
@@ -201,11 +204,11 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
         <ReferenciaRelacionada leccionId={leccion.id} />
 
         <Seccion id="ejemplo-minimo" titulo="Ejemplo mínimo">
-          <CodeBlock code={leccion.ejemploMinimo} />
+          {typeof leccion.ejemploMinimo === 'string' ? <CodeBlock code={leccion.ejemploMinimo} /> : <EjemploHojaVista ejemplo={leccion.ejemploMinimo} titulo="ejemplo mínimo" />}
         </Seccion>
 
         <Seccion id="ejemplo-aplicado" titulo="Ejemplo aplicado a datos">
-          <CodeBlock code={leccion.ejemploAplicado} />
+          {typeof leccion.ejemploAplicado === 'string' ? <CodeBlock code={leccion.ejemploAplicado} /> : <EjemploHojaVista ejemplo={leccion.ejemploAplicado} titulo="ejemplo aplicado" />}
         </Seccion>
 
         <Seccion id="error-frecuente" titulo="Error frecuente">
@@ -214,11 +217,19 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
         </Seccion>
 
         <Seccion id="practica-guiada" titulo="Práctica guiada">
-          <ExerciseBlock exercise={leccion.practicaGuiada} lessonId={leccion.id} titulo="Completa el código" />
+          {esEjercicioHoja(leccion.practicaGuiada) ? (
+            <EjercicioHojaBlock ejercicio={leccion.practicaGuiada} lessonId={leccion.id} titulo="Completa la fórmula" />
+          ) : (
+            <ExerciseBlock exercise={leccion.practicaGuiada} lessonId={leccion.id} titulo="Completa el código" />
+          )}
         </Seccion>
 
         <Seccion id="reto" titulo="Reto">
-          <ExerciseBlock exercise={leccion.reto} lessonId={leccion.id} titulo="Resuélvelo por tu cuenta" />
+          {esEjercicioHoja(leccion.reto) ? (
+            <EjercicioHojaBlock ejercicio={leccion.reto} lessonId={leccion.id} titulo="Resuélvelo por tu cuenta" />
+          ) : (
+            <ExerciseBlock exercise={leccion.reto} lessonId={leccion.id} titulo="Resuélvelo por tu cuenta" />
+          )}
         </Seccion>
 
         <Seccion id="verificacion" titulo="Verificación">

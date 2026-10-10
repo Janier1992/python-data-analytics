@@ -1,3 +1,5 @@
+import type { EjemploHoja, EjercicioHoja } from './excel/tipos'
+
 export type Mastery = 'NO_INICIADO' | 'EN_APRENDIZAJE' | 'PRACTICADO' | 'DOMINADO'
 
 export type LearningStyle = 'explicacion' | 'practica' | 'proyectos'
@@ -30,16 +32,19 @@ export interface Exercise {
 
 export interface Lesson {
   id: string
+  /** Con qué se practica: Python (por defecto) o fórmulas de hoja de cálculo. */
+  motor?: 'python' | 'excel'
   moduloId: string
   titulo: string
   objetivo: string
   porQueImporta: string
   concepto: string // markdown
-  ejemploMinimo: string
-  ejemploAplicado: string
+  /** Ejemplos: código (texto) o, en las lecciones de Excel (`motor: 'excel'`), una hoja con fórmulas y su resultado. */
+  ejemploMinimo: string | EjemploHoja
+  ejemploAplicado: string | EjemploHoja
   errorFrecuente: { codigo: string; explicacion: string }
-  practicaGuiada: Exercise
-  reto: Exercise
+  practicaGuiada: Exercise | EjercicioHoja
+  reto: Exercise | EjercicioHoja
   verificacion: QuizQuestion[]
   resumen: string[]
   proximoPaso: string
