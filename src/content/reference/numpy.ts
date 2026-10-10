@@ -6,7 +6,7 @@ export const numpyRef: ColeccionRef = {
   descripcion: 'Arreglos numéricos rápidos: crearlos, operar con ellos sin bucles, filtrarlos y calcular estadísticas.',
   icono: '🔢',
   lenguaje: 'python',
-  nota: 'Todos los ejemplos usan import numpy as np.',
+  nota: 'Todos los ejemplos usan import numpy as np. Las salidas mostradas son las de NumPy 1.26 (la versión que ejecuta esta plataforma). Con NumPy 2 el código funciona igual, pero al imprimir un número suelto dentro de una tupla o lista verás `np.float64(...)` en lugar de solo el valor.',
   entradas: [
     // ───────────────────────── Crear arreglos ─────────────────────────
     {

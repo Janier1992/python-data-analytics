@@ -72,11 +72,14 @@ export const matplotlibRef: ColeccionRef = {
       id: 'matplotlib-boxplot',
       nombre: 'plt.boxplot()',
       grupo: 'Tipos de gráfico',
-      firma: 'plt.boxplot(datos, labels=None, vert=True)',
+      firma: 'plt.boxplot(datos, vert=True)',
       resumen: 'Diagrama de caja: mediana, cuartiles y valores atípicos de uno o varios grupos.',
-      ejemplo: `import matplotlib.pyplot as plt\n\ngrupo_a = [5, 6, 5, 7, 6, 5, 6]\ngrupo_b = [4, 8, 9, 5, 12, 6, 30]\nplt.boxplot([grupo_a, grupo_b], labels=["A", "B"])\nplt.title("Comparación de grupos")\nprint("gráfico creado")`,
+      ejemplo: `import matplotlib.pyplot as plt\n\ngrupo_a = [5, 6, 5, 7, 6, 5, 6]\ngrupo_b = [4, 8, 9, 5, 12, 6, 30]\nplt.boxplot([grupo_a, grupo_b])\nplt.xticks([1, 2], ["A", "B"])\nplt.title("Comparación de grupos")\nprint("gráfico creado")`,
       salida: 'gráfico creado',
-      notas: ['Los puntos sueltos fuera de los "bigotes" son posibles outliers.'],
+      notas: [
+        'Los puntos sueltos fuera de los "bigotes" son posibles outliers.',
+        'Los nombres de cada caja se ponen con `plt.xticks`. El argumento `labels=` de `boxplot` se renombró a `tick_labels` en matplotlib 3.9 y la versión antigua ya no funciona en las versiones más recientes, por eso aquí se evita.',
+      ],
       lecciones: ['m9-l2', 'm10-l2'],
     },
     {

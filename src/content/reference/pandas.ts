@@ -17,7 +17,7 @@ export const pandasRef: ColeccionRef = {
   descripcion: 'Tablas de datos (DataFrame y Series): leer, explorar, seleccionar, limpiar, transformar, agrupar y combinar.',
   icono: '🐼',
   lenguaje: 'python',
-  nota: 'Los ejemplos usan este DataFrame de 5 filas (se crea al inicio de cada ejemplo): producto, categoria, cantidad, precio y ciudad. Se importa con import pandas as pd.',
+  nota: 'Los ejemplos usan este DataFrame de 5 filas (se crea al inicio de cada ejemplo): producto, categoria, cantidad, precio y ciudad. Se importa con import pandas as pd. Las salidas mostradas son las de pandas 2.2 (la versión que ejecuta esta plataforma). Con pandas 3 (2026) el código funciona igual, pero las columnas de texto se muestran con dtype `str` en lugar de `object`, y las fechas con `datetime64[us]` en lugar de `[ns]`.',
   entradas: [
     // ───────────────────────── Crear y leer datos ─────────────────────────
     {

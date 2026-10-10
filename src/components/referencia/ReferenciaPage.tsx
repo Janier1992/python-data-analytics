@@ -141,6 +141,9 @@ export function ReferenciaPage() {
         <p className="mt-2 max-w-2xl text-slate-300">
           Qué hace cada función, método, parámetro o sentencia de Python y SQL, con un ejemplo que puedes ejecutar y modificar sin salir de la página.
         </p>
+        <p className="mt-2 max-w-2xl text-sm text-slate-400">
+          Los ejemplos se ejecutan aquí con Python 3.12, pandas 2.2 y NumPy 1.26. Comprobamos además que funcionan con las versiones más recientes (pandas 3, NumPy 2, scikit-learn 1.9, SciPy 1.17); en esos casos algunas salidas se muestran con otro formato, y donde importa lo avisamos en las notas.
+        </p>
       </header>
 
       <div role="search" className="mt-6">

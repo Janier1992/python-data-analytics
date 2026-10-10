@@ -7,6 +7,7 @@ import {
   leccionesDeCurso,
   modulosDeCurso,
   moduloLeccionesCertificablesMap,
+  rutasPorObjetivo,
   todasLasLecciones,
 } from '../content/curriculum'
 import { avanceCertificado, diasDeEstudio, formatearTiempoEstudio } from '../lib/certificado'
@@ -133,6 +134,68 @@ export function Dashboard() {
               <CursoCard curso={curso} progreso={progreso} modulos={modulos} />
             </li>
           ))}
+        </ul>
+      </section>
+
+      {/* Rutas sugeridas según el objetivo */}
+      <section aria-labelledby="titulo-objetivos" className="mt-10">
+        <h2 id="titulo-objetivos" className="text-xl font-bold text-slate-50">
+          Rutas sugeridas según tu objetivo
+        </h2>
+        <p className="mt-1 max-w-3xl text-sm text-slate-400">
+          Si no sabes por dónde empezar, elige la ruta que más se parezca a lo que quieres hacer. Son recomendaciones de orden de estudio, no requisitos: puedes combinar cursos como prefieras.
+        </p>
+        <ul className="mt-5 grid gap-4 lg:grid-cols-3">
+          {rutasPorObjetivo.map((ruta) => {
+            const pasos = ruta.cursoIds.map((id) => tarjetas.find((t) => t.curso.id === id)).filter((t): t is (typeof tarjetas)[number] => Boolean(t))
+            const siguienteCursoRuta = pasos.find((p) => p.progreso.estado !== 'proximamente' && p.progreso.estado !== 'completado')
+            return (
+              <li key={ruta.id} className="flex min-w-0 flex-col rounded-2xl border border-surface-border bg-surface-raised/60 p-5">
+                <p className="text-lg font-bold text-slate-50">
+                  <span aria-hidden="true">{ruta.icono} </span>
+                  {ruta.titulo}
+                </p>
+                <p className="mt-1 text-sm text-slate-400">{ruta.descripcion}</p>
+                <ol className="mt-4 flex-1 space-y-1">
+                  {pasos.map(({ curso, progreso }, indice) => {
+                    const proximamente = progreso.estado === 'proximamente'
+                    const contenido = (
+                      <>
+                        <span aria-hidden="true" className="w-5 shrink-0 text-center text-xs text-slate-500">
+                          {indice + 1}
+                        </span>
+                        <span className="min-w-0 flex-1 truncate">{curso.titulo}</span>
+                        <span className={`shrink-0 text-xs ${progreso.estado === 'completado' ? 'text-emerald-400' : 'text-slate-500'}`}>
+                          {proximamente ? 'Próximamente' : progreso.estado === 'completado' ? '✓' : `${progreso.porcentaje} %`}
+                        </span>
+                      </>
+                    )
+                    return (
+                      <li key={curso.id}>
+                        {proximamente ? (
+                          <span className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-slate-500">{contenido}</span>
+                        ) : (
+                          <Link to={`/cursos/${curso.id}`} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-slate-200 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400">
+                            {contenido}
+                          </Link>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ol>
+                {siguienteCursoRuta ? (
+                  <Link
+                    to={`/cursos/${siguienteCursoRuta.curso.id}`}
+                    className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600/90 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
+                  >
+                    {siguienteCursoRuta.progreso.estado === 'en-curso' ? 'Continuar' : 'Empezar'}: {siguienteCursoRuta.curso.titulo} →
+                  </Link>
+                ) : (
+                  <p className="mt-4 text-center text-sm text-emerald-300">✓ Completaste los cursos disponibles de esta ruta</p>
+                )}
+              </li>
+            )
+          })}
         </ul>
       </section>
 
