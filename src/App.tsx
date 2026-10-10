@@ -15,6 +15,8 @@ import { Spinner } from './components/ui'
 const LessonPage = lazy(() => import('./components/LessonPage').then((m) => ({ default: m.LessonPage })))
 // La guía de referencia (con sus 8 colecciones) también se descarga solo cuando se abre.
 const CertificadoPage = lazy(() => import('./components/CertificadoPage').then((m) => ({ default: m.CertificadoPage })))
+const CertificadosPage = lazy(() => import('./components/CertificadosPage').then((m) => ({ default: m.CertificadosPage })))
+const CertificadoCursoPage = lazy(() => import('./components/CertificadoCursoPage').then((m) => ({ default: m.CertificadoCursoPage })))
 const ReferenciaPage = lazy(() => import('./components/referencia/ReferenciaPage').then((m) => ({ default: m.ReferenciaPage })))
 
 function Cargando() {
@@ -77,6 +79,8 @@ export default function App() {
         <Route path="/referencia" element={<ReferenciaPage />} />
         <Route path="/referencia/:coleccionId" element={<ReferenciaPage />} />
         <Route path="/certificado" element={<CertificadoPage />} />
+        <Route path="/certificados" element={<CertificadosPage />} />
+        <Route path="/certificados/:cursoId" element={<CertificadoCursoPage />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

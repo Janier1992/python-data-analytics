@@ -5,6 +5,8 @@ import {
   cursos,
   cursosDisponibles,
   certificacionDeCurso,
+  cursoDeLeccion,
+  moduloLeccionesDeCurso,
   leccionesCertificables,
   leccionesDeCurso,
   rutasPorObjetivo,
@@ -88,4 +90,20 @@ test('siguiente curso con contenido', () => {
   assert.equal(siguienteCurso('ia-aplicada')?.id, 'proyecto-final')
   assert.equal(siguienteCurso('proyecto-final')?.id, undefined)
   assert.equal(cursosDisponibles.length, 12)
+})
+
+test('curso de una lección y módulos de un curso (certificados por curso)', () => {
+  assert.equal(cursoDeLeccion('m19-l1'), 'sql')
+  assert.equal(cursoDeLeccion('m38-l1'), 'sql')
+  assert.equal(cursoDeLeccion('m34-l1'), 'excel')
+  assert.equal(cursoDeLeccion('no-existe'), undefined)
+  const sql = moduloLeccionesDeCurso('sql')
+  assert.deepEqual(Object.keys(sql), ['modulo-19', 'modulo-38', 'modulo-39', 'modulo-40', 'modulo-41', 'modulo-42'])
+  assert.equal(Object.values(sql).flat().length, leccionesDeCurso('sql').length)
+})
+
+test('los cursos con límites de evaluación lo avisan en su certificado', () => {
+  for (const id of ['excel', 'power-bi', 'ia-aplicada', 'proyecto-final']) {
+    assert.ok(cursos.find((c) => c.id === id)?.avisoCertificado, `${id} debe tener avisoCertificado`)
+  }
 })

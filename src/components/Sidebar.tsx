@@ -10,14 +10,15 @@ import {
   todasLasLecciones,
 } from '../content/curriculum'
 import { progresoDeCurso } from '../lib/cursos'
-import { programaCompleto, useProgressStore } from '../state/progressStore'
+import { cursoCompleto } from '../lib/certificadoCurso'
+import { useProgressStore } from '../state/progressStore'
 import { Logo } from './ui'
 
 /** Barra lateral: accesos principales y la lista de cursos (el curso abierto se despliega con sus módulos y lecciones). */
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { leccionId, cursoId: cursoIdRuta } = useParams()
   const completedLessons = useProgressStore((s) => s.completedLessons)
-  const programaTerminado = programaCompleto(completedLessons)
+  const algunCertificado = cursosDisponibles.some((c) => cursoCompleto(completedLessons, leccionesDeCurso(c.id)))
   const leccionActual = leccionId ? getLeccion(leccionId) : undefined
   const cursoActualId = (leccionActual && getModulo(leccionActual.moduloId)?.cursoId) ?? cursoIdRuta ?? null
   const [moduloAbierto, setModuloAbierto] = useState<string | null>(leccionActual?.moduloId ?? null)
@@ -43,7 +44,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         {[
           { to: '/curso', etiqueta: 'Mi ruta de aprendizaje', icono: '🧭', fin: true },
           { to: '/referencia', etiqueta: 'Guía de referencia', icono: '📚', fin: false },
-          { to: '/certificado', etiqueta: 'Mi certificado', icono: programaTerminado ? '🎓' : '🔒', fin: false },
+          { to: '/certificados', etiqueta: 'Mis certificados', icono: algunCertificado ? '🎓' : '🔒', fin: false },
         ].map((enlace) => (
           <NavLink
             key={enlace.to}

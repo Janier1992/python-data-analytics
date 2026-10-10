@@ -51,9 +51,12 @@ export function CursoPage() {
             Paso {curso.paso} de {cursos.length}
           </span>
           <InsigniaNivel nivel={curso.nivel} />
+          {!proximamente && (
+            <span className="rounded-full bg-brand-600/15 px-2.5 py-0.5 text-xs font-medium text-brand-200">🎓 Con certificado propio</span>
+          )}
           {!proximamente && certificacionDeCurso(curso.id) !== 'ninguno' && (
-            <span className="rounded-full bg-brand-600/15 px-2.5 py-0.5 text-xs font-medium text-brand-200">
-              {certificacionDeCurso(curso.id) === 'todo' ? '🎓 Cuenta para el certificado «AI Academy»' : '🎓 Solo los módulos básicos cuentan para el certificado «AI Academy»'}
+            <span className="rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-slate-300 ring-1 ring-surface-border">
+              {certificacionDeCurso(curso.id) === 'todo' ? 'También cuenta para el certificado «AI Academy»' : 'Solo los módulos básicos cuentan para el certificado «AI Academy»'}
             </span>
           )}
         </div>
@@ -85,6 +88,14 @@ export function CursoPage() {
               </div>
               <BarraProgreso valor={progreso.porcentaje} etiqueta={`Progreso del curso ${curso.titulo}`} />
             </div>
+            {progreso.estado === 'completado' && (
+              <Link
+                to={`/certificados/${curso.id}`}
+                className="mt-5 mr-3 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+              >
+                🎓 Obtener el certificado del curso
+              </Link>
+            )}
             {siguienteLeccion && (
               <Link
                 to={`/leccion/${siguienteLeccion.id}`}

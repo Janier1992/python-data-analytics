@@ -1,7 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import { getCurso, getLeccion, getLeccionesAdyacentes, getModulo, modulosDeCurso, moduloLeccionesMap } from '../content/curriculum'
+import { getCurso, getLeccion, getLeccionesAdyacentes, getModulo, leccionesDeCurso, modulosDeCurso, moduloLeccionesMap } from '../content/curriculum'
+import { cursoCompleto } from '../lib/certificadoCurso'
 import { cargarLeccion, leccionEnCache } from '../content/lessonLoader'
 import { cargarTodasLasColecciones } from '../content/reference'
 import type { Lesson } from '../types'
@@ -148,6 +149,8 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
   }
 
   const programaTerminado = quizScore !== null && quizScore >= 70 && programaCompleto([...completedLessons, leccion.id])
+  const cursoTerminado =
+    quizScore !== null && quizScore >= 70 && modulo ? cursoCompleto([...completedLessons, leccion.id], leccionesDeCurso(modulo.cursoId)) : false
 
   return (
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-8 sm:px-6 xl:grid-cols-[minmax(0,48rem)_14rem]">
@@ -259,12 +262,17 @@ function LessonContent({ leccion }: { leccion: Lesson }) {
                     Volver a intentar
                   </Boton>
                 )}
-                {quizScore >= 70 && programaTerminado && (
-                  <Link to="/certificado" className="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
-                    🎓 ¡Completaste el programa! Obtener mi certificado
+                {quizScore >= 70 && cursoTerminado && modulo && (
+                  <Link to={`/certificados/${modulo.cursoId}`} className="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
+                    🎓 ¡Completaste el curso! Obtener mi certificado
                   </Link>
                 )}
-                {quizScore >= 70 && !programaTerminado && siguiente && (
+                {quizScore >= 70 && programaTerminado && (
+                  <Link to="/certificado" className="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
+                    🎓 ¡Completaste el programa! Obtener el certificado «AI Academy»
+                  </Link>
+                )}
+                {quizScore >= 70 && !cursoTerminado && !programaTerminado && siguiente && (
                   <Link to={`/leccion/${siguiente.id}`} className="inline-flex items-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-glow hover:bg-brand-500">
                     Siguiente lección →
                   </Link>

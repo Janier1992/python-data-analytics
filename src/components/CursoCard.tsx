@@ -64,10 +64,18 @@ export function CursoCard({ curso, progreso, modulos }: { curso: Curso; progreso
           {ACCION[progreso.estado]}
           {!proximamente && <span aria-hidden="true"> →</span>}
         </span>
-        {!proximamente && certificacionDeCurso(curso.id) !== 'ninguno' && (
-          <span className="rounded-full bg-brand-600/15 px-2 py-0.5 text-[11px] font-medium text-brand-200" title={certificacionDeCurso(curso.id) === 'todo' ? 'Sus lecciones cuentan para el certificado «AI Academy»' : 'Solo sus módulos básicos cuentan para el certificado «AI Academy»'}>
-            🎓 Certificado
-          </span>
+        {!proximamente && progreso.estado === 'completado' ? (
+          <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-300">🎓 Certificado disponible</span>
+        ) : (
+          !proximamente &&
+          certificacionDeCurso(curso.id) !== 'ninguno' && (
+            <span
+              className="rounded-full bg-brand-600/15 px-2 py-0.5 text-[11px] font-medium text-brand-200"
+              title={certificacionDeCurso(curso.id) === 'todo' ? 'Sus lecciones cuentan para el certificado del programa «AI Academy»' : 'Solo sus módulos básicos cuentan para el certificado del programa «AI Academy»'}
+            >
+              AI Academy
+            </span>
+          )
         )}
       </div>
     </>

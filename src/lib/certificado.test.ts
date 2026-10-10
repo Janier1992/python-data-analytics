@@ -53,6 +53,17 @@ test('código de constancia: estable, con formato y sensible a los datos', async
   assert.notEqual(a, await codigoDeConstancia({ ...datos, completadoEn: datos.completadoEn + 1 }))
 })
 
+test('código de constancia de un curso: prefijo propio y distinto según el curso', async () => {
+  const datos = { cuentaId: 'abc', nombre: 'Ana María Pérez', inicioEn: T0, completadoEn: T0 + 30 * DIA }
+  const programa = await codigoDeConstancia(datos)
+  const sql = await codigoDeConstancia({ ...datos, cursoId: 'sql' })
+  const excel = await codigoDeConstancia({ ...datos, cursoId: 'excel' })
+  assert.match(sql, /^AIC-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/)
+  assert.notEqual(sql, excel)
+  assert.notEqual(sql.slice(4), programa.slice(4))
+  assert.equal(sql, await codigoDeConstancia({ ...datos, cursoId: 'sql' }))
+})
+
 test('avance del certificado', () => {
   const modulos = { 'modulo-0': ['a', 'b'], 'modulo-1': ['c', 'd', 'e'], 'modulo-2': [] as string[] }
   const parcial = avanceCertificado(['a', 'b', 'c'], modulos)

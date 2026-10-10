@@ -205,12 +205,13 @@ export function Dashboard() {
           <p className="text-lg font-semibold text-slate-100">📚 Guía de referencia</p>
           <p className="mt-1 text-sm text-slate-400">Qué hace cada función, método y sentencia de Python y SQL, con ejemplos que puedes ejecutar.</p>
         </Link>
-        <Link to="/certificado" className="group min-w-0 rounded-2xl border border-surface-border bg-surface-raised/60 p-5 transition hover:border-brand-500/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400">
-          <p className="text-lg font-semibold text-slate-100">{certificado.completo ? '🎓 Tu certificado está listo' : '🎓 Certificado «AI Academy»'}</p>
+        <Link to="/certificados" className="group min-w-0 rounded-2xl border border-surface-border bg-surface-raised/60 p-5 transition hover:border-brand-500/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400">
+          <p className="text-lg font-semibold text-slate-100">{cursosCompletados > 0 ? '🎓 Tus certificados' : '🎓 Certificados'}</p>
           <p className="mt-1 text-sm text-slate-400">
-            {certificado.completo
-              ? 'Descárgalo en PDF con tu nombre y el tiempo que te tomó.'
-              : `Se obtiene al completar los cursos marcados con 🎓: llevas el ${certificado.porcentaje} %.`}
+            {cursosCompletados > 0
+              ? `Has completado ${cursosCompletados} de ${disponibles.length} cursos: descarga su certificado en PDF.`
+              : 'Cada curso tiene su certificado, que se emite al completar todas sus lecciones.'}
+            {certificado.completo ? ' Tu certificado del programa «AI Academy» también está listo.' : ''}
           </p>
         </Link>
       </section>

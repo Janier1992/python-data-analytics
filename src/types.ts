@@ -71,10 +71,12 @@ export interface Curso {
   aprenderas: string[]
   /** Qué conviene saber antes de empezar. */
   requisitos: string
-  /** Si sus lecciones cuentan para el certificado «AI Academy» actual. Por defecto sí; los cursos nuevos lo desactivan hasta tener certificado propio. */
+  /** Si sus lecciones cuentan para el certificado del programa «AI Academy» original (96 lecciones). Por defecto sí; los cursos añadidos después lo desactivan. Todos los cursos con contenido tienen además su propio certificado de curso. */
   certifica?: boolean
   /** `true` si el curso aún no tiene contenido: se muestra como «Próximamente». */
   proximamente?: boolean
+  /** Aclaración que se imprime en el certificado del curso sobre lo que la plataforma sí y no evalúa (por ejemplo, que no se ejecuta Power BI). */
+  avisoCertificado?: string
 }
 
 /** Ruta sugerida según el objetivo del estudiante: una secuencia de cursos. */
@@ -106,6 +108,16 @@ export interface ExerciseAttempt {
   correcto: boolean
 }
 
+/** Actividad del estudiante en un curso, para su certificado propio. */
+export interface ActividadCurso {
+  /** Primera vez que abrió una lección del curso. */
+  inicioEn: number | null
+  /** Cuándo completó todas las lecciones del curso (se fija una sola vez). */
+  completadoEn: number | null
+  /** Segundos de estudio activo mientras estaba en el curso. */
+  tiempoSeg: number
+}
+
 export interface StudentState {
   onboardingCompletado: boolean
   diagnostico: DiagnosticAnswers | null
@@ -129,4 +141,6 @@ export interface StudentState {
   diasActivos: string[]
   /** Última lección abierta, para "continuar donde quedaste". */
   ultimaLeccionId: string | null
+  /** Fechas y tiempo por curso (certificados de curso), por id de curso. */
+  cursosProgreso: Record<string, ActividadCurso>
 }
